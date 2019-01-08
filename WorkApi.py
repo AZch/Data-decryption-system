@@ -1,6 +1,7 @@
 from Methods.Method import Method
 from FactoryMethods.FactoryMethodCheck import FactoryMethodCheck
 from Data.Data import Data
+from Data.TestData import TestData
 from Constants import StrRetConts
 
 """
@@ -32,24 +33,27 @@ from Constants import StrRetConts
         5.3. сохрание входных данных в файл
 """
 class WorkApi():
-    def __init__(self, baseData):
+    def __init__(self):
         self.startMethod = None    # 1. начальный метод
         self.currMethod = None     # 2. текущий метод
-        self.baseData = baseData   # 3. стандартные тестовые данные
-        self.currData = None       # 4. текущие введенные данные
+        #self.baseData = baseData   # 3. стандартные тестовые данные
+        self.currTestData = None       # 4. текущие введенные данные
         self.factoryMethods = None # 5. фабрика для создания методов
 
     """ 1. работа с данными """
     ''' 1.1. загрузка '''
-    def loadData(self, way):
+    def loadData(self, data):
+        self.currTestData = TestData()
+        self.currTestData.loadData(strData=data)
         return StrRetConts.retGood
 
     ''' 1.2. сохранение '''
-    def saveData(self, way, data):
-        return StrRetConts.retGood
+    def saveData(self):
+        return self.currTestData.getStrTestData()
 
     ''' 1.3. очистка '''
-    def  clearCurrData(self):
+    def  clearCurrTestData(self):
+        self.currTestData.loadData("")
         return StrRetConts.retGood
 
     """ 2. переход между методами """
@@ -102,24 +106,19 @@ class WorkApi():
 
     """ 4. работа с методами """
     ''' 4.1. создание методов '''
-    def createMethod(self):
+    def createMethod(self, nameMethod):
         if (not isinstance(self.factoryMethods, FactoryMethodCheck)):
             print("Не правильный формат фабрики метода")
             return StrRetConts.retBat
 
         try:
             if (self.currMethod == None):
-                if (self.currData == None):
-                    self.startMethod = self.factoryMethods.createMethod(data=self.baseData)
-                else:
-                    self.startMethod = self.factoryMethods.createMethod(data=self.currData)
+                self.startMethod = self.factoryMethods.createMethod(name=nameMethod)
                 self.currMethod = self.startMethod
             else:
-                if (self.currData == None):
-                    self.currMethod.s = self.factoryMethods.createMethod(data=self.baseData)
-                else:
-                    self.startMethod = self.factoryMethods.createMethod(data=self.currData)
-                self.currMethod = self.currMethod.next()
+                newMethod = self.factoryMethods.createMethod(name=nameMethod)
+                self.currMethod.setNext(newMethod)
+                self.currMethod = newMethod
             return StrRetConts.retGood
         except:
             return StrRetConts.retBat
@@ -127,8 +126,8 @@ class WorkApi():
     ''' 4.2. вычисление по методу '''
     def calcMethod(self):
         if (isinstance(self.currMethod, Method)):
-            self.currMethod.calc()
-            return self.currMethod.getResData()
+            self.currMethod.calc(self.currTestData)
+            return self.currMethod.getResData().makeStrData()
         else:
             print("Неверный формат метода")
             return StrRetConts.retBat
@@ -156,6 +155,27 @@ class WorkApi():
         except:
             return StrRetConts.retBat
 
+    ''' 4.4. получить имя текущего метода '''
+    def getNameThisMethod(self):
+        try:
+            return self.currMethod.getName()
+        except:
+            return "NO"
+
+    ''' 4.4. получить имя следующего метода '''
+    def getNameNextMethod(self):
+        try:
+            return self.currMethod.next().getName()
+        except:
+            return "NO"
+
+    ''' 4.4. получить имя предыдущего метода '''
+    def getNamePrevMethod(self):
+        try:
+            return self.currMethod.prev().getName()
+        except:
+            return "NO"
+
     """ 5. экспорт метода и сохранение входных и выходных данных """
     ''' 5.1. экспорт метода '''
     def exportMethod(self):
@@ -166,24 +186,23 @@ class WorkApi():
             print("Неверный формат метода")
             return StrRetConts.retBat
 
-    ''' 5.2. сохрание входных данных в файл '''
-    def saveInputData(self):
-        if (isinstance(self.currMethod, Method)):
-            if (isinstance(self.currMethod.getData(), Data)):
-                print(self.currMethod.getData().toStr())
-                return StrRetConts.retGood
-            else:
-                print("Неверный формат входных данных")
-        else:
-            print("Неверный формат метода")
-        return StrRetConts.retBat
-
     ''' 5.3. сохрание входных данных в файл '''
     def saveResData(self):
         if (isinstance(self.currMethod, Method)):
             if (isinstance(self.currMethod.getResData(), Data)):
-                print(self.currMethod.getResData().toStr())
-                return StrRetConts.retGood
+                print(self.currMethod.getResData().makeStrData())
+                return self.currMethod.getResData().makeStrData()
+            else:
+                print("Неверный формат результирующих данных")
+        else:
+            print("Неверный формат метода")
+        return StrRetConts.retBat
+
+    def saveResDataByte(self):
+        if (isinstance(self.currMethod, Method)):
+            if (isinstance(self.currMethod.getResData(), Data)):
+                print(self.currMethod.getResData().makeStrTestData())
+                return self.currMethod.getResData().makeStrTestData()
             else:
                 print("Неверный формат результирующих данных")
         else:

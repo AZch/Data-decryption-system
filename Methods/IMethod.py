@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 class IMethod(ABC):
     # должен заполнять resData
     @abstractmethod
-    def calc(self):
+    def calc(self, data):
         pass
 
     # должен возвращать формализованную строку
