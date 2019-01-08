@@ -1,0 +1,9 @@
+/__pycache__/*
+/.idea/*
+/.git/*
+/venv/*
+/Data/__pycache__/*
+/FactoryMethods/__pycache__/*
+/Methods/__pycache__/*
+/ObjectPool/__pycache__/*
+/UnitTests/__pycache__/*
