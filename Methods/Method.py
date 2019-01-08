@@ -1,11 +1,11 @@
 from Methods.IMethod import IMethod
 
 class Method(IMethod):
-    def __init__(self, data):
+    def __init__(self, name):
         self.nextMethod = None
         self.prevMethod = None
-        self.data = data
         self.resData = None
+        self.name = name
         pass
 
     # работа со следующими методами
@@ -32,6 +32,7 @@ class Method(IMethod):
                 bufMethod = bufMethod.next()
             bufMethod.setNext(method=method)
             method.__setSimplePrev(method=bufMethod)
+        return method
 
     def __setSimpleNext(self, method): # простое задание следующего метода
         if (not isinstance(method, Method)):
@@ -55,7 +56,6 @@ class Method(IMethod):
             pass
         self.prevMethod = method
 
-
     def setPrev(self, method): # задать предыдущий метод
         if (not isinstance(method, Method)):
             print("Не правильный формат метода")
@@ -70,11 +70,10 @@ class Method(IMethod):
                 bufMethod = bufMethod.prev()
             bufMethod.setPrev(method=method)
             method.__setSimpleNext(method=bufMethod)
-
-    def getData(self):
-        return self.data
+        return method
 
     def getResData(self):
         return self.resData
 
-
+    def getName(self):
+        return self.name

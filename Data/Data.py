@@ -1,6 +1,7 @@
 from Data.IData import IData
 from Data.Note import Note
 from Constants import NumConst
+from Data.TestData import TestData
 
 class Data(IData):
     def __init__(self):
@@ -8,7 +9,7 @@ class Data(IData):
 
     '''
         Формат строки данных
-        Название метода|результат|биты под результат
+        Название метода|результат|биты под результат|позиции битов
     '''
     def loadData(self, strData):
         lstAllNotes = strData.split('\n')
@@ -16,7 +17,7 @@ class Data(IData):
             dataNote = note.split('|')
             if (len(dataNote) == NumConst.countDataStr):
                 self.lstNotes.append(Note(nameFunction=dataNote[0], resFunction=dataNote[1],
-                                          lstBit=dataNote[2].split()))
+                                          lstBit=dataNote[2].split(), lstPosition=dataNote[3].split()))
             else:
                 print("загружаемые данные имеют неверный формат")
                 pass
@@ -29,12 +30,24 @@ class Data(IData):
     def makeStrData(self):
         resStr = ""
         for note in self.lstNotes:
-            resStr += note.nameFunction + "|" + note.resFunction + "|" + ' '.join(note.lstBit) + "\n"
+            resStr += note.nameFunction + "|" + note.resFunction + "|" + ' '.join(note.lstBit) + "|" + ' '.join(note.lstPosition) + "\n"
         return resStr
+
+    def makeLstTestData(self):
+        testData = TestData()
+        return testData.parseNotes(self.lstNotes)
+
+    def makeStrTestData(self):
+        testData = TestData()
+        testData.parseNotes(self.lstNotes)
+        return testData.getStrTestData()
 
     def getData(self):
         copyLstNote = []
         for note in self.lstNotes:
             copyLstNote.append(Note(nameFunction=note.nameFunction, resFunction=note.resFunction,
-                                    lstBit=note.lstBit))
+                                    lstBit=note.lstBit, lstPosition=note.lstPosition))
         return copyLstNote
+
+    def addOneNote(self, note):
+        self.lstNotes.append(note)
