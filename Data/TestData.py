@@ -52,5 +52,7 @@ class TestData():
         for i in range(len(self.__lstTestData)):
             for j in range(len(self.__lstTestData[i])):
                 strTestData += str(self.__lstTestData[i][j]) + ' '
+            strTestData = strTestData[:-1]
             strTestData += '\n'
+        strTestData = strTestData[:-1]
         return strTestData
