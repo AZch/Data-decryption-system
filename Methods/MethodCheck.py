@@ -46,7 +46,7 @@ class MethodCheck(Method):
         data = {}
         data[jsonWord.method] = {
             jsonWord.name : self.name,
-            jsonWord.type : "MethodCheck",
+            jsonWord.type : jsonWord.mCheck,
             jsonWord.startTime : self.start,
             jsonWord.endTime : self.end
         }

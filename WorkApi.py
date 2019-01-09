@@ -3,6 +3,7 @@ from FactoryMethods.FactoryMethodCheck import FactoryMethodCheck
 from Data.Data import Data
 from Data.TestData import TestData
 from Constants import StrRetConts
+from Constants import jsonWord
 
 """
     API предоставляющие взаимодейтсвие со всей системой
@@ -113,13 +114,26 @@ class WorkApi():
         if (not isinstance(self.factoryMethods, FactoryMethodCheck)):
             print("Не правильный формат фабрики метода")
             return StrRetConts.retBat
+        self.__addMethod(method=self.factoryMethods.createMethod(name=nameMethod))
+        # try:
+        #     if (self.currMethod == None):
+        #         self.startMethod = self.factoryMethods.createMethod(name=nameMethod)
+        #         self.currMethod = self.startMethod
+        #     else:
+        #         newMethod = self.factoryMethods.createMethod(name=nameMethod)
+        #         self.currMethod.setNext(newMethod)
+        #         self.currMethod = newMethod
+        #     return StrRetConts.retGood
+        # except:
+        #     return StrRetConts.retBat
 
+    def __addMethod(self, method):
         try:
             if (self.currMethod == None):
-                self.startMethod = self.factoryMethods.createMethod(name=nameMethod)
-                self.currMethod = self.startMethod
+                self.startMethod = method
+                self.currMethod = method
             else:
-                newMethod = self.factoryMethods.createMethod(name=nameMethod)
+                newMethod = method
                 self.currMethod.setNext(newMethod)
                 self.currMethod = newMethod
             return StrRetConts.retGood
@@ -157,6 +171,29 @@ class WorkApi():
             return StrRetConts.retGood
         except:
             return StrRetConts.retBat
+
+    ''' 4.4. загрузка метода(ов) из json файла '''
+    def loadJSONFile(self, dataStr):
+        try:
+            if dataStr[jsonWord.method] != None:
+                self.__parseOneMethod(dataStr=dataStr[jsonWord.method])
+        except:
+            countMethod = 1
+            while dataStr[jsonWord.method + str(countMethod)] != None:
+                self.__parseOneMethod(dataStr=dataStr[jsonWord.method + str(countMethod)][jsonWord.method])
+                countMethod += 1
+                try:
+                    dataStr[jsonWord.method + str(countMethod)]
+                except:
+                    return StrRetConts.retGood
+
+    ''' загрузка одного метода '''
+    def __parseOneMethod(self, dataStr):
+        if dataStr[jsonWord.type] == jsonWord.mCheck:
+            factoryMethodCheck = FactoryMethodCheck()
+            self.__addMethod(factoryMethodCheck.createMethod(dataStr[jsonWord.name]))
+        else:
+            print("Данного метода еще нету")
 
     ''' 4.4. получить имя текущего метода '''
     def getNameThisMethod(self):

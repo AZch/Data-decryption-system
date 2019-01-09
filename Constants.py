@@ -30,6 +30,7 @@ class msgError():
     delMethods = "Ошибка удаления всех методов"
     typeMethod = "Ошибка при выборе типа"
 
+
 class msgWarning():
     formatMethod = "Неверный формат метода"
     formatResData = "Неверный формат результирующих данных"
@@ -47,7 +48,8 @@ class jsonWord():
     method = "method"
     name = "name"
     type = "type"
-    methods = "methods"
+
+    mCheck = "MethodCheck"
 
     startTime = "startTime"
     endTime = "endTime"

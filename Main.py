@@ -49,6 +49,7 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
         self.btnCalcTo.clicked.connect(self.calcTo)
         self.btnSaveThisMethod.clicked.connect(self.saveMethod)
         self.btnSaveAllMethod.clicked.connect(self.saveAllMethod)
+        self.btnLoadMethods.clicked.connect(self.loadMethod)
 
     """ Работа с файлами """
     ''' Сохранение '''
@@ -107,7 +108,7 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
             except:
                 self.lblInputTest.clear()
                 self.txtInputTest.clear()
-                self.lblMsg.setText(msgError.loadFile)
+                return self.lblMsg.setText(msgError.loadFile)
             self.lblMsg.setText(msgConfirm.loadFile)
         except:
             self.lblMsg.setText(msgError.loadFile)
@@ -125,6 +126,25 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
             self.lblMsg.setText(msgConfirm.saveFile)
         except:
             self.lblMsg.setText(msgError.saveFile)
+
+    ''' Загрузка метода(ов) '''
+    def loadMethod(self):
+        try:
+            self.lblExecFile.clear()
+            file = QtWidgets.QFileDialog.getOpenFileName(self, 'Выберите файл с методами')[0]
+            if file == '' :
+                return self.lblMsg.setText(msgWarning.noFileLoad)
+            try :
+                loadFile = open(file, 'r')
+                with loadFile:
+                    data = loadFile.read()
+                    self.workApi.loadJSONFile(dataStr=json.loads(data))
+            except:
+                return self.lblMsg.setText(msgError.loadFile)
+            self.lblMsg.setText(msgConfirm.loadFile)
+            self.updateAfterSelect()
+        except:
+            self.lblMsg.setText(msgError.loadFile)
 
     ''' Сохранение всех методов '''
     def saveAllMethod(self):

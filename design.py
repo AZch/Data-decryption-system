@@ -74,7 +74,7 @@ class Ui_MainWindow(object):
         self.label_8.setGeometry(QtCore.QRect(20, 90, 47, 13))
         self.label_8.setObjectName("label_8")
         self.lblNextMethod = QtWidgets.QLabel(self.centralwidget)
-        self.lblNextMethod.setGeometry(QtCore.QRect(60, 90, 121, 16))
+        self.lblNextMethod.setGeometry(QtCore.QRect(60, 85, 121, 16))
         self.lblNextMethod.setText("")
         self.lblNextMethod.setObjectName("lblNextMethod")
         self.label_10 = QtWidgets.QLabel(self.centralwidget)
@@ -138,6 +138,9 @@ class Ui_MainWindow(object):
         self.txtRes = QtWidgets.QTextBrowser(self.centralwidget)
         self.txtRes.setGeometry(QtCore.QRect(280, 190, 491, 221))
         self.txtRes.setObjectName("txtRes")
+        self.btnLoadMethods = QtWidgets.QPushButton(self.centralwidget)
+        self.btnLoadMethods.setGeometry(QtCore.QRect(20, 140, 331, 23))
+        self.btnLoadMethods.setObjectName("btnLoadMethods")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 783, 21))
@@ -180,4 +183,5 @@ class Ui_MainWindow(object):
         self.label_5.setText(_translate("MainWindow", "Сообщение:"))
         self.btnAddMethod.setText(_translate("MainWindow", "Добавить \n"
 "метод"))
+        self.btnLoadMethods.setText(_translate("MainWindow", "Загрузить метод(ы)"))
 
