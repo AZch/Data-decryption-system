@@ -1,7 +1,0 @@
-01 0 0 0
-35 0 BB 0
-0 0 AD FD
-44 AA FD 0
-0 DC 0 FC
-DC 65 42 0
-AD 0 BF 0
