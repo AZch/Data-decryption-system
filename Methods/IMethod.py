@@ -8,5 +8,5 @@ class IMethod(ABC):
 
     # должен возвращать формализованную строку
     @abstractmethod
-    def exportXMLStr(self):
+    def exportJSON(self):
         pass

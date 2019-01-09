@@ -25,16 +25,16 @@ class Method(IMethod):
 
         if (self.nextMethod == None):
             self.nextMethod = method
-            self.nextMethod.__setSimplePrev(method=self)
+            self.nextMethod.setSimplePrev(method=self)
         else:
             bufMethod = self.nextMethod
             while (bufMethod.isNext()):
                 bufMethod = bufMethod.next()
             bufMethod.setNext(method=method)
-            method.__setSimplePrev(method=bufMethod)
+            method.setSimplePrev(method=bufMethod)
         return method
 
-    def __setSimpleNext(self, method): # простое задание следующего метода
+    def setSimpleNext(self, method): # простое задание следующего метода
         if (not isinstance(method, Method)):
             print("Не правильный формат метода")
             pass
@@ -50,7 +50,7 @@ class Method(IMethod):
         else:
             return False
 
-    def __setSimplePrev(self, method): # простое задание предыдущего метода
+    def setSimplePrev(self, method): # простое задание предыдущего метода
         if (not isinstance(method, Method)):
             print("Не правильный формат метода")
             pass
@@ -63,13 +63,13 @@ class Method(IMethod):
 
         if (self.prevMethod == None):
             self.prevMethod = method
-            self.prevMethod.__setSimpleNext(method=self)
+            self.prevMethod.setSimpleNext(method=self)
         else:
             bufMethod = self.prevMethod
             while (bufMethod.isPrev()):
                 bufMethod = bufMethod.prev()
             bufMethod.setPrev(method=method)
-            method.__setSimpleNext(method=bufMethod)
+            method.setSimpleNext(method=bufMethod)
         return method
 
     def getResData(self):

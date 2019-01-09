@@ -1,11 +1,17 @@
 import sys  # sys нужен для передачи argv в QApplication
 import os  # Отсюда нам понадобятся методы для отображения содержимого директорий
 import time
+import json
 
 from PyQt5 import QtWidgets
 from PyQt5 import QtCore
 
 from WorkApi import WorkApi
+from Constants import msgWarning
+from Constants import msgConfirm
+from Constants import msgError
+from Constants import StrRetConts
+from Constants import jsonWord
 
 import design  # Это наш конвертированный файл дизайна
 
@@ -14,12 +20,20 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
         # Это здесь нужно для доступа к переменным, методам
         # и т.д. в файле design.py
         super().__init__()
-        self.workApi = WorkApi()
-        self.workApi.setFactoryCheck()
         self.setupUi(self)  # Это нужно для инициализации нашего дизайна
+        self.countMethod = 0
 
         self.cmbMethods.addItems(["Проверка", "Метод проверки"])
+        self.__initAPI()
+        self.__initBtn()
 
+    ''' Инициализация API '''
+    def __initAPI(self):
+        self.workApi = WorkApi()
+        self.workApi.setFactoryCheck()
+
+    ''' Инициализация кнопок '''
+    def __initBtn(self):
         self.cmbMethods.activated[str].connect(self.setFactory)
         self.btnLoadExecFile.clicked.connect(self.loadExecFile)
         self.btnExit.clicked.connect(QtCore.QCoreApplication.instance().quit)
@@ -30,69 +44,212 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
         self.btnPrevMethod.clicked.connect(self.prevMethod)
         self.btnSaveTest.clicked.connect(self.saveTestRes)
         self.btnSaveResByte.clicked.connect(self.saveTestResByte)
+        self.btnDelThisMethod.clicked.connect(self.delMethod)
+        self.btnDelAllMethod.clicked.connect(self.delMethods)
+        self.btnCalcTo.clicked.connect(self.calcTo)
+        self.btnSaveThisMethod.clicked.connect(self.saveMethod)
+        self.btnSaveAllMethod.clicked.connect(self.saveAllMethod)
 
+    """ Работа с файлами """
+    ''' Сохранение '''
     def saveTestRes(self):
-        wayFile = QtWidgets.QFileDialog.getOpenFileName(self, 'Выберите файл для сохранения')[0]
-        file = open(wayFile, 'w')
-        file.write(self.workApi.saveResData())
-        file.close()
+        try:
+            wayFile = QtWidgets.QFileDialog.getOpenFileName(self, 'Выберите файл для сохранения')[0]
+            file = open(wayFile, 'w')
+            if file == '' :
+                return self.lblMsg.setText(msgWarning.noFileLoad)
+            file.write(self.workApi.saveResData())
+            file.close()
+            self.lblMsg.setText(msgConfirm.saveFile)
+        except:
+            self.lblMsg.setText(msgError.saveFile)
 
     def saveTestResByte(self):
-        wayFile = QtWidgets.QFileDialog.getOpenFileName(self, 'Выберите файл для сохранения')[0]
-        file = open(wayFile, 'w')
-        file.write(self.workApi.saveResDataByte())
-        file.close()
+        try:
+            wayFile = QtWidgets.QFileDialog.getOpenFileName(self, 'Выберите файл для сохранения')[0]
+            file = open(wayFile, 'w')
+            if file == '' :
+                return self.lblMsg.setText(msgWarning.noFileLoad)
+            file.write(self.workApi.saveResDataByte())
+            file.close()
+            self.lblMsg.setText(msgConfirm.saveFile)
+        except:
+            self.lblMsg.setText(msgError.saveFile)
 
+    ''' Загрузка '''
+    def loadExecFile(self):
+        try:
+            self.lblExecFile.clear()
+            file = QtWidgets.QFileDialog.getOpenFileName(self, 'Выберите исполняемый файл')[0]
+            if file == '' :
+                return self.lblMsg.setText(msgWarning.noFileLoad)
+            waySplit = file.split('/')
+            self.lblExecFile.setText(waySplit[len(waySplit) - 1])
+            self.lblMsg.setText(msgConfirm.loadFile)
+        except:
+            self.lblMsg.setText(msgError.loadFile)
+
+    def loadInputTestFile(self):
+        try:
+            self.lblInputTest.clear()
+            self.txtInputTest.clear()
+            file = QtWidgets.QFileDialog.getOpenFileName(self, 'Выберите тестовый пример')[0]
+            if file == '' :
+                return self.lblMsg.setText(msgWarning.noFileLoad)
+            waySplit = file.split('/')
+            self.lblInputTest.setText(waySplit[len(waySplit) - 1])
+            try :
+                loadFile = open(file, 'r')
+                with loadFile:
+                    data = loadFile.read()
+                    self.txtInputTest.setText(data)
+                    self.workApi.loadData(data=data)
+            except:
+                self.lblInputTest.clear()
+                self.txtInputTest.clear()
+                self.lblMsg.setText(msgError.loadFile)
+            self.lblMsg.setText(msgConfirm.loadFile)
+        except:
+            self.lblMsg.setText(msgError.loadFile)
+
+    """ Работа с методами """
+    ''' Сохранение метода '''
+    def saveMethod(self):
+        try:
+            wayFile = QtWidgets.QFileDialog.getOpenFileName(self, 'Выберите файл для сохранения')[0]
+            file = open(wayFile, 'w')
+            if file == '' :
+                return self.lblMsg.setText(msgWarning.noFileLoad)
+            file.write(json.dumps(self.workApi.exportMethod()))
+            file.close()
+            self.lblMsg.setText(msgConfirm.saveFile)
+        except:
+            self.lblMsg.setText(msgError.saveFile)
+
+    ''' Сохранение всех методов '''
+    def saveAllMethod(self):
+        try:
+            wayFile = QtWidgets.QFileDialog.getOpenFileName(self, 'Выберите файл для сохранения')[0]
+            file = open(wayFile, 'w')
+            if file == '' :
+                return self.lblMsg.setText(msgWarning.noFileLoad)
+            currMethod = self.workApi.currMethod
+            self.workApi.goStartMethod()
+            countMethods = 1
+            data = {}
+            data[jsonWord.method + str(countMethods)] = self.workApi.exportMethod()
+            while self.workApi.goNextMethod() != StrRetConts.retBat:
+                countMethods += 1
+                data[jsonWord.method + str(countMethods)] = self.workApi.exportMethod()
+            file.write(json.dumps(data))
+            file.close()
+            self.lblMsg.setText(msgConfirm.saveFile)
+            self.workApi.currMethod = currMethod
+        except:
+            self.lblMsg.setText(msgError.saveFile)
+
+    ''' Удаление метода '''
+    def delMethod(self):
+        try:
+            if self.workApi.delMethod() == StrRetConts.retBat:
+                raise ValueError()
+            self.updateAfterSelect()
+            self.lblMsg.setText(msgConfirm.delMethod)
+            self.countMethod -= 1
+            self.updateAfterSelect()
+        except:
+            self.lblMsg.setText(msgError.delMethod)
+
+    ''' Удаление методов '''
+    def delMethods(self):
+        try:
+            if self.workApi.delMethod() == StrRetConts.retBat:
+                raise ValueError()
+            while self.workApi.delMethod() != StrRetConts.retBat:
+                pass
+            self.lblMsg.setText(msgConfirm.delMethods)
+            self.countMethod = 0
+            self.updateAfterSelect()
+        except:
+            self.lblMsg.setText(msgError.delMethods)
+
+    ''' Вычисление до метода '''
+    def calcTo(self):
+        try:
+            if self.countMethod < self.spnToMethod.value():
+                return self.lblMsg.setText(msgWarning.toMachMethods)
+            countCalc = self.spnToMethod.value()
+            goPrev = True
+            while countCalc > 0:
+                countCalc -= 1
+                self.workApi.calcMethod()
+                self.workApi.saveResDataByte()
+                if self.workApi.goNextMethod() == StrRetConts.retBat:
+                    goPrev = False
+            if goPrev:
+                self.workApi.goPrevMethod()
+            self.lblMsg.setText(msgConfirm.successCalc)
+            self.updateAfterSelect()
+        except:
+            self.lblMsg.setText(msgError.successCalc)
+
+    ''' Задание фабрик методов '''
     def setFactory(self, text):
         if (text == "Проверка"):
             self.workApi.setFactoryCheck()
         elif (text == "Метод проверки"):
-            self.lblMsg.setText("Данный метод еще не реализован")
+            self.workApi.clearFactory()
+            return self.lblMsg.setText(msgWarning.noReleaseMethod)
         else:
-            self.lblMsg.setText("Данный метод еще не реализован")
+            self.workApi.clearFactory()
+            return self.lblMsg.setText(msgWarning.noReleaseMethod)
+        self.lblMsg.setText(msgConfirm.setReleaseMethod)
 
+    ''' Добавление метода '''
     def addMethod(self):
-        self.workApi.createMethod(self.nameMethod.toPlainText())
-        self.updateAfterSelect()
+        try:
+            if self.nameMethod.toPlainText() == '' or self.workApi.createMethod(self.nameMethod.toPlainText()) == StrRetConts.retBat:
+                return self.lblMsg.setText(msgError.addMethod)
+            self.updateAfterSelect()
+            self.lblMsg.setText(msgConfirm.addMethod)
+            self.countMethod += 1
+        except:
+            self.lblMsg.setText(msgError.addMethod)
 
+    ''' Переход между методами '''
     def nextMethod(self):
-        self.workApi.goNextMethod()
-        self.updateAfterSelect()
+        try:
+            if self.workApi.goNextMethod() == StrRetConts.retBat:
+                raise ValueError()
+            self.updateAfterSelect()
+            self.lblMsg.setText(msgConfirm.changeMethod)
+        except:
+            self.lblMsg.setText(msgWarning.noNextMethod)
 
     def prevMethod(self):
-        self.workApi.goPrevMethod()
-        self.updateAfterSelect()
-
-    def calcThisMethod(self):
-        startTime = time.time()
-        self.txtRes.setText(self.workApi.calcMethod())
-        self.lcdNumber.display(int(time.time() - startTime))
-
-    def loadExecFile(self):
-        self.lblExecFile.clear()
-        file = QtWidgets.QFileDialog.getOpenFileName(self, 'Выберите исполняемый файл')[0]
-        waySplit = file.split('/')
-        self.lblExecFile.setText(waySplit[len(waySplit) - 1])
-
-    def loadInputTestFile(self):
-        self.lblInputTest.clear()
-        self.txtInputTest.clear()
-        file = QtWidgets.QFileDialog.getOpenFileName(self, 'Выберите тестовый пример')[0]
-        waySplit = file.split('/')
-        self.lblInputTest.setText(waySplit[len(waySplit) - 1])
-        try :
-            loadFile = open(file, 'r')
-            with loadFile:
-                data = loadFile.read()
-                self.txtInputTest.setText(data)
-                self.workApi.loadData(data=data)
+        try:
+            if self.workApi.goPrevMethod() == StrRetConts.retBat:
+                raise ValueError()
+            self.updateAfterSelect()
+            self.lblMsg.setText(msgConfirm.changeMethod)
         except:
-            self.lblInputTest.clear()
-            self.txtInputTest.clear()
-            self.lblMsg.setText("Плохой файл для загрузки")
+            self.lblMsg.setText(msgWarning.noPrevMethod)
 
+    ''' Вычисление по выбранному методу '''
+    def calcThisMethod(self):
+        try:
+            startTime = time.time()
+            res = self.workApi.calcMethod()
+            if res == StrRetConts.retBat:
+                raise ValueError()
+            self.txtRes.setText(res)
+            self.lcdNumber.display(int(time.time() - startTime))
+            self.lblMsg.setText(msgConfirm.successCalc)
+        except:
+            self.lblMsg.setText(msgError.successCalc)
+
+    """ Обновление данных на экране (label) """
     def updateAfterSelect(self):
-        check = self.workApi.getNameThisMethod()
         self.lblThisMethod.setText(self.workApi.getNameThisMethod())
         self.lblPrevMethod.setText(self.workApi.getNamePrevMethod())
         self.lblNextMethod.setText(self.workApi.getNameNextMethod())

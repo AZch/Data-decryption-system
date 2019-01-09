@@ -5,6 +5,7 @@ import string
 from Data.Note import Note
 from Data.Data import Data
 from Data.TestData import TestData
+from Constants import jsonWord
 
 class MethodCheck(Method):
 
@@ -15,6 +16,7 @@ class MethodCheck(Method):
         pass
 
     def calc(self, testData):
+        print(self.name)
         if (not isinstance(testData, TestData)):
             print("Неверный формат входных данных")
             pass
@@ -40,9 +42,12 @@ class MethodCheck(Method):
     def __randomstr(self, size=6, chars=string.ascii_uppercase + string.digits):
         return ''.join(random.choice(chars) for _ in range(size))
 
-    def exportXMLStr(self):
-        resStr = "<MethodCheck>" \
-            "<start>" + str(self.start) + "</start>" \
-            "<end>" + str(self.end) + "</end>" \
-            "</MethodCheck>"
-        return resStr
+    def exportJSON(self):
+        data = {}
+        data[jsonWord.method] = {
+            jsonWord.name : self.name,
+            jsonWord.type : "MethodCheck",
+            jsonWord.startTime : self.start,
+            jsonWord.endTime : self.end
+        }
+        return data

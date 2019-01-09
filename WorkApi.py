@@ -104,6 +104,9 @@ class WorkApi():
         except:
             return StrRetConts.retBat
 
+    def clearFactory(self):
+        self.factoryMethods = None
+
     """ 4. работа с методами """
     ''' 4.1. создание методов '''
     def createMethod(self, nameMethod):
@@ -138,15 +141,15 @@ class WorkApi():
             print("Нету методов")
             return StrRetConts.retBat
         try:
-            if (self.currMethod.isNext and self.currMethod.isPrev):
-                self.currMethod.next().setSimplePrev(self.currMethod.prev)
-                self.currMethod.prev().setSimpleNext(self.currMethod.next)
+            if (self.currMethod.isNext() and self.currMethod.isPrev()):
+                self.currMethod.next().setSimplePrev(self.currMethod.prev())
+                self.currMethod.prev().setSimpleNext(self.currMethod.next())
                 self.currMethod = self.currMethod.prev()
-            elif (self.currMethod.prev()):
+            elif (self.currMethod.isPrev()):
                 self.currMethod.prev().setSimpleNext(None)
-                self.currMethod = self.currMethod.prev
-            elif (self.currMethod.next):
-                self.currMethod.next.setSimplePrev(None)
+                self.currMethod = self.currMethod.prev()
+            elif (self.currMethod.isNext()):
+                self.currMethod.next().setSimplePrev(None)
                 self.currMethod = self.currMethod.next()
             else:
                 self.currMethod = None
@@ -180,8 +183,7 @@ class WorkApi():
     ''' 5.1. экспорт метода '''
     def exportMethod(self):
         if (isinstance(self.currMethod, Method)):
-            print(self.currMethod.exportXMLStr())
-            return StrRetConts.retGood
+            return self.currMethod.exportJSON()
         else:
             print("Неверный формат метода")
             return StrRetConts.retBat
