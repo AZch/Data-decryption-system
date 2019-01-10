@@ -31,6 +31,7 @@ class Data(IData):
         resStr = ""
         for note in self.lstNotes:
             resStr += note.nameFunction + "|" + note.resFunction + "|" + ' '.join(note.lstBit) + "|" + ' '.join(note.lstPosition) + "\n"
+        resStr = resStr[:-1]
         return resStr
 
     def makeLstTestData(self):

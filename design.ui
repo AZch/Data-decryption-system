@@ -7,11 +7,11 @@
     <x>0</x>
     <y>0</y>
     <width>1021</width>
-    <height>393</height>
+    <height>396</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Анализ данных</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QPushButton" name="btnLoadExecFile">
@@ -139,26 +139,6 @@
     </property>
     <property name="text">
      <string>Загрузить тест</string>
-    </property>
-   </widget>
-   <widget class="QTextBrowser" name="txtInputTest">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>110</y>
-      <width>251</width>
-      <height>221</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QTableView" name="tblRes">
-    <property name="geometry">
-     <rect>
-      <x>270</x>
-      <y>110</y>
-      <width>491</width>
-      <height>221</height>
-     </rect>
     </property>
    </widget>
    <widget class="QPushButton" name="btnNextMethod">
@@ -413,7 +393,7 @@
      <rect>
       <x>690</x>
       <y>330</y>
-      <width>75</width>
+      <width>71</width>
       <height>23</height>
      </rect>
     </property>
@@ -493,16 +473,6 @@
      </rect>
     </property>
    </widget>
-   <widget class="QTextBrowser" name="txtRes">
-    <property name="geometry">
-     <rect>
-      <x>270</x>
-      <y>110</y>
-      <width>491</width>
-      <height>221</height>
-     </rect>
-    </property>
-   </widget>
    <widget class="QPushButton" name="btnLoadMethods">
     <property name="geometry">
      <rect>
@@ -514,6 +484,26 @@
     </property>
     <property name="text">
      <string>Загрузить метод(ы)</string>
+    </property>
+   </widget>
+   <widget class="QTableWidget" name="tblInutTest">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>110</y>
+      <width>251</width>
+      <height>221</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QTableWidget" name="tblRes">
+    <property name="geometry">
+     <rect>
+      <x>270</x>
+      <y>110</y>
+      <width>491</width>
+      <height>221</height>
+     </rect>
     </property>
    </widget>
   </widget>
