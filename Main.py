@@ -106,8 +106,6 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
 
     def loadInputTestFile(self):
         try:
-            #self.lblInputTest.clear()
-            #self.txtInputTest.clear()
             file = QtWidgets.QFileDialog.getOpenFileName(self, 'Выберите тестовый пример')[0]
             if file == '' :
                 return self.lblMsg.setText(msgWarning.noFileLoad)
