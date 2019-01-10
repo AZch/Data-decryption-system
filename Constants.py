@@ -1,5 +1,12 @@
 class NumConst():
     countDataStr = 3
+    countColumnRes = 4
+
+class StrConst():
+    сolumnNameFun = "Функция ПО"
+    columnNameRes = "Результат функции"
+    columnByte = "Байты"
+    columnLocByte = "Положение байтов (с 0)"
 
 class StrRetConts():
     retGood = "good"
@@ -53,4 +60,3 @@ class jsonWord():
 
     startTime = "startTime"
     endTime = "endTime"
-

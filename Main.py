@@ -2,6 +2,7 @@ import sys  # sys нужен для передачи argv в QApplication
 import os  # Отсюда нам понадобятся методы для отображения содержимого директорий
 import time
 import json
+import traceback
 
 from PyQt5 import QtWidgets
 from PyQt5 import QtCore
@@ -12,6 +13,8 @@ from Constants import msgConfirm
 from Constants import msgError
 from Constants import StrRetConts
 from Constants import jsonWord
+from Constants import NumConst
+from Constants import StrConst
 
 import design  # Это наш конвертированный файл дизайна
 
@@ -26,6 +29,17 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
         self.cmbMethods.addItems(["Проверка", "Метод проверки"])
         self.__initAPI()
         self.__initBtn()
+
+        self.tblRes.setColumnCount(NumConst.countColumnRes)
+        self.tblRes.setHorizontalHeaderLabels([
+            StrConst.сolumnNameFun, StrConst.columnNameRes, StrConst.columnByte, StrConst.columnLocByte
+        ])
+        self.tblRes.horizontalHeaderItem(0).setToolTip(StrConst.сolumnNameFun)
+        self.tblRes.horizontalHeaderItem(1).setToolTip(StrConst.columnNameRes)
+        self.tblRes.horizontalHeaderItem(2).setToolTip(StrConst.columnByte)
+        self.tblRes.horizontalHeaderItem(3).setToolTip(StrConst.columnLocByte)
+
+    ''' Инициализация основной таблицы '''
 
     ''' Инициализация API '''
     def __initAPI(self):
@@ -92,8 +106,6 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
 
     def loadInputTestFile(self):
         try:
-            self.lblInputTest.clear()
-            self.txtInputTest.clear()
             file = QtWidgets.QFileDialog.getOpenFileName(self, 'Выберите тестовый пример')[0]
             if file == '' :
                 return self.lblMsg.setText(msgWarning.noFileLoad)
@@ -103,8 +115,15 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
                 loadFile = open(file, 'r')
                 with loadFile:
                     data = loadFile.read()
-                    self.txtInputTest.setText(data)
+                    #self.txtInputTest.setText(data)
                     self.workApi.loadData(data=data)
+
+                    self.tblInutTest.setColumnCount(len(self.workApi.currTestData.getLstTestData()[0]))
+                    self.tblInutTest.setRowCount(len(self.workApi.currTestData.getLstTestData()))
+                    for i in range(len(self.workApi.currTestData.getLstTestData())):
+                        for j in range(len(self.workApi.currTestData.getLstTestData()[0])):
+                            self.tblInutTest.setItem(i, j, QtWidgets.QTableWidgetItem(self.workApi.currTestData.getLstTestData()[i][j]))
+                    self.tblInutTest.resizeColumnsToContents()
             except:
                 self.lblInputTest.clear()
                 self.txtInputTest.clear()
@@ -262,7 +281,18 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
             res = self.workApi.calcMethod()
             if res == StrRetConts.retBat:
                 raise ValueError()
-            self.txtRes.setText(res)
+            i = 0
+            moreStr = res.split('\n')
+            self.tblRes.setRowCount(len(moreStr))
+            for str in moreStr:
+                dataStr = str.split('|')
+                self.tblRes.setItem(i, 0, QtWidgets.QTableWidgetItem(dataStr[0]))
+                self.tblRes.setItem(i, 1, QtWidgets.QTableWidgetItem(dataStr[1]))
+                self.tblRes.setItem(i, 2, QtWidgets.QTableWidgetItem(dataStr[2]))
+                self.tblRes.setItem(i, 3, QtWidgets.QTableWidgetItem(dataStr[3]))
+                i += 1
+            self.tblRes.resizeColumnsToContents()
+            #self.txtRes.setText(res)
             self.lcdNumber.display(int(time.time() - startTime))
             self.lblMsg.setText(msgConfirm.successCalc)
         except:
