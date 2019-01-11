@@ -25,7 +25,7 @@ class TestData():
                     self.__lstTestData[int(xyPosition[1])][int(xyPosition[0])] = note.lstBit[i]
         return self.__lstTestData
 
-    def saveToFile(self, fileSave=""):
+    def saveToFile(self):
         fileSave = self.testFileWay
         file = open(fileSave, 'w')
         if file == '':
@@ -35,7 +35,11 @@ class TestData():
         file.close()
 
     def incDot(self, x, y):
-        self.__lstTestData[x][y] = hex(int('0x' + self.__lstTestData[x][y], 16) + 1)[2:]
+        res = hex(int('0x' + self.__lstTestData[x][y], 16) + 1)[2:]
+        if len(res) == 1:
+            self.__lstTestData[x][y] = "0" + res
+        else:
+            self.__lstTestData[x][y] = res
 
     '''
         Данные представляют собой матрицу битов

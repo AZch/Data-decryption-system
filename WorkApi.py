@@ -45,8 +45,8 @@ class WorkApi():
 
     """ 1. работа с данными """
     ''' 1.1. загрузка '''
-    def loadData(self, data):
-        self.currTestData = TestData()
+    def loadData(self, data, fileWay):
+        self.currTestData = TestData(testFileWay=fileWay)
         self.currTestData.loadData(strData=data)
         return StrRetConts.retGood
 
