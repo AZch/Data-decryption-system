@@ -38,6 +38,7 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
         self.tblRes.horizontalHeaderItem(1).setToolTip(StrConst.columnNameRes)
         self.tblRes.horizontalHeaderItem(2).setToolTip(StrConst.columnByte)
         self.tblRes.horizontalHeaderItem(3).setToolTip(StrConst.columnLocByte)
+        self.tblRes.resizeColumnsToContents()
 
     ''' Инициализация API '''
     def __initAPI(self):
