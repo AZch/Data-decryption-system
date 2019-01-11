@@ -63,14 +63,20 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
         self.btnSaveThisMethod.clicked.connect(self.saveMethod)
         self.btnSaveAllMethod.clicked.connect(self.saveAllMethod)
         self.btnLoadMethods.clicked.connect(self.loadMethod)
+        self.btnLoadResFile.clicked.connect(self.loadTestResFile)
 
     """ Работа с файлами """
+    def loadTestResFile(self):
+        wayFile = QtWidgets.QFileDialog.getOpenFileName(self, 'Выберите файл для сохранения')[0]
+        self.workApi.setWayResData(wayFile=wayFile)
+        print("file res loaded: " + wayFile)
+
     ''' Сохранение '''
     def saveTestRes(self):
         try:
             wayFile = QtWidgets.QFileDialog.getOpenFileName(self, 'Выберите файл для сохранения')[0]
             file = open(wayFile, 'w')
-            if file == '' :
+            if file == '':
                 return self.lblMsg.setText(msgWarning.noFileLoad)
             file.write(self.workApi.saveResData())
             file.close()
@@ -97,6 +103,7 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
             file = QtWidgets.QFileDialog.getOpenFileName(self, 'Выберите исполняемый файл')[0]
             if file == '' :
                 return self.lblMsg.setText(msgWarning.noFileLoad)
+            self.workApi.setExecFileName(wayFile=file)
             waySplit = file.split('/')
             self.lblExecFile.setText(waySplit[len(waySplit) - 1])
             self.lblMsg.setText(msgConfirm.loadFile)
