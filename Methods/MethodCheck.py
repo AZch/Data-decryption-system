@@ -45,7 +45,9 @@ class MethodCheck(Method):
         testData.saveToFile()
         subprocess.Popen(
             execFileWay,
-            cwd=execFileWay.split(execFileWay.split('\\'))[0],
+            cwd=execFileWay.split(
+                "\\" + execFileWay.split('\\')[len(execFileWay.split('\\')) - 1]
+            )[0],
             creationflags=subprocess.CREATE_NEW_CONSOLE)
         print(self.getStrFromFile(resFileWay))
 
