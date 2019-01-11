@@ -43,6 +43,12 @@ class Data(IData):
         testData.parseNotes(self.lstNotes)
         return testData.getStrTestData()
 
+    def searchForNameFunc(self, nameSearch):
+        for note in self.lstNotes:
+            if note.nameFunction == nameSearch:
+                return note
+        return "not found"
+
     def getData(self):
         copyLstNote = []
         for note in self.lstNotes:

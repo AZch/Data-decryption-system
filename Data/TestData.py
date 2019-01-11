@@ -1,14 +1,17 @@
 class TestData():
-    def __init__(self):
+    def __init__(self, testFileWay=""):
         self.__lstTestData = []
+        self.testFileWay = testFileWay
+        self.__allUpData = ""
+        self.__allDownData = ""
 
     def parseNotes(self, lstNote):
         maxXSize = 0
         maxYSize = 0
         for note in lstNote:
             for position in note.lstPosition:
-                x = int(position.split('x')[0])
-                y = int(position.split('x')[1])
+                y = int(position.split('x')[0])
+                x = int(position.split('x')[1])
                 if x > maxXSize:
                     maxXSize = x
                 if y > maxYSize:
@@ -22,12 +25,26 @@ class TestData():
                     self.__lstTestData[int(xyPosition[1])][int(xyPosition[0])] = note.lstBit[i]
         return self.__lstTestData
 
+    def saveToFile(self, fileSave=""):
+        fileSave = self.testFileWay
+        file = open(fileSave, 'w')
+        if file == '':
+            return fileSave + " not open"
+
+        file.write(self.getStrTestData())
+        file.close()
+
+    def incDot(self, x, y):
+        self.__lstTestData[x][y] = hex(int('0x' + self.__lstTestData[x][y], 16) + 1)[2:]
+
     '''
         Данные представляют собой матрицу битов
     '''
     def loadData(self, strData):
         getData = strData.split('"Data"=hex:\\\n')
+        self.__allUpData = getData[0] + '"Data"=hex:\\\n'
         getData = getData[1].split('\n\n"ColumnMask"')
+        self.__allDownData = '\n\n"ColumnMask"' + getData[1]
         linesData = getData[0].split(',\\\n')
         xSize = 0
         ySize = 0
@@ -53,8 +70,9 @@ class TestData():
         strTestData = ""
         for i in range(len(self.__lstTestData)):
             for j in range(len(self.__lstTestData[i])):
-                strTestData += str(self.__lstTestData[i][j]) + ' '
+                strTestData += str(self.__lstTestData[i][j]) + ','
             strTestData = strTestData[:-1]
-            strTestData += '\n'
-        strTestData = strTestData[:-1]
-        return strTestData
+            strTestData += ',\\\n'
+        strTestData = strTestData[:-3]
+
+        return self.__allUpData + strTestData + self.__allDownData
