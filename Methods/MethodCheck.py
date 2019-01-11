@@ -37,15 +37,17 @@ class MethodCheck(Method):
 
         self.resData = Data()
         print(testData.getStrTestData())
-        for x in range(len(testData.getLstTestData())):
-            for y in range(len(testData.getLstTestData()[x])):
-                testData.incDot(x, y)
-                testData.saveToFile()
-                subprocess.Popen(
-                    execFileWay,
-                    cwd=execFileWay.split(execFileWay.split('\\'))[0],
-                    creationflags=subprocess.CREATE_NEW_CONSOLE)
-                print(self.getStrFromFile(resFileWay))
+        x = 0
+        y = 0
+        #for x in range(len(testData.getLstTestData())):
+        #    for y in range(len(testData.getLstTestData()[x])):
+        testData.incDot(x, y)
+        testData.saveToFile()
+        subprocess.Popen(
+            execFileWay,
+            cwd=execFileWay.split(execFileWay.split('\\'))[0],
+            creationflags=subprocess.CREATE_NEW_CONSOLE)
+        print(self.getStrFromFile(resFileWay))
 
 
         # for i in range(random.randint(1, 10)):
