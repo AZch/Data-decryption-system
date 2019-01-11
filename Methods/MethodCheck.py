@@ -36,18 +36,23 @@ class MethodCheck(Method):
         #time.sleep(random.randint(self.start, self.end))
 
         self.resData = Data()
-        print(testData.getStrTestData())
+        #print(testData.getStrTestData())
         x = 0
         y = 0
         #for x in range(len(testData.getLstTestData())):
         #    for y in range(len(testData.getLstTestData()[x])):
         testData.incDot(x, y)
         testData.saveToFile()
+        cwd = execFileWay.split(
+                "\\" + execFileWay.split('\\')[len(execFileWay.split('\\')) - 1]
+            )[0]
+        if cwd == execFileWay:
+            cwd = execFileWay.split(
+                "/" + execFileWay.split('/')[len(execFileWay.split('/')) - 1]
+            )[0]
         subprocess.Popen(
             execFileWay,
-            cwd=execFileWay.split(
-                "\\" + execFileWay.split('\\')[len(execFileWay.split('\\')) - 1]
-            )[0],
+            cwd=cwd,
             creationflags=subprocess.CREATE_NEW_CONSOLE)
         print(self.getStrFromFile(resFileWay))
 

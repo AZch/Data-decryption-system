@@ -122,7 +122,7 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
                 with loadFile:
                     data = loadFile.read()
                     #self.txtInputTest.setText(data)
-                    self.workApi.loadData(data=data)
+                    self.workApi.loadData(data=data, fileWay=file)
 
                     self.tblInutTest.setColumnCount(len(self.workApi.currTestData.getLstTestData()[0]))
                     self.tblInutTest.setRowCount(len(self.workApi.currTestData.getLstTestData()))
