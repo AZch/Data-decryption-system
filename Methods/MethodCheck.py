@@ -6,6 +6,7 @@ from Data.Note import Note
 from Data.Data import Data
 from Data.TestData import TestData
 from Constants import jsonWord
+import subprocess
 
 class MethodCheck(Method):
 
@@ -15,28 +16,47 @@ class MethodCheck(Method):
         self.end = 90
         pass
 
-    def calc(self, testData):
+    def getStrFromFile(self, fileWay):
+        try:
+            file = open(fileWay, 'r')
+            if file == '':
+                return fileWay + " not open"
+            with file:
+                data = file.read()
+                return data
+        except:
+            return fileWay + " not open"
+
+    def calc(self, testData, resFileWay, execFileWay):
         print(self.name)
         if (not isinstance(testData, TestData)):
             print("Неверный формат входных данных")
             pass
 
         #time.sleep(random.randint(self.start, self.end))
+
         self.resData = Data()
         print(testData.getStrTestData())
-        x = 0
-        y = 0
-        for i in range(random.randint(1, 10)):
-            count = 5
-            lstBit = []
-            lstPos = []
-            for j in range(count):
-                y = random.randint(0, len(testData.getLstTestData()) - 1)
-                x = random.randint(0, len(testData.getLstTestData()[0]) - 1)
-                lstPos.append(str(x) + 'x' + str(y))
-                lstBit.append(testData.getLstTestData()[y][x])
-            self.resData.addOneNote(Note(nameFunction=self.__randomstr(3), resFunction=self.__randomstr(5),
-                                         lstBit=lstBit, lstPosition=lstPos))
+        for x in range(len(testData.getLstTestData())):
+            for y in range(len(testData.getLstTestData()[x])):
+                testData.incDot(x, y)
+                testData.saveToFile()
+                subprocess.Popen(
+                    execFileWay,
+                    cwd=execFileWay.split(execFileWay.split('\\'))[0],
+                    creationflags=subprocess.CREATE_NEW_CONSOLE)
+                print(self.getStrFromFile(resFileWay))
+
+
+        # for i in range(random.randint(1, 10)):
+        #     count = 5
+        #     lstBit = []
+        #     lstPos = []
+        #     for j in range(count):
+        #         lstPos.append(str(x) + 'x' + str(y))
+        #         lstBit.append(testData.getLstTestData()[y][x])
+        #     self.resData.addOneNote(Note(nameFunction=self.__randomstr(3), resFunction=self.__randomstr(5),
+        #                                  lstBit=lstBit, lstPosition=lstPos))
         return self.resData
 
     def __randomstr(self, size=6, chars=string.ascii_uppercase + string.digits):

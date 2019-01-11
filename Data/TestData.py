@@ -1,6 +1,7 @@
 class TestData():
-    def __init__(self):
+    def __init__(self, testFileWay=""):
         self.__lstTestData = []
+        self.testFileWay = testFileWay
         self.__allUpData = ""
         self.__allDownData = ""
 
@@ -9,8 +10,8 @@ class TestData():
         maxYSize = 0
         for note in lstNote:
             for position in note.lstPosition:
-                x = int(position.split('x')[0])
-                y = int(position.split('x')[1])
+                y = int(position.split('x')[0])
+                x = int(position.split('x')[1])
                 if x > maxXSize:
                     maxXSize = x
                 if y > maxYSize:
@@ -23,6 +24,18 @@ class TestData():
                     xyPosition = note.lstPosition[i].split('x')
                     self.__lstTestData[int(xyPosition[1])][int(xyPosition[0])] = note.lstBit[i]
         return self.__lstTestData
+
+    def saveToFile(self, fileSave=""):
+        fileSave = self.testFileWay
+        file = open(fileSave, 'w')
+        if file == '':
+            return fileSave + " not open"
+
+        file.write(self.getStrTestData())
+        file.close()
+
+    def incDot(self, x, y):
+        self.__lstTestData[x][y] = hex(int('0x' + self.__lstTestData[x][y], 16) + 1)[2:]
 
     '''
         Данные представляют собой матрицу битов

@@ -40,6 +40,8 @@ class WorkApi():
         #self.baseData = baseData   # 3. стандартные тестовые данные
         self.currTestData = None       # 4. текущие введенные данные
         self.factoryMethods = None # 5. фабрика для создания методов
+        self.resDataWay = ""
+        self.execFileName = ""
 
     """ 1. работа с данными """
     ''' 1.1. загрузка '''
@@ -53,9 +55,15 @@ class WorkApi():
         return self.currTestData.getStrTestData()
 
     ''' 1.3. очистка '''
-    def  clearCurrTestData(self):
+    def clearCurrTestData(self):
         self.currTestData.loadData("")
         return StrRetConts.retGood
+
+    def setWayResData(self, wayFile):
+        self.resDataWay = wayFile
+
+    def setExecFileName(self, wayFile):
+        self.execFileName = wayFile
 
     """ 2. переход между методами """
     ''' 2.1. переход к начальному методу '''
@@ -143,7 +151,7 @@ class WorkApi():
     ''' 4.2. вычисление по методу '''
     def calcMethod(self):
         if (isinstance(self.currMethod, Method)):
-            self.currMethod.calc(self.currTestData)
+            self.currMethod.calc(self.currTestData, self.resDataWay, self.execFileName)
             return self.currMethod.getResData().makeStrData()
         else:
             print("Неверный формат метода")
