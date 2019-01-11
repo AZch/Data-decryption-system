@@ -39,8 +39,6 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
         self.tblRes.horizontalHeaderItem(2).setToolTip(StrConst.columnByte)
         self.tblRes.horizontalHeaderItem(3).setToolTip(StrConst.columnLocByte)
 
-    ''' Инициализация основной таблицы '''
-
     ''' Инициализация API '''
     def __initAPI(self):
         self.workApi = WorkApi()

@@ -26,11 +26,13 @@ class TestData():
         Данные представляют собой матрицу битов
     '''
     def loadData(self, strData):
-        linesData = strData.split('\n')
+        getData = strData.split('"Data"=hex:\\\n')
+        getData = getData[1].split('\n\n"ColumnMask"')
+        linesData = getData[0].split(',\\\n')
         xSize = 0
         ySize = 0
         for i in range(len(linesData)):
-            elems = linesData[i].split(' ')
+            elems = linesData[i].split(',')
             if (xSize == 0 and ySize == 0):
                 xSize = len(elems)
                 ySize = len(linesData)
