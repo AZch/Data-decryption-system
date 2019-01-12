@@ -8,6 +8,12 @@ class Method(IMethod):
         self.name = name
         pass
 
+
+
+    def addRes(self, notes):
+        for note in notes:
+            self.resData.addOneNote(note)
+
     # работа со следующими методами
     def next(self): # получить следующий метод
         return self.nextMethod

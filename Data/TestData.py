@@ -38,6 +38,8 @@ class TestData():
         res = hex(int('0x' + self.__lstTestData[x][y], 16) + 1)[2:]
         if len(res) == 1:
             self.__lstTestData[x][y] = "0" + res
+        elif len(res) == 2:
+            self.__lstTestData[x][y] = "00"
         else:
             self.__lstTestData[x][y] = res
 

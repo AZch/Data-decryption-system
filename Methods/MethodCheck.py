@@ -6,7 +6,9 @@ from Data.Note import Note
 from Data.Data import Data
 from Data.TestData import TestData
 from Constants import jsonWord
-import subprocess
+from ObjectPool.ExecProcPool import ExecProcPool
+from ObjectPool.ExecProc import ExecProc
+from threading import Thread
 
 class MethodCheck(Method):
 
@@ -15,17 +17,6 @@ class MethodCheck(Method):
         self.start = 1
         self.end = 90
         pass
-
-    def getStrFromFile(self, fileWay):
-        try:
-            file = open(fileWay, 'r')
-            if file == '':
-                return fileWay + " not open"
-            with file:
-                data = file.read()
-                return data
-        except:
-            return fileWay + " not open"
 
     def calc(self, testData, resFileWay, execFileWay):
         print(self.name)
@@ -37,24 +28,31 @@ class MethodCheck(Method):
 
         self.resData = Data()
         #print(testData.getStrTestData())
-        x = 0
-        y = 0
-        #for x in range(len(testData.getLstTestData())):
-        #    for y in range(len(testData.getLstTestData()[x])):
-        testData.incDot(x, y)
-        testData.saveToFile()
-        cwd = execFileWay.split(
-                "\\" + execFileWay.split('\\')[len(execFileWay.split('\\')) - 1]
-            )[0]
-        if cwd == execFileWay:
-            cwd = execFileWay.split(
-                "/" + execFileWay.split('/')[len(execFileWay.split('/')) - 1]
-            )[0]
-        subprocess.Popen(
-            execFileWay,
-            cwd=cwd,
-            creationflags=subprocess.CREATE_NEW_CONSOLE)
-        print(self.getStrFromFile(resFileWay))
+        execProcPool = ExecProcPool(16)
+        for x in range(20):#range(len(testData.getLstTestData())):
+            for y in range(len(testData.getLstTestData()[x])):
+                testData.incDot(x, y)
+                testData.saveToFile()
+                proc = 'wait'
+                while proc == 'wait':
+                    proc = execProcPool.getProc(execFile=execFileWay, resFile=resFileWay,
+                                         bytePos=x * len(testData.getLstTestData()[x]) + y, byte=testData.getLstTestData()[x][y],
+                                                method=self)
+                proc.start()
+
+
+                # cwd = execFileWay.split(
+                #         "\\" + execFileWay.split('\\')[len(execFileWay.split('\\')) - 1]
+                #     )[0]
+                # if cwd == execFileWay:
+                #     cwd = execFileWay.split(
+                #         "/" + execFileWay.split('/')[len(execFileWay.split('/')) - 1]
+                #     )[0]
+                # subprocess.Popen(
+                #     execFileWay,
+                #     cwd=cwd,
+                #     creationflags=subprocess.CREATE_NEW_CONSOLE)
+        #print(self.getStrFromFile(resFileWay))
 
 
         # for i in range(random.randint(1, 10)):

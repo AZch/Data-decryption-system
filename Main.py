@@ -302,6 +302,7 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
             self.lcdNumber.display(int(time.time() - startTime))
             self.lblMsg.setText(msgConfirm.successCalc)
         except:
+            print('Ошибка:\n', traceback.format_exc())
             self.lblMsg.setText(msgError.successCalc)
 
     """ Обновление данных на экране (label) """
