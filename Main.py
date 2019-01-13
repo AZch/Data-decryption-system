@@ -253,7 +253,8 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
     ''' Добавление метода '''
     def addMethod(self):
         try:
-            if self.nameMethod.toPlainText() == '' or self.workApi.createMethod(self.nameMethod.toPlainText()) == StrRetConts.retBat:
+            if self.nameMethod.toPlainText() == '' or self.workApi.createMethod([self.nameMethod.toPlainText(), self.spnCountThread.value(),
+                                                                                self.spnCountRow.value(), self.spnSleepWork.value()]) == StrRetConts.retBat:
                 return self.lblMsg.setText(msgError.addMethod)
             self.updateAfterSelect()
             self.lblMsg.setText(msgConfirm.addMethod)

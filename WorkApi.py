@@ -122,7 +122,7 @@ class WorkApi():
         if (not isinstance(self.factoryMethods, FactoryMethodCheck)):
             print("Не правильный формат фабрики метода")
             return StrRetConts.retBat
-        self.__addMethod(method=self.factoryMethods.createMethod(name=nameMethod))
+        self.__addMethod(method=self.factoryMethods.createMethod(param=nameMethod))
         # try:
         #     if (self.currMethod == None):
         #         self.startMethod = self.factoryMethods.createMethod(name=nameMethod)

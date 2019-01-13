@@ -6,9 +6,11 @@ class Method(IMethod):
         self.prevMethod = None
         self.resData = None
         self.name = name
+        self.bytePosForRes = []
         pass
 
-
+    def addBytePos(self, byte, pos):
+        self.bytePosForRes.append(str(byte) + " == " + str(pos))
 
     def addRes(self, notes):
         for note in notes:

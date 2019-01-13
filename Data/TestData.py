@@ -38,7 +38,20 @@ class TestData():
         res = hex(int('0x' + self.__lstTestData[x][y], 16) + 1)[2:]
         if len(res) == 1:
             self.__lstTestData[x][y] = "0" + res
-        elif len(res) == 2:
+        elif len(res) > 2:
+            self.__lstTestData[x][y] = "00"
+        else:
+            self.__lstTestData[x][y] = res
+
+    def decDot(self, x, y):
+        if hex(int('0x' + self.__lstTestData[x][y], 16))[2:] == 0:
+            self.__lstTestData[x][y] = 'ff'
+            return True
+
+        res = hex(int('0x' + self.__lstTestData[x][y], 16) - 1)[2:]
+        if len(res) == 1:
+            self.__lstTestData[x][y] = "0" + res
+        elif len(res) > 2:
             self.__lstTestData[x][y] = "00"
         else:
             self.__lstTestData[x][y] = res

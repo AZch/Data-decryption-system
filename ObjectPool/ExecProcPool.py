@@ -1,18 +1,17 @@
 from ObjectPool.ExecProc import ExecProc
-from Methods.Method import Method
-import time
 
 class ExecProcPool():
 
-    def __init__(self, maxCountProc):
+    def __init__(self, maxCountProc, maxWait):
         self.__maxCountProc = maxCountProc
         self.__lstExecProc = list()
         self.__workProc = list()
         self.__thisCount = 0
+        self.__maxWait = maxWait
 
     def getProc(self, execFile, resFile, bytePos, byte, method):
         for proc in self.__workProc:
-            if proc.whatSecWork() > 6:
+            if proc.whatSecWork() > self.__maxWait:
                 self.returnProc(proc)
         if len(self.__lstExecProc) > 0:
             newProc = self.__lstExecProc.pop(0)
@@ -29,19 +28,11 @@ class ExecProcPool():
                 return 'wait'
 
     def returnProc(self, proc):
-        #connection.commit()
         isDel = False
+        proc.dontAdd()
         for procWork in self.__workProc:
             if procWork.startTime == proc.startTime:
                 self.__workProc.remove(procWork)
                 isDel = True
         if isDel:
             self.__lstExecProc.append(proc.clone())
-
-        #print(len(self.__workProc) + len(self.__lstExecProc))
-
-
-    # def __del__(self):
-    #     for conn in self.__lstExecProc:
-    #         conn.commit()
-    #         conn.close()

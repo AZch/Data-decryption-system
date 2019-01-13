@@ -16,6 +16,10 @@ class ExecProc(Thread):
         self.method = method
         self.pool = pool
         self.startTime = time.time()
+        self.__isAdd = True
+
+    def dontAdd(self):
+        self.__isAdd = False
 
     def whatSecWork(self):
         return int(time.time() - self.startTime)
@@ -38,47 +42,49 @@ class ExecProc(Thread):
         except:
             return fileWay + " not open"
 
-    def getLstNote(self):
-        return self.lstNote
+    # def getLstNote(self):
+    #     return self.lstNote
 
     def run(self):
-        self.startTime = time.time()
-        cwd = self.execFile.split(
-            "\\" + self.execFile.split('\\')[len(self.execFile.split('\\')) - 1]
-        )[0]
-        if cwd == self.execFile:
-            cwd = self.execFile.split(
-                "/" + self.execFile.split('/')[len(self.execFile.split('/')) - 1]
-            )[0]
-        proc = subprocess.Popen(
+        self.startTime = time.time() # запоминем время старта потока
+        proc = subprocess.Popen( # запускаем переданный файл
             self.execFile,
-            cwd=cwd,
+            cwd=self.execFile.split(
+                "/" + self.execFile.split('/')[len(self.execFile.split('/')) - 1]
+            )[0],
             creationflags=subprocess.CREATE_NEW_CONSOLE)
-        proc.wait()
+        proc.wait() # ждем пока программа отработает и выдаст результат
+        if (self.__isAdd):
+            self.method.addBytePos(self.__byte, self.__bytePos)
         #timeSleep = random.randint(1, 11)
         #print(timeSleep)
         #time.sleep(timeSleep)
 
-        dataStr = self.getStrFromFile(self.resFile)
-        self.lstNote = []
-        for oneData in list(filter(None, dataStr.split('----------------------------\n'))):
-            splitOneData = re.split('\n |│', oneData)
-            i = 0
-            nameFunction = ""
-            resFunction = ""
-            while (i < len(splitOneData)):
-                nameFunction += splitOneData[i]
-                resFunction += splitOneData[i + 1]
-                resFunction += splitOneData[i + 2]
-                i += 3
-            nameFunction = nameFunction.translate({ord(char): None for char in '\n'})
-            resFunction = resFunction.translate({ord(char): None for char in '\n'})
-            self.lstNote.append(Note(nameFunction=nameFunction, resFunction=resFunction, lstBit=[self.__byte], lstPosition=[self.__bytePos]))
-        self.method.addRes(notes=self.lstNote)
-        file = open(self.resFile, 'w')
-        file.write("")
-        file.close()
-        self.pool.returnProc(proc=self)
+        # dataStr = self.getStrFromFile(self.resFile) # получаем результат (функции, которые изменились)
+        # self.lstNote = []
+        # for oneData in list(filter(None, dataStr.split('\n'))):
+        #     splitOneData = oneData.split('│')
+        #     i = 0
+        #     nameFunction = ""
+        #     resFunction = ""
+        #     try:
+        #         while (i < len(splitOneData)):
+        #             nameFunction += splitOneData[i]
+        #             resFunction += splitOneData[i + 1]
+        #             resFunction += splitOneData[i + 2]
+        #             i += 3
+        #     except:
+        #         nameFunction += 'error'
+        #         resFunction += 'error'
+        #     nameFunction = nameFunction.translate({ord(char): None for char in '\n'})
+        #     resFunction = resFunction.translate({ord(char): None for char in '\n'})
+        #     self.lstNote.append(Note(nameFunction=nameFunction, resFunction=resFunction, # добавляем новую запись
+        #                              lstBit=[self.__byte], lstPosition=[self.__bytePos]))
+        # self.method.addRes(notes=self.lstNote) # добавлем их к вызванному методу
+        # file = open(self.resFile, 'w') # очищаем файл с результатом
+        # file.write("")
+        # file.close()
+        self.pool.returnProc(proc=self) # завершаем процесс
         #return lstNote
 
     def clone(self):

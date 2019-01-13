@@ -12,58 +12,78 @@ from threading import Thread
 
 class MethodCheck(Method):
 
-    def __init__(self, name):
+    def __init__(self, name, timeSleep, countRow, countProc):
         super().__init__(name=name)
-        self.start = 1
-        self.end = 90
+        self.__timeSleep = timeSleep
+        self.__countRow = countRow
+        self.__countProc = countProc
         pass
+
+    def getStrFromFile(self, fileWay):
+        try:
+            file = open(fileWay, 'r', encoding='cp866')
+            if file == '':
+                return fileWay + " not open"
+            with file:
+                data = file.read()
+                return data
+        except:
+            return fileWay + " not open"
 
     def calc(self, testData, resFileWay, execFileWay):
         print(self.name)
         if (not isinstance(testData, TestData)):
             print("Неверный формат входных данных")
-            pass
+            return 0
 
-        #time.sleep(random.randint(self.start, self.end))
-
-        self.resData = Data()
-        #print(testData.getStrTestData())
-        execProcPool = ExecProcPool(16)
-        for x in range(20):#range(len(testData.getLstTestData())):
+        self.resData = Data() # инициализирем объект данных для результата
+        execProcPool = ExecProcPool(self.__countProc) # инициализируем заданное количество процессов
+        proc = None
+        for x in range(self.__countRow):#range(len(testData.getLstTestData())):
             for y in range(len(testData.getLstTestData()[x])):
-                testData.incDot(x, y)
-                testData.saveToFile()
+                testData.incDot(x, y) # изменяем данные в одной позиции
+                testData.saveToFile() # сохраняем измененные данные во входной файл
                 proc = 'wait'
-                while proc == 'wait':
-                    proc = execProcPool.getProc(execFile=execFileWay, resFile=resFileWay,
+                while proc == 'wait': # ждем пока не получим свободный поток
+                    proc = execProcPool.getProc(execFile=execFileWay, resFile=resFileWay, # инициализуем поток
                                          bytePos=x * len(testData.getLstTestData()[x]) + y, byte=testData.getLstTestData()[x][y],
                                                 method=self)
-                proc.start()
+                proc.start() # запускаем поток (запускается бат файл и формируется список результатов)
+                time.sleep(self.__timeSleep) # ждем запуска окна паузой
+                testData.decDot(x, y)
+        testData.saveToFile() # сохраняем последний раз файл с правильными данными
+        proc.join() # дожидаемся последний поток
 
+        dataStr = self.getStrFromFile(resFileWay)  # получаем результат (функции, которые изменились)
+        countRes = 0
+        for oneData in list(filter(None, dataStr.split('new\n'))):
+            for strForNew in list(filter(None, oneData.split('\n'))):
+                splitOneData = strForNew.split('│')
+                i = 0
+                nameFunction = ""
+                resFunction = ""
+                try:
+                    while (i < len(splitOneData)):
+                        nameFunction += splitOneData[i]
+                        resFunction += splitOneData[i + 1]
+                        resFunction += splitOneData[i + 2]
+                        i += 3
+                except:
+                    nameFunction += 'error'
+                    resFunction += 'error'
+                nameFunction = nameFunction.translate({ord(char): None for char in '\n'})
+                resFunction = resFunction.translate({ord(char): None for char in '\n'})
+                self.resData.addOneNote(Note(nameFunction=nameFunction, resFunction=resFunction,  # добавляем новую запись
+                                         lstBit=[self.bytePosForRes[countRes].split(' == ')[0]], lstPosition=[int(self.bytePosForRes[countRes].split(' == ')[1])]))
+            countRes += 1
 
-                # cwd = execFileWay.split(
-                #         "\\" + execFileWay.split('\\')[len(execFileWay.split('\\')) - 1]
-                #     )[0]
-                # if cwd == execFileWay:
-                #     cwd = execFileWay.split(
-                #         "/" + execFileWay.split('/')[len(execFileWay.split('/')) - 1]
-                #     )[0]
-                # subprocess.Popen(
-                #     execFileWay,
-                #     cwd=cwd,
-                #     creationflags=subprocess.CREATE_NEW_CONSOLE)
-        #print(self.getStrFromFile(resFileWay))
+        if countRes + 1 != len(self.bytePosForRes):
+            print('not good')
+        #self.method.addRes(notes=self.lstNote)  # добавлем их к вызванному методу
+        file = open(resFileWay, 'w', encoding='cp866')  # очищаем файл с результатом
+        file.write("")
+        file.close()
 
-
-        # for i in range(random.randint(1, 10)):
-        #     count = 5
-        #     lstBit = []
-        #     lstPos = []
-        #     for j in range(count):
-        #         lstPos.append(str(x) + 'x' + str(y))
-        #         lstBit.append(testData.getLstTestData()[y][x])
-        #     self.resData.addOneNote(Note(nameFunction=self.__randomstr(3), resFunction=self.__randomstr(5),
-        #                                  lstBit=lstBit, lstPosition=lstPos))
         return self.resData
 
     def __randomstr(self, size=6, chars=string.ascii_uppercase + string.digits):
@@ -74,7 +94,7 @@ class MethodCheck(Method):
         data[jsonWord.method] = {
             jsonWord.name : self.name,
             jsonWord.type : jsonWord.mCheck,
-            jsonWord.startTime : self.start,
-            jsonWord.endTime : self.end
+            #jsonWord.startTime : self.start,
+            #jsonWord.endTime : self.end
         }
         return data
