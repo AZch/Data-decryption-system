@@ -66,7 +66,6 @@ class MethodCheck(Method):
                                          bytePos=x * len(testData.getLstTestData()[x]) + y, byte=testData.getLstTestData()[x][y],
                                                 method=self)
                 proc.start() # запускаем поток (запускается бат файл и формируется список результатов)
-                self.resData.addOneNote(Note(nameFunction=self.__randomstr(), resFunction=self.__randomstr(), lstBit=['1'], lstPosition=[1]))
                 time.sleep(self.__timeSleep) # ждем запуска окна паузой
                 testData.decDot(x, y)
             x += 1
