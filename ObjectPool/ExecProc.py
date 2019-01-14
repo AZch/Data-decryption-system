@@ -60,30 +60,30 @@ class ExecProc(Thread):
         #print(timeSleep)
         #time.sleep(timeSleep)
 
-        # dataStr = self.getStrFromFile(self.resFile) # получаем результат (функции, которые изменились)
-        # self.lstNote = []
-        # for oneData in list(filter(None, dataStr.split('\n'))):
-        #     splitOneData = oneData.split('│')
-        #     i = 0
-        #     nameFunction = ""
-        #     resFunction = ""
-        #     try:
-        #         while (i < len(splitOneData)):
-        #             nameFunction += splitOneData[i]
-        #             resFunction += splitOneData[i + 1]
-        #             resFunction += splitOneData[i + 2]
-        #             i += 3
-        #     except:
-        #         nameFunction += 'error'
-        #         resFunction += 'error'
-        #     nameFunction = nameFunction.translate({ord(char): None for char in '\n'})
-        #     resFunction = resFunction.translate({ord(char): None for char in '\n'})
-        #     self.lstNote.append(Note(nameFunction=nameFunction, resFunction=resFunction, # добавляем новую запись
-        #                              lstBit=[self.__byte], lstPosition=[self.__bytePos]))
-        # self.method.addRes(notes=self.lstNote) # добавлем их к вызванному методу
-        # file = open(self.resFile, 'w') # очищаем файл с результатом
-        # file.write("")
-        # file.close()
+        dataStr = self.getStrFromFile(self.resFile) # получаем результат (функции, которые изменились)
+        file = open(self.resFile, 'w', encoding='cp866') # очищаем файл с результатом
+        file.write("")
+        file.close()
+        self.lstNote = []
+        for oneData in list(filter(None, dataStr.split('\n'))):
+            splitOneData = oneData.split('│')
+            i = 0
+            nameFunction = ""
+            resFunction = ""
+            try:
+                while (i < len(splitOneData)):
+                    nameFunction += splitOneData[i]
+                    resFunction += splitOneData[i + 1]
+                    resFunction += splitOneData[i + 2]
+                    i += 3
+            except:
+                nameFunction += 'error'
+                resFunction += 'error'
+            nameFunction = nameFunction.translate({ord(char): None for char in '\n'})
+            resFunction = resFunction.translate({ord(char): None for char in '\n'})
+            self.lstNote.append(Note(nameFunction=nameFunction, resFunction=resFunction, # добавляем новую запись
+                                     lstBit=[self.__byte], lstPosition=[self.__bytePos]))
+        self.method.addRes(notes=self.lstNote) # добавлем их к вызванному методу
         self.pool.returnProc(proc=self) # завершаем процесс
         #return lstNote
 

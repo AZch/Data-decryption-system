@@ -1,6 +1,6 @@
 from abc import ABCMeta, abstractmethod
 
-class FactoryMethod(ABCMeta):
+class FactoryMethod():
     @abstractmethod
     def createMethod(self, param):
         pass

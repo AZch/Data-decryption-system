@@ -1,5 +1,6 @@
 import sys  # sys нужен для передачи argv в QApplication
 import os  # Отсюда нам понадобятся методы для отображения содержимого директорий
+import threading
 import time
 import json
 import traceback
@@ -65,11 +66,13 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
         self.btnLoadMethods.clicked.connect(self.loadMethod)
         self.btnLoadResFile.clicked.connect(self.loadTestResFile)
 
+
     """ Работа с файлами """
     def loadTestResFile(self):
         wayFile = QtWidgets.QFileDialog.getOpenFileName(self, 'Выберите файл для сохранения')[0]
         self.workApi.setWayResData(wayFile=wayFile)
-        print("file res loaded: " + wayFile)
+        waySplit = wayFile.split('/')
+        self.lblResFile.setText(waySplit[len(waySplit) - 1])
 
     ''' Сохранение '''
     def saveTestRes(self):
@@ -254,7 +257,8 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
     def addMethod(self):
         try:
             if self.nameMethod.toPlainText() == '' or self.workApi.createMethod([self.nameMethod.toPlainText(), self.spnCountThread.value(),
-                                                                                self.spnCountRow.value(), self.spnSleepWork.value()]) == StrRetConts.retBat:
+                                                                                self.spnCountRowStart.value() - 1, self.spnCountRowEnd.value() - 1,
+                                                                                 self.spnSleepWork.value(), self.spnTimeWait.value()]) == StrRetConts.retBat:
                 return self.lblMsg.setText(msgError.addMethod)
             self.updateAfterSelect()
             self.lblMsg.setText(msgConfirm.addMethod)
@@ -284,33 +288,70 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
     ''' Вычисление по выбранному методу '''
     def calcThisMethod(self):
         try:
-            startTime = time.time()
             res = self.workApi.calcMethod()
+            newThread = threading.Thread(target=self.updateCalc, args=[self.workApi, self.lblMsg, self.getAllBtnArray(),
+                                                                       self.updateAfterSelect, self.lcdNumber])
+            newThread.start()
             if res == StrRetConts.retBat:
                 raise ValueError()
-            i = 0
-            moreStr = res.split('\n')
-            self.tblRes.setRowCount(len(moreStr))
-            for str in moreStr:
-                dataStr = str.split('|')
-                self.tblRes.setItem(i, 0, QtWidgets.QTableWidgetItem(dataStr[0]))
-                self.tblRes.setItem(i, 1, QtWidgets.QTableWidgetItem(dataStr[1]))
-                self.tblRes.setItem(i, 2, QtWidgets.QTableWidgetItem(dataStr[2]))
-                self.tblRes.setItem(i, 3, QtWidgets.QTableWidgetItem(dataStr[3]))
-                i += 1
-            self.tblRes.resizeColumnsToContents()
+            #self.setResTable(res=res)
             #self.txtRes.setText(res)
-            self.lcdNumber.display(int(time.time() - startTime))
-            self.lblMsg.setText(msgConfirm.successCalc)
         except:
             print('Ошибка:\n', traceback.format_exc())
             self.lblMsg.setText(msgError.successCalc)
+
+    def getAllBtnArray(self):
+        return [self.btnCalcThisMethod, self.btnCalcTo, self.btnNextMethod, self.btnPrevMethod,
+                self.btnSaveTest, self.btnSaveResByte, self.btnSaveThisMethod, self.btnSaveAllMethod,
+                self.btnDelThisMethod, self.btnDelAllMethod, self.btnLoadMethods, self.btnAddMethod,
+                self.btnLoadResFile, self.btnLoadExecFile, self.btnLoadInputTest]
+
+    def updateCalc(self, workApi, lblMsg, arrayBtnLock, functionUpdateRes, lcdNumber):
+        startTime = time.time()
+        for btn in arrayBtnLock:
+            btn.setEnabled(False)
+        maxByte = workApi.getMaxCountByte()
+        oldThisCountStr = workApi.getThisCalcStr() - 1
+        while (workApi.checkEndCalc()):
+            lblMsg.setText(
+                "Вычисление! строка: " + str(workApi.getThisCalcStr() + 1) + " номер байта (со строки): " +
+                str(workApi.getThisCalcByte() + 1) + " / " + str(maxByte))
+            if oldThisCountStr != workApi.getThisCalcStr():
+                functionUpdateRes()
+                oldThisCountStr = workApi.getThisCalcStr()
+        for btn in arrayBtnLock:
+            btn.setEnabled(True)
+        lcdNumber.display(int(time.time() - startTime))
+        if workApi.getThisCalcByte() + 1 == maxByte:
+            lblMsg.setText(msgConfirm.successCalc)
+        else:
+            lblMsg.setText(msgError.successCalc)
+        functionUpdateRes()
+
+    def setResTable(self, res):
+        self.tblRes.setRowCount(0)
+        i = 0
+        moreStr = res.split('\n')
+        self.tblRes.setRowCount(len(moreStr))
+        for str in moreStr:
+            dataStr = str.split('|')
+            self.tblRes.setItem(i, 0, QtWidgets.QTableWidgetItem(dataStr[0]))
+            self.tblRes.setItem(i, 1, QtWidgets.QTableWidgetItem(dataStr[1]))
+            self.tblRes.setItem(i, 2, QtWidgets.QTableWidgetItem(dataStr[2]))
+            self.tblRes.setItem(i, 3, QtWidgets.QTableWidgetItem(dataStr[3]))
+            i += 1
+        self.tblRes.resizeColumnsToContents()
 
     """ Обновление данных на экране (label) """
     def updateAfterSelect(self):
         self.lblThisMethod.setText(self.workApi.getNameThisMethod())
         self.lblPrevMethod.setText(self.workApi.getNamePrevMethod())
         self.lblNextMethod.setText(self.workApi.getNameNextMethod())
+        try:
+            self.setResTable(res=self.workApi.saveResData())
+        except:
+            self.tblRes.setRowCount(0)
+            self.lblMsg.setText("нет результатов для этого метода")
 
 def main():
     app = QtWidgets.QApplication(sys.argv)  # Новый экземпляр QApplication
