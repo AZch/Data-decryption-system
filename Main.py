@@ -302,7 +302,7 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
 
     def getAllBtnArray(self):
         return [self.btnCalcThisMethod, self.btnCalcTo, self.btnNextMethod, self.btnPrevMethod,
-                self.btnSaveTest, self.btnSaveResByte, self.btnSaveThisMethod, self.btnSaveAllMethod,
+                self.btnSaveResByte, self.btnSaveThisMethod, self.btnSaveAllMethod,
                 self.btnDelThisMethod, self.btnDelAllMethod, self.btnLoadMethods, self.btnAddMethod,
                 self.btnLoadResFile, self.btnLoadExecFile, self.btnLoadInputTest]
 
@@ -311,14 +311,14 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
             for btn in arrayBtnLock:
                 btn.setEnabled(False)
             maxByte = workApi.getMaxCountByte()
-            oldThisCountStr = workApi.getThisCalcStr() - 1
+            oldThisCountByte = workApi.getThisCalcByte() - 1
             while (workApi.checkEndCalc()):
                 lblMsg.setText(
                     "Вычисление! строка: " + str(workApi.getThisCalcStr() + 1) + " номер байта (со строки): " +
                     str(workApi.getThisCalcByte() + 1) + " / " + str(maxByte))
-                if oldThisCountStr != workApi.getThisCalcStr():
+                if oldThisCountByte != workApi.getThisCalcByte():
                     functionUpdateRes()
-                    oldThisCountStr = workApi.getThisCalcStr()
+                    oldThisCountByte = workApi.getThisCalcByte()
             for btn in arrayBtnLock:
                 btn.setEnabled(True)
             lcdNumber.display(int(time.time() - startTime))
@@ -353,7 +353,7 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
         self.lblPrevMethod.setText(self.workApi.getNamePrevMethod())
         self.lblNextMethod.setText(self.workApi.getNameNextMethod())
         try:
-            self.setResTable(res=self.workApi.saveResData())
+            self.setResTable(res=self.workApi.dataForTable())
         except:
             self.tblRes.setRowCount(0)
             self.lblMsg.setText("нет результатов для этого метода")

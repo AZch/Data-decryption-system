@@ -52,17 +52,17 @@ class ExecProc(Thread):
     def run(self):
         self.startTime = time.time() # запоминем время старта потока
         self.__testData.saveToFile() # сохраняем измененные данные во входной файл
-        proc = subprocess.Popen( # запускаем переданный файл
-            self.execFile,
-            cwd=self.execFile.split(
-                "/" + self.execFile.split('/')[len(self.execFile.split('/')) - 1]
-            )[0],
-            creationflags=subprocess.CREATE_NEW_CONSOLE)
-        self.__proc = proc
-        proc.wait() # ждем пока программа отработает и выдаст результат
-        #timeSleep = random.randint(1, 11)
-        #print(timeSleep)
-        #time.sleep(timeSleep)
+        # proc = subprocess.Popen( # запускаем переданный файл
+        #     self.execFile,
+        #     cwd=self.execFile.split(
+        #         "/" + self.execFile.split('/')[len(self.execFile.split('/')) - 1]
+        #     )[0],
+        #     creationflags=subprocess.CREATE_NEW_CONSOLE)
+        # self.__proc = proc
+        # proc.wait() # ждем пока программа отработает и выдаст результат
+        timeSleep = random.randint(1, 11)
+        print(timeSleep)
+        time.sleep(10)
 
         dataStr = self.getStrFromFile(self.resFile) # получаем результат (функции, которые изменились)
         # file = open(self.resFile, 'w', encoding='cp866') # очищаем файл с результатом

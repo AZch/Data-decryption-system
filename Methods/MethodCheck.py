@@ -61,12 +61,12 @@ class MethodCheck(Method):
                                                 method=self, testData=testData)
         proc.start()
         proc.join(self.__timeWait)
-        if self.__resStrData == "":
+        if self._resStrData == "":
             print("Файл не отработал успешно на пустом результате")
             return 0
-        self.__baseResData = self.__resStrData
+        self._baseResData = self._resStrData
 
-        print(self.__resStrData)
+        print(self._resStrData)
 
         posByteX = 0 # содержат позицию байтов, которые поток проверяет (для последнего шага проверки)
         posByteY = 0
@@ -78,7 +78,7 @@ class MethodCheck(Method):
                 posByteY = y
                 self.thisCalcByte = x * len(testData.getLstTestData()[x]) + y
                 testData.incDot(x, y) # изменяем данные в одной позиции
-                self.__resStrData = "" # обнуляем строку с даннымии в которую будет записан результат
+                self._resStrData = "" # обнуляем строку с даннымии в которую будет записан результат
                 proc = 'wait'
                 while proc == 'wait': # ждем пока не получим свободный поток
                     proc = execProcPool.getProc(execFile=execFileWay, resFile=resFileWay, # инициализуем поток

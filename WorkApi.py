@@ -251,6 +251,18 @@ class WorkApi():
             print("Неверный формат метода")
         return StrRetConts.retBat
 
+    ''' 5.3. сохрание входных данных в файл '''
+
+    def dataForTable(self):
+        if (isinstance(self.currMethod, Method)):
+            if (isinstance(self.currMethod.getResData(), Data)):
+                return self.currMethod.getResData().makeStrData()
+            else:
+                print("Неверный формат результирующих данных")
+        else:
+            print("Неверный формат метода")
+        return StrRetConts.retBat
+
     def saveResDataByte(self):
         if (isinstance(self.currMethod, Method)):
             if (isinstance(self.currMethod.getResData(), Data)):

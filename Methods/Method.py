@@ -6,14 +6,14 @@ class Method(IMethod):
         self.nextMethod = None
         self.prevMethod = None
         self.resData = None
-        self.__resStrData = ""
-        self.__baseResData = ""
+        self._resStrData = ""
+        self._baseResData = ""
         self.name = name
         pass
 
     def compareData(self, position, byte):
-        resStrData = self.__baseResData.split('\n')
-        compStrData = self.__resStrData.split('\n')
+        resStrData = self._baseResData.split('\n')
+        compStrData = self._resStrData.split('\n')
         noteCompare = list()
         i = 0
         while i < len(resStrData) and i < len(compStrData):
@@ -32,10 +32,11 @@ class Method(IMethod):
                 resFunction = resFunction.translate({ord(char): None for char in '\n'})
                 noteCompare.append(Note(nameFunction=nameFunction, resFunction=resFunction,  # добавляем новую запись
                                          lstBit=[byte], lstPosition=[position]))
+            i += 1
         return noteCompare
 
     def setResData(self, data):
-        self.__resStrData = data
+        self._resStrData = data
 
     def addRes(self, notes):
         for note in notes:
