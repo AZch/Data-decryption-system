@@ -23,7 +23,7 @@ class MethodCheck(Method):
         self.thisCalcByte = 0
 
     def getMaxCountByte(self, testData):
-        return self.__countRowEnd * len(testData.getLstTestData()[self.__countRowEnd])
+        return (self.__countRowEnd + 1) * len(testData.getLstTestData()[self.__countRowEnd])
 
     def getThisCalcStr(self):
         return self.thisCalcStr
@@ -42,66 +42,62 @@ class MethodCheck(Method):
         except:
             return fileWay + " not open"
 
+    def makeReport(self):
+        resStr = "Функции: \n"
+        for note in self.resData.getData():
+            resStr += note.nameFunction + " Позиции байтов: " + ' '.join(hex(posInt) for posInt in note.lstPosition)
+        return resStr
+
     def calc(self, testData, resFileWay, execFileWay):
-        print(self.name)
-        #print(resFileWay + " " + execFileWay + " " + str(self.__timeSleep) + " " + str(self.__countRowStart) + " " + str(self.__countProc))
         if (not isinstance(testData, TestData)):
             print("Неверный формат входных данных")
             return 0
 
         self.resData = Data() # инициализирем объект данных для результата
         execProcPool = ExecProcPool(self.__countProc, maxWait=self.__timeWait) # инициализируем заданное количество процессов
-        proc = None
-        #for x in range(self.__countRowEnd):#range(len(testData.getLstTestData())):
+        proc = execProcPool.getProc(execFile=execFileWay, resFile=resFileWay, # инициализуем поток
+                                                bytePos=0,
+                                                byte=0,
+                                                method=self, testData=testData)
+        proc.start()
+        proc.join(self.__timeWait)
+        if self.__resStrData == "":
+            print("Файл не отработал успешно на пустом результате")
+            return 0
+        self.__baseResData = self.__resStrData
+
+        print(self.__resStrData)
+
+        posByteX = 0 # содержат позицию байтов, которые поток проверяет (для последнего шага проверки)
+        posByteY = 0
         x = self.__countRowStart
-        while x < self.__countRowEnd:
+        while x <= self.__countRowEnd:
             self.thisCalcStr = x
             for y in range(len(testData.getLstTestData()[x])):
+                posByteX = x
+                posByteY = y
                 self.thisCalcByte = x * len(testData.getLstTestData()[x]) + y
                 testData.incDot(x, y) # изменяем данные в одной позиции
-                testData.saveToFile() # сохраняем измененные данные во входной файл
+                self.__resStrData = "" # обнуляем строку с даннымии в которую будет записан результат
                 proc = 'wait'
                 while proc == 'wait': # ждем пока не получим свободный поток
                     proc = execProcPool.getProc(execFile=execFileWay, resFile=resFileWay, # инициализуем поток
-                                         bytePos=x * len(testData.getLstTestData()[x]) + y, byte=testData.getLstTestData()[x][y],
-                                                method=self)
+                                                bytePos=x * len(testData.getLstTestData()[x]) + y,
+                                                byte=testData.getLstTestData()[x][y],
+                                                method=self, testData=testData)
                 proc.start() # запускаем поток (запускается бат файл и формируется список результатов)
-                time.sleep(self.__timeSleep) # ждем запуска окна паузой
+                try:
+                    proc.join(self.__timeWait)
+                except TimeoutError:
+                    print('to Long')
+                self.addRes(notes=self.compareData(position=x * len(testData.getLstTestData()[x]) + y,
+                                                                 byte=testData.getLstTestData()[x][y]))  # добавлем различия
                 testData.decDot(x, y)
             x += 1
         testData.saveToFile() # сохраняем последний раз файл с правильными данными
-        proc.join() # дожидаемся последний поток
-
-        # dataStr = self.getStrFromFile(resFileWay)  # получаем результат (функции, которые изменились)
-        # countRes = 0
-        # for oneData in list(filter(None, dataStr.split('new\n'))):
-        #     for strForNew in list(filter(None, oneData.split('\n'))):
-        #         splitOneData = strForNew.split('│')
-        #         i = 0
-        #         nameFunction = ""
-        #         resFunction = ""
-        #         try:
-        #             while (i < len(splitOneData)):
-        #                 nameFunction += splitOneData[i]
-        #                 resFunction += splitOneData[i + 1]
-        #                 resFunction += splitOneData[i + 2]
-        #                 i += 3
-        #         except:
-        #             nameFunction += 'error'
-        #             resFunction += 'error'
-        #         nameFunction = nameFunction.translate({ord(char): None for char in '\n'})
-        #         resFunction = resFunction.translate({ord(char): None for char in '\n'})
-        #         self.resData.addOneNote(Note(nameFunction=nameFunction, resFunction=resFunction,  # добавляем новую запись
-        #                                  lstBit=[self.bytePosForRes[countRes].split(' == ')[0]], lstPosition=[int(self.bytePosForRes[countRes].split(' == ')[1])]))
-        #     countRes += 1
-        #
-        # if countRes + 1 != len(self.bytePosForRes):
-        #     print('not good')
-        # #self.method.addRes(notes=self.lstNote)  # добавлем их к вызванному методу
-        # file = open(resFileWay, 'w', encoding='cp866')  # очищаем файл с результатом
-        # file.write("")
-        # file.close()
-
+        proc.join(self.__timeWait) # дожидаемся последний поток
+        self.addRes(notes=self.compareData(position=posByteX * len(testData.getLstTestData()[posByteX]) + posByteY,
+                                                         byte=testData.getLstTestData()[posByteX][posByteY]))  # добавлем различия
         return self.resData
 
     def __randomstr(self, size=6, chars=string.ascii_uppercase + string.digits):
@@ -112,7 +108,5 @@ class MethodCheck(Method):
         data[jsonWord.method] = {
             jsonWord.name : self.name,
             jsonWord.type : jsonWord.mCheck,
-            #jsonWord.startTime : self.start,
-            #jsonWord.endTime : self.end
         }
         return data

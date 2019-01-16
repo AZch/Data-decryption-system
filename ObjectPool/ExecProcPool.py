@@ -9,7 +9,7 @@ class ExecProcPool():
         self.__thisCount = 0
         self.__maxWait = maxWait
 
-    def getProc(self, execFile, resFile, bytePos, byte, method):
+    def getProc(self, execFile, resFile, bytePos, byte, method, testData):
         for proc in self.__workProc:
             if proc.whatSecWork() > self.__maxWait:
                 self.returnProc(proc)
@@ -21,7 +21,7 @@ class ExecProcPool():
         else:
             if self.__thisCount < self.__maxCountProc:
                 self.__thisCount += 1
-                proc = ExecProc(execFile, resFile, bytePos, byte, method, self)
+                proc = ExecProc(execFile, resFile, bytePos, byte, method, self, testData=testData)
                 self.__workProc.append(proc)
                 return proc
             else:

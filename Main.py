@@ -290,7 +290,7 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
         try:
             res = self.workApi.calcMethod()
             newThread = threading.Thread(target=self.updateCalc, args=[self.workApi, self.lblMsg, self.getAllBtnArray(),
-                                                                       self.updateAfterSelect, self.lcdNumber])
+                                                                       self.updateAfterSelect, self.lcdNumber, time.time()])
             newThread.start()
             if res == StrRetConts.retBat:
                 raise ValueError()
@@ -306,27 +306,32 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
                 self.btnDelThisMethod, self.btnDelAllMethod, self.btnLoadMethods, self.btnAddMethod,
                 self.btnLoadResFile, self.btnLoadExecFile, self.btnLoadInputTest]
 
-    def updateCalc(self, workApi, lblMsg, arrayBtnLock, functionUpdateRes, lcdNumber):
-        startTime = time.time()
-        for btn in arrayBtnLock:
-            btn.setEnabled(False)
-        maxByte = workApi.getMaxCountByte()
-        oldThisCountStr = workApi.getThisCalcStr() - 1
-        while (workApi.checkEndCalc()):
-            lblMsg.setText(
-                "Вычисление! строка: " + str(workApi.getThisCalcStr() + 1) + " номер байта (со строки): " +
-                str(workApi.getThisCalcByte() + 1) + " / " + str(maxByte))
-            if oldThisCountStr != workApi.getThisCalcStr():
-                functionUpdateRes()
-                oldThisCountStr = workApi.getThisCalcStr()
-        for btn in arrayBtnLock:
-            btn.setEnabled(True)
-        lcdNumber.display(int(time.time() - startTime))
-        if workApi.getThisCalcByte() + 1 == maxByte:
-            lblMsg.setText(msgConfirm.successCalc)
-        else:
+    def updateCalc(self, workApi, lblMsg, arrayBtnLock, functionUpdateRes, lcdNumber, startTime):
+        try:
+            for btn in arrayBtnLock:
+                btn.setEnabled(False)
+            maxByte = workApi.getMaxCountByte()
+            oldThisCountStr = workApi.getThisCalcStr() - 1
+            while (workApi.checkEndCalc()):
+                lblMsg.setText(
+                    "Вычисление! строка: " + str(workApi.getThisCalcStr() + 1) + " номер байта (со строки): " +
+                    str(workApi.getThisCalcByte() + 1) + " / " + str(maxByte))
+                if oldThisCountStr != workApi.getThisCalcStr():
+                    functionUpdateRes()
+                    oldThisCountStr = workApi.getThisCalcStr()
+            for btn in arrayBtnLock:
+                btn.setEnabled(True)
+            lcdNumber.display(int(time.time() - startTime))
+            if workApi.getThisCalcByte() + 1 == maxByte:
+                lblMsg.setText(msgConfirm.successCalc)
+            else:
+                lblMsg.setText(msgError.successCalc)
+            functionUpdateRes()
+        except:
+            for btn in arrayBtnLock:
+                btn.setEnabled(True)
+            lcdNumber.display(int(time.time() - startTime))
             lblMsg.setText(msgError.successCalc)
-        functionUpdateRes()
 
     def setResTable(self, res):
         self.tblRes.setRowCount(0)

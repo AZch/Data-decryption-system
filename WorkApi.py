@@ -244,8 +244,7 @@ class WorkApi():
     def saveResData(self):
         if (isinstance(self.currMethod, Method)):
             if (isinstance(self.currMethod.getResData(), Data)):
-                #print(self.currMethod.getResData().makeStrData())
-                return self.currMethod.getResData().makeStrData()
+                return self.currMethod.makeReport()
             else:
                 print("Неверный формат результирующих данных")
         else:

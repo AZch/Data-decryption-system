@@ -1,16 +1,41 @@
 from Methods.IMethod import IMethod
+from Data.Note import Note
 
 class Method(IMethod):
     def __init__(self, name):
         self.nextMethod = None
         self.prevMethod = None
         self.resData = None
+        self.__resStrData = ""
+        self.__baseResData = ""
         self.name = name
-        self.bytePosForRes = []
         pass
 
-    def addBytePos(self, byte, pos):
-        self.bytePosForRes.append(str(byte) + " == " + str(pos))
+    def compareData(self, position, byte):
+        resStrData = self.__baseResData.split('\n')
+        compStrData = self.__resStrData.split('\n')
+        noteCompare = list()
+        i = 0
+        while i < len(resStrData) and i < len(compStrData):
+            if (resStrData[i] != compStrData[i]):
+                splitOneStrData = compStrData[i].split('│')
+                nameFunction = ""
+                resFunction = ""
+                try:
+                    nameFunction += splitOneStrData[0]
+                    resFunction += splitOneStrData[i + 1] + " Дата: "
+                    resFunction += splitOneStrData[i + 2]
+                except:
+                    nameFunction += 'error'
+                    resFunction += 'error'
+                nameFunction = nameFunction.translate({ord(char): None for char in '\n'})
+                resFunction = resFunction.translate({ord(char): None for char in '\n'})
+                noteCompare.append(Note(nameFunction=nameFunction, resFunction=resFunction,  # добавляем новую запись
+                                         lstBit=[byte], lstPosition=[position]))
+        return noteCompare
+
+    def setResData(self, data):
+        self.__resStrData = data
 
     def addRes(self, notes):
         for note in notes:
