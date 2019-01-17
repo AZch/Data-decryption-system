@@ -1,4 +1,5 @@
 from ObjectPool.ExecProc import ExecProc
+from Data.Note import Note
 
 class ExecProcPool():
 
@@ -9,10 +10,21 @@ class ExecProcPool():
         self.__thisCount = 0
         self.__maxWait = maxWait
 
-    def getProc(self, execFile, resFile, bytePos, byte, method, testData):
+    def wait(self):
+        lstNoteToLong = list()
         for proc in self.__workProc:
             if proc.whatSecWork() > self.__maxWait:
+                lstNoteToLong.append(Note(nameFunction='long wait', resFunction='long wait',
+                                          lstBit=proc.getLstByte(), lstPosition=proc.getLstBytePos()))
                 self.returnProc(proc)
+        if len(self.__lstExecProc) <= 0 and len(self.__workProc) != 0:
+            return 'wait'
+        return lstNoteToLong
+
+    def getProc(self, execFile, resFile, bytePos, byte, method, testData):
+        ret = self.wait()
+        if ret == 'wait':
+            return ret
         if len(self.__lstExecProc) > 0:
             newProc = self.__lstExecProc.pop(0)
             newProc.setNewData(execFile, resFile, bytePos, byte)

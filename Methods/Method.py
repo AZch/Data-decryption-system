@@ -11,6 +11,29 @@ class Method(IMethod):
         self.name = name
         pass
 
+    def __getBaseData__(self, execProcPool, execFileWay, resFileWay, testData):
+        proc = self.__getProc__(procPool=execProcPool, execFileWay=execFileWay, resFileWay=resFileWay,
+                                testData=testData, byte=0, bytePos=0)
+        proc.start()
+        # ожидаем завершения потока и получаем новый
+        while self.addRes(execProcPool.wait()) == 'wait':
+            pass
+
+        if self._resStrData == "":
+            print("Файл не отработал успешно на пустом результате")
+            return 0
+        self._baseResData = self._resStrData
+        return self._baseResData
+
+    def __getProc__(self, procPool, execFileWay, resFileWay, testData, bytePos, byte):
+        proc = 'wait'
+        while proc == 'wait':
+            proc = procPool.getProc(execFile=execFileWay, resFile=resFileWay,  # инициализуем поток
+                                        bytePos=bytePos,
+                                        byte=byte,
+                                        method=self, testData=testData)
+        return proc
+
     def compareData(self, position, byte):
         resStrData = self._baseResData.split('\n')
         compStrData = self._resStrData.split('\n')
@@ -23,8 +46,8 @@ class Method(IMethod):
                 resFunction = ""
                 try:
                     nameFunction += splitOneStrData[0]
-                    resFunction += splitOneStrData[i + 1] + " Дата: "
-                    resFunction += splitOneStrData[i + 2]
+                    resFunction += splitOneStrData[1] + " Дата: "
+                    resFunction += splitOneStrData[2]
                 except:
                     nameFunction += 'error'
                     resFunction += 'error'
@@ -39,6 +62,9 @@ class Method(IMethod):
         self._resStrData = data
 
     def addRes(self, notes):
+        if notes == 'wait':
+            return notes
+
         for note in notes:
             self.resData.addOneNote(note)
 

@@ -264,12 +264,4 @@ class WorkApi():
         return StrRetConts.retBat
 
     def saveResDataByte(self):
-        if (isinstance(self.currMethod, Method)):
-            if (isinstance(self.currMethod.getResData(), Data)):
-                print(self.currMethod.getResData().makeStrTestData())
-                return self.currMethod.getResData().makeStrTestData()
-            else:
-                print("Неверный формат результирующих данных")
-        else:
-            print("Неверный формат метода")
-        return StrRetConts.retBat
+        return self.currTestData.getStrTestData()
