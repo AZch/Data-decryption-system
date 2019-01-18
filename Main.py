@@ -19,6 +19,8 @@ from Constants import StrConst
 from Constants import msgChgNum
 
 import design  # Это наш конвертированный файл дизайна
+import designOpenTbl
+from OpenTblWnd import OpenTblWnd
 
 class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
     ''' Сигнналы (должны быть объявлены здесь) для обновления данных и таблицы при выполнении метода '''
@@ -80,6 +82,8 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
         self.btnLoadMethods.clicked.connect(self.loadMethod)
         self.btnLoadResFile.clicked.connect(self.loadTestResFile)
         self.btnAddStrEditTest.clicked.connect(self.addStrToEditTest)
+        self.btnOpenInputData.clicked.connect(self.openNewWndInputTest)
+        self.btnOpenResData.clicked.connect(self.openNewWndResData)
 
     ''' Сигнал обновления данных при выполнении метода '''
     def __sgnUpdExec(self, newValuePrg, newMsg, newValueLcd):
@@ -193,6 +197,15 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
                 self.lblMsg.setText(msgChgNum.confirmFind)
         except:
             self.lblMsg.setText(msgChgNum.badAction)
+
+    ''' Разворачивание теста '''
+    def openNewWndInputTest(self):
+        self.dialogTest = OpenTblWnd(self.tblInutTest)
+        self.dialogTest.show()
+
+    def openNewWndResData(self):
+        self.dialogRes = OpenTblWnd(self.tblRes)
+        self.dialogRes.show()
 
     """ Работа с файлами """
     ''' Выбор файла для сохранения '''
@@ -400,6 +413,7 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
             self.lblMsg.setText(msgConfirm.addMethod)
             self.countMethod += 1
         except:
+            print('Ошибка:\n', traceback.format_exc())
             self.lblMsg.setText(msgError.addMethod)
 
     ''' Переход между методами '''
@@ -439,7 +453,8 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
         return [self.btnCalcThisMethod, self.btnCalcTo, self.btnNextMethod, self.btnPrevMethod,
                 self.btnSaveResByte, self.btnSaveThisMethod, self.btnSaveAllMethod,
                 self.btnDelThisMethod, self.btnDelAllMethod, self.btnLoadMethods, self.btnAddMethod,
-                self.btnLoadResFile, self.btnLoadExecFile, self.btnLoadInputTest]
+                self.btnLoadResFile, self.btnLoadExecFile, self.btnLoadInputTest,
+                self.tblChgTest, self.btnAddStrEditTest, self.btnChgAll, self.btnClearChgAll, self.btnFindChgAll]
 
     ''' Обновление данных формы во время работы метода '''
     def updateCalc(self, workApi, sgnUpdExec, arrayBtnLock, sgnUpdTbl):
@@ -452,8 +467,7 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
             while (workApi.checkEndCalc()):
                 if oldThisCountByte != workApi.getThisCalcByte():
                     sgnUpdExec.emit((workApi.getThisCalcByte() + 1) * 100 / maxByte,
-                                    "Вычисление! строка: " + str(
-                                        workApi.getThisCalcStr() + 1) + " номер байта (со строки): " +
+                                    "Вычисление! номер байта: " +
                                      str(workApi.getThisCalcByte() + 1) + " / " + str(maxByte),
                                     int(time.time() - startTime)
                                     )
