@@ -37,7 +37,6 @@ class msgError():
     delMethods = "Ошибка удаления всех методов"
     typeMethod = "Ошибка при выборе типа"
 
-
 class msgWarning():
     formatMethod = "Неверный формат метода"
     formatResData = "Неверный формат результирующих данных"
@@ -60,3 +59,12 @@ class jsonWord():
 
     startTime = "startTime"
     endTime = "endTime"
+
+class msgChgNum():
+    badPosition = "Ошибка: данного адреса не обнаружено"
+    badHexNum = "Ошибка: число не является шестнадцетиричным"
+    emptyField = "Ошибка: пустое поле"
+    confirmChg = "Изменение прошло успешно"
+    confirmCancelChg = "Откат прошел успешно"
+    confirmFind = "Байт найден"
+    badAction = "Произвести действие не удалось"

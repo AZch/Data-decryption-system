@@ -12,11 +12,11 @@ from threading import Thread
 
 class MethodCheck(Method):
 
-    def __init__(self, name, timeSleep, countRowStart, countRowEnd, countProc, timeWait):
+    def __init__(self, name, timeSleep, posStart, posEnd, countProc, timeWait):
         super().__init__(name=name)
         self.__timeSleep = timeSleep
-        self.__countRowStart = countRowStart
-        self.__countRowEnd = countRowEnd
+        self.__posStart = posStart
+        self.__posEnd = posEnd
         self.__countProc = countProc
         self.__timeWait = timeWait
         self.thisCalcStr = 0
@@ -40,34 +40,30 @@ class MethodCheck(Method):
         if isBaseData == 0:
             return isBaseData
 
-        posByteX = 0 # содержат позицию байтов, которые поток проверяет (для последнего шага проверки)
-        posByteY = 0
-        x = self.__countRowStart
-        while x <= self.__countRowEnd:
-            self.thisCalcStr = x
-            for y in range(len(testData.getLstTestData()[x])):
-                posByteX = x
-                posByteY = y
-                self.thisCalcByte = (x - self.__countRowStart) * len(testData.getLstTestData()[x]) + y
-                testData.incDot(x, y) # изменяем данные в одной позиции
-                self._resStrData = "" # обнуляем строку с даннымии в которую будет записан результат
-                # получаем новый поток
-                proc = self.__getProc__(procPool=execProcPool, execFileWay=execFileWay, resFileWay=resFileWay,
-                                        testData=testData, byte=testData.getLstTestData()[x][y],
-                                        bytePos=x * len(testData.getLstTestData()[x]) + y)
-                proc.start() # запускаем поток (запускается бат файл и формируется список результатов)
-                while self.addRes(execProcPool.wait()) == 'wait': # ожидаем пока не будет доступен поток
-                    pass
-                self.addRes(notes=self.compareData(position=x * len(testData.getLstTestData()[x]) + y,
-                                                                 byte=testData.getLstTestData()[x][y]))  # добавлем различия
-                testData.decDot(x, y)
-            x += 1
+        posByteSave = 0 # содержат позицию байтов, которые поток проверяет (для последнего шага проверки)
+        pos = self.__posStart
+        while pos <= self.__posEnd:
+            posByteSave = pos
+            self.thisCalcByte = pos - self.__posStart
+            testData.incDot(pos) # изменяем данные в одной позиции
+            self._resStrData = "" # обнуляем строку с даннымии в которую будет записан результат
+            # получаем новый поток
+            proc = self.__getProc__(procPool=execProcPool, execFileWay=execFileWay, resFileWay=resFileWay,
+                                    testData=testData, byte=testData.getLstTestData()[pos],
+                                    bytePos=pos)
+            proc.start() # запускаем поток (запускается бат файл и формируется список результатов)
+            while self.addRes(execProcPool.wait()) == 'wait': # ожидаем пока не будет доступен поток
+                pass
+            self.addRes(notes=self.compareData(position=pos, byte=testData.getLstTestData()[pos]))  # добавлем различия
+            testData.decDot(pos)
+            pos += 1
         testData.saveToFile() # сохраняем последний раз файл с правильными данными
         # дожидаемся последний поток
         while self.addRes(execProcPool.wait()) == 'wait':  # ожидаем пока не будет доступен поток
             pass
-        self.addRes(notes=self.compareData(position=posByteX * len(testData.getLstTestData()[posByteX]) + posByteY,
-                                                         byte=testData.getLstTestData()[posByteX][posByteY]))  # добавлем различия
+        self.addRes(notes=self.compareData(position=posByteSave,
+                                                         byte=testData.getLstTestData()[posByteSave]))  # добавлем различия
+        testData.saveBaseToFile()
         return self.resData
 
     def exportJSON(self):
@@ -79,7 +75,7 @@ class MethodCheck(Method):
         return data
 
     def getMaxCountByte(self, testData):
-        return (self.__countRowEnd + 1 - self.__countRowStart) * len(testData.getLstTestData()[self.__countRowEnd])
+        return (self.__posEnd + 1 - self.__posStart)
 
     def getThisCalcStr(self):
         return self.thisCalcStr
