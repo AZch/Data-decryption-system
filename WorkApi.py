@@ -1,3 +1,5 @@
+import threading
+
 from Methods.Method import Method
 from FactoryMethods.FactoryMethodCheck import FactoryMethodCheck
 from Data.Data import Data
@@ -42,6 +44,7 @@ class WorkApi():
         self.factoryMethods = None # 5. фабрика для создания методов
         self.resDataWay = ""
         self.execFileName = ""
+        self.currThread = None
 
     """ 1. работа с данными """
     ''' 1.1. загрузка '''
@@ -122,18 +125,10 @@ class WorkApi():
         if (not isinstance(self.factoryMethods, FactoryMethodCheck)):
             print("Не правильный формат фабрики метода")
             return StrRetConts.retBat
-        self.__addMethod(method=self.factoryMethods.createMethod(name=nameMethod))
-        # try:
-        #     if (self.currMethod == None):
-        #         self.startMethod = self.factoryMethods.createMethod(name=nameMethod)
-        #         self.currMethod = self.startMethod
-        #     else:
-        #         newMethod = self.factoryMethods.createMethod(name=nameMethod)
-        #         self.currMethod.setNext(newMethod)
-        #         self.currMethod = newMethod
-        #     return StrRetConts.retGood
-        # except:
-        #     return StrRetConts.retBat
+        self.__addMethod(method=self.factoryMethods.createMethod(param=nameMethod))
+
+    def getMaxCountByte(self):
+        return self.currMethod.getMaxCountByte(self.currTestData)
 
     def __addMethod(self, method):
         try:
@@ -151,11 +146,23 @@ class WorkApi():
     ''' 4.2. вычисление по методу '''
     def calcMethod(self):
         if (isinstance(self.currMethod, Method)):
-            self.currMethod.calc(self.currTestData, self.resDataWay, self.execFileName)
-            return self.currMethod.getResData().makeStrData()
+            self.currThread = threading.Thread(target=self.currMethod.calc, args=[self.currTestData, self.resDataWay, self.execFileName])
+            self.currThread.start()
+            #self.currMethod.calc(self.currTestData, self.resDataWay, self.execFileName)
+            return StrRetConts.retGood
         else:
             print("Неверный формат метода")
             return StrRetConts.retBat
+
+    def checkEndCalc(self):
+        return self.currThread.isAlive()
+
+    def getThisCalcStr(self):
+        return self.currMethod.getThisCalcStr()
+
+    def getThisCalcByte(self):
+        return self.currMethod.getThisCalcByte()
+
 
     ''' 4.3. удаление метода '''
     def delMethod(self):
@@ -237,7 +244,18 @@ class WorkApi():
     def saveResData(self):
         if (isinstance(self.currMethod, Method)):
             if (isinstance(self.currMethod.getResData(), Data)):
-                print(self.currMethod.getResData().makeStrData())
+                return self.currMethod.makeReport()
+            else:
+                print("Неверный формат результирующих данных")
+        else:
+            print("Неверный формат метода")
+        return StrRetConts.retBat
+
+    ''' 5.3. сохрание входных данных в файл '''
+
+    def dataForTable(self):
+        if (isinstance(self.currMethod, Method)):
+            if (isinstance(self.currMethod.getResData(), Data)):
                 return self.currMethod.getResData().makeStrData()
             else:
                 print("Неверный формат результирующих данных")
@@ -246,12 +264,4 @@ class WorkApi():
         return StrRetConts.retBat
 
     def saveResDataByte(self):
-        if (isinstance(self.currMethod, Method)):
-            if (isinstance(self.currMethod.getResData(), Data)):
-                print(self.currMethod.getResData().makeStrTestData())
-                return self.currMethod.getResData().makeStrTestData()
-            else:
-                print("Неверный формат результирующих данных")
-        else:
-            print("Неверный формат метода")
-        return StrRetConts.retBat
+        return self.currTestData.getStrTestData()

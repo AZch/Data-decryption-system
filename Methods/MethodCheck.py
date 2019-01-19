@@ -6,77 +6,79 @@ from Data.Note import Note
 from Data.Data import Data
 from Data.TestData import TestData
 from Constants import jsonWord
-import subprocess
+from ObjectPool.ExecProcPool import ExecProcPool
+from ObjectPool.ExecProc import ExecProc
+from threading import Thread
 
 class MethodCheck(Method):
 
-    def __init__(self, name):
+    def __init__(self, name, timeSleep, posStart, posEnd, countProc, timeWait):
         super().__init__(name=name)
-        self.start = 1
-        self.end = 90
-        pass
+        self.__timeSleep = timeSleep
+        self.__posStart = posStart
+        self.__posEnd = posEnd
+        self.__countProc = countProc
+        self.__timeWait = timeWait
+        self.thisCalcStr = 0
+        self.thisCalcByte = 0
 
-    def getStrFromFile(self, fileWay):
-        try:
-            file = open(fileWay, 'r')
-            if file == '':
-                return fileWay + " not open"
-            with file:
-                data = file.read()
-                return data
-        except:
-            return fileWay + " not open"
+    def makeReport(self):
+        resStr = "Функции: \n"
+        for note in self.resData.getData():
+            resStr += note.nameFunction + " Позиции байтов: " + ' '.join(hex(posInt)[2:] + 'h' for posInt in note.lstPosition) + '\n'
+        return resStr
 
     def calc(self, testData, resFileWay, execFileWay):
-        print(self.name)
         if (not isinstance(testData, TestData)):
             print("Неверный формат входных данных")
+            return 0
+
+        self.resData = Data() # инициализирем объект данных для результата
+        execProcPool = ExecProcPool(self.__countProc, maxWait=self.__timeWait) # инициализируем заданное количество процессов
+        isBaseData = self.__getBaseData__(execProcPool=execProcPool, execFileWay=execFileWay,
+                                          resFileWay=resFileWay, testData=testData)
+        if isBaseData == 0:
+            return isBaseData
+
+        posByteSave = 0 # содержат позицию байтов, которые поток проверяет (для последнего шага проверки)
+        pos = self.__posStart
+        while pos <= self.__posEnd:
+            posByteSave = pos
+            self.thisCalcByte = pos - self.__posStart
+            testData.incDot(pos) # изменяем данные в одной позиции
+            self._resStrData = "" # обнуляем строку с даннымии в которую будет записан результат
+            # получаем новый поток
+            proc = self.__getProc__(procPool=execProcPool, execFileWay=execFileWay, resFileWay=resFileWay,
+                                    testData=testData, byte=testData.getLstTestData()[pos],
+                                    bytePos=pos)
+            proc.start() # запускаем поток (запускается бат файл и формируется список результатов)
+            while self.addRes(execProcPool.wait()) == 'wait': # ожидаем пока не будет доступен поток
+                pass
+            self.addRes(notes=self.compareData(position=pos, byte=testData.getLstTestData()[pos]))  # добавлем различия
+            testData.decDot(pos)
+            pos += 1
+        testData.saveToFile() # сохраняем последний раз файл с правильными данными
+        # дожидаемся последний поток
+        while self.addRes(execProcPool.wait()) == 'wait':  # ожидаем пока не будет доступен поток
             pass
-
-        #time.sleep(random.randint(self.start, self.end))
-
-        self.resData = Data()
-        #print(testData.getStrTestData())
-        x = 0
-        y = 0
-        #for x in range(len(testData.getLstTestData())):
-        #    for y in range(len(testData.getLstTestData()[x])):
-        testData.incDot(x, y)
-        testData.saveToFile()
-        cwd = execFileWay.split(
-                "\\" + execFileWay.split('\\')[len(execFileWay.split('\\')) - 1]
-            )[0]
-        if cwd == execFileWay:
-            cwd = execFileWay.split(
-                "/" + execFileWay.split('/')[len(execFileWay.split('/')) - 1]
-            )[0]
-        subprocess.Popen(
-            execFileWay,
-            cwd=cwd,
-            creationflags=subprocess.CREATE_NEW_CONSOLE)
-        print(self.getStrFromFile(resFileWay))
-
-
-        # for i in range(random.randint(1, 10)):
-        #     count = 5
-        #     lstBit = []
-        #     lstPos = []
-        #     for j in range(count):
-        #         lstPos.append(str(x) + 'x' + str(y))
-        #         lstBit.append(testData.getLstTestData()[y][x])
-        #     self.resData.addOneNote(Note(nameFunction=self.__randomstr(3), resFunction=self.__randomstr(5),
-        #                                  lstBit=lstBit, lstPosition=lstPos))
+        self.addRes(notes=self.compareData(position=posByteSave,
+                                                         byte=testData.getLstTestData()[posByteSave]))  # добавлем различия
+        testData.saveBaseToFile()
         return self.resData
-
-    def __randomstr(self, size=6, chars=string.ascii_uppercase + string.digits):
-        return ''.join(random.choice(chars) for _ in range(size))
 
     def exportJSON(self):
         data = {}
         data[jsonWord.method] = {
             jsonWord.name : self.name,
             jsonWord.type : jsonWord.mCheck,
-            jsonWord.startTime : self.start,
-            jsonWord.endTime : self.end
         }
         return data
+
+    def getMaxCountByte(self, testData):
+        return (self.__posEnd + 1 - self.__posStart)
+
+    def getThisCalcStr(self):
+        return self.thisCalcStr
+
+    def getThisCalcByte(self):
+        return self.thisCalcByte

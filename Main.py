@@ -1,5 +1,6 @@
 import sys  # sys нужен для передачи argv в QApplication
 import os  # Отсюда нам понадобятся методы для отображения содержимого директорий
+import threading
 import time
 import json
 import traceback
@@ -15,10 +16,17 @@ from Constants import StrRetConts
 from Constants import jsonWord
 from Constants import NumConst
 from Constants import StrConst
+from Constants import msgChgNum
 
 import design  # Это наш конвертированный файл дизайна
+import designOpenTbl
+from OpenTblWnd import OpenTblWnd
 
 class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
+    ''' Сигнналы (должны быть объявлены здесь) для обновления данных и таблицы при выполнении метода '''
+    sgnUpdExec = QtCore.pyqtSignal(int, str, int, name='sgnUpdExec')
+    sgnUpdTbl = QtCore.pyqtSignal(name='sgnUpdTbl')
+
     def __init__(self):
         # Это здесь нужно для доступа к переменным, методам
         # и т.д. в файле design.py
@@ -29,7 +37,11 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
         self.cmbMethods.addItems(["Проверка", "Метод проверки"])
         self.__initAPI()
         self.__initBtn()
+        self.__initSgn()
+        self.__initResTbl()
 
+    ''' Инициализация таблицы с результатом '''
+    def __initResTbl(self):
         self.tblRes.setColumnCount(NumConst.countColumnRes)
         self.tblRes.setHorizontalHeaderLabels([
             StrConst.сolumnNameFun, StrConst.columnNameRes, StrConst.columnByte, StrConst.columnLocByte
@@ -44,6 +56,11 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
     def __initAPI(self):
         self.workApi = WorkApi()
         self.workApi.setFactoryCheck()
+
+    ''' Инициализация сигналов '''
+    def __initSgn(self):
+        self.sgnUpdExec.connect(self.__sgnUpdExec, QtCore.Qt.QueuedConnection)
+        self.sgnUpdTbl.connect(self.__sgnUpdTbl, QtCore.Qt.QueuedConnection)
 
     ''' Инициализация кнопок '''
     def __initBtn(self):
@@ -64,14 +81,141 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
         self.btnSaveAllMethod.clicked.connect(self.saveAllMethod)
         self.btnLoadMethods.clicked.connect(self.loadMethod)
         self.btnLoadResFile.clicked.connect(self.loadTestResFile)
+        self.btnAddStrEditTest.clicked.connect(self.addStrToEditTest)
+        self.btnOpenInputData.clicked.connect(self.openNewWndInputTest)
+        self.btnOpenResData.clicked.connect(self.openNewWndResData)
+
+    ''' Сигнал обновления данных при выполнении метода '''
+    def __sgnUpdExec(self, newValuePrg, newMsg, newValueLcd):
+        self.lblExecuteProc.setText(newMsg)
+        self.lcdNumber.display(newValueLcd)
+        try:
+            self.prgExec.setValue(newValuePrg)
+        except:
+            self.prgExec.setValue(100)
+
+    ''' Сигнла обновления таблицы при выполении метода '''
+    def __sgnUpdTbl(self):
+        self.setResTable(res=self.workApi.dataForTable())
+
+    ''' Добавление новых кнопок и полей для изменения входных данных '''
+    def addStrToEditTest(self):
+        rowPosition = self.tblChgTest.rowCount()
+        self.tblChgTest.insertRow(rowPosition)
+
+        # Поля для позиции
+        txtEditPosition = QtWidgets.QTextEdit(self.tblChgTest)
+        self.tblChgTest.setCellWidget(rowPosition, 0, txtEditPosition)
+
+        # Поле для нового значения
+        txtEditNewVal = QtWidgets.QTextEdit(self.tblChgTest)
+        self.tblChgTest.setCellWidget(rowPosition, 1, txtEditNewVal)
+
+        # Кнопка применения введенных изменений
+        btn = QtWidgets.QPushButton(self.tblChgTest)
+        btn.setText('Готово')
+        self.tblChgTest.setCellWidget(rowPosition, 2, btn)
+        btn.clicked.connect(
+            lambda *args, rowPosition=rowPosition: self.__chgValueTestData(txtEditPosition, txtEditNewVal)
+        )
+
+        # Кнопка отмены изменений
+        btn = QtWidgets.QPushButton(self.tblChgTest)
+        btn.setText('Убрать')
+        self.tblChgTest.setCellWidget(rowPosition, 3, btn)
+        btn.clicked.connect(
+            lambda *args, rowPosition=rowPosition: self.__cnclValueTestData(txtEditPosition, txtEditNewVal)
+        )
+
+        # Кнопка поиска байта по адресу
+        btn = QtWidgets.QPushButton(self.tblChgTest)
+        btn.setText('Получить')
+        self.tblChgTest.setCellWidget(rowPosition, 4, btn)
+        btn.clicked.connect(
+            lambda *args, rowPosition=rowPosition: self.__getValByAddr(txtEditPosition, txtEditNewVal)
+        )
+
+        self.tblRes.resizeColumnsToContents()
+
+    ''' Проверка полей при изменении/поиске/откате тестовых данных '''
+    def __checkChgField(self, txtEditPosition, txtEditNewVal):
+        # Проверка на пустоту полей
+        if txtEditPosition.toPlainText() == "" or txtEditNewVal.toPlainText() == "":
+            self.lblMsg.setText(msgChgNum.emptyField)
+            return False
+        # Проверка на валидность позиции
+        intNum = -1
+        try:
+            intNum = int(txtEditPosition.toPlainText(), 16)
+        except:
+            try:
+                if txtEditPosition.toPlainText()[-1] == 'h':
+                    intNum = int(txtEditPosition.toPlainText()[:-1], 16)
+            except:
+                self.lblMsg.setText(msgChgNum.badPosition)
+                return False
+        if intNum >= len(self.workApi.currTestData.getLstTestData()):
+            self.lblMsg.setText(msgChgNum.badPosition)
+            return False
+        txtEditPosition.setText(hex(intNum)[2:])
+
+        # Проверка на валидность нового значения
+        try:
+            intNum = int(txtEditNewVal.toPlainText(), 16)
+        except:
+            self.lblMsg.setText(msgChgNum.badHexNum)
+            return False
+        txtEditNewVal.setText(hex(intNum)[2:])
+        return True
+
+    ''' Изменение тестовых данных '''
+    def __chgValueTestData(self, txtEditPosition, txtEditNewVal):
+        try:
+            if self.__checkChgField(txtEditPosition, txtEditNewVal):
+                self.workApi.currTestData.chgValue(hexPos=txtEditPosition.toPlainText(), newVal=txtEditNewVal.toPlainText())
+                self.updTblInputTest()
+                self.lblMsg.setText(msgChgNum.confirmChg)
+        except:
+            self.lblMsg.setText(msgChgNum.badAction)
+
+    ''' откат изменений в тестовых данных '''
+    def __cnclValueTestData(self, txtEditPosition, txtEditNewVal):
+        try:
+            if self.__checkChgField(txtEditPosition, txtEditNewVal):
+                self.workApi.currTestData.backStartValue(hexPos=txtEditPosition.toPlainText())
+                self.updTblInputTest()
+                self.lblMsg.setText(msgChgNum.confirmCancelChg)
+        except:
+            self.lblMsg.setText(msgChgNum.badAction)
+
+    ''' Получить значение по адресу в тестовых данных '''
+    def __getValByAddr(self, txtEditPosition, txtEditVal):
+        try:
+            if self.__checkChgField(txtEditPosition, txtEditVal):
+                findVal = self.workApi.currTestData.getValByPos(hexPos=txtEditPosition.toPlainText())
+                txtEditVal.setText(findVal)
+                self.lblMsg.setText(msgChgNum.confirmFind)
+        except:
+            self.lblMsg.setText(msgChgNum.badAction)
+
+    ''' Разворачивание теста '''
+    def openNewWndInputTest(self):
+        self.dialogTest = OpenTblWnd(self.tblInutTest)
+        self.dialogTest.show()
+
+    def openNewWndResData(self):
+        self.dialogRes = OpenTblWnd(self.tblRes)
+        self.dialogRes.show()
 
     """ Работа с файлами """
+    ''' Выбор файла для сохранения '''
     def loadTestResFile(self):
         wayFile = QtWidgets.QFileDialog.getOpenFileName(self, 'Выберите файл для сохранения')[0]
         self.workApi.setWayResData(wayFile=wayFile)
-        print("file res loaded: " + wayFile)
+        waySplit = wayFile.split('/')
+        self.lblResFile.setText(waySplit[len(waySplit) - 1])
 
-    ''' Сохранение '''
+    ''' Сохранение результата '''
     def saveTestRes(self):
         try:
             wayFile = QtWidgets.QFileDialog.getOpenFileName(self, 'Выберите файл для сохранения')[0]
@@ -84,6 +228,7 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
         except:
             self.lblMsg.setText(msgError.saveFile)
 
+    ''' Сохранение теста в файл '''
     def saveTestResByte(self):
         try:
             wayFile = QtWidgets.QFileDialog.getOpenFileName(self, 'Выберите файл для сохранения')[0]
@@ -110,6 +255,18 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
         except:
             self.lblMsg.setText(msgError.loadFile)
 
+    ''' Обновление таблицы с входным тестом '''
+    def updTblInputTest(self):
+        matrixTest = self.workApi.currTestData.makeMatrixData()
+        self.tblInutTest.setColumnCount(len(matrixTest[0]))
+        self.tblInutTest.setRowCount(len(matrixTest))
+        for i in range(len(matrixTest)):
+            for j in range(len(matrixTest[i])):
+                self.tblInutTest.setItem(i, j,
+                                         QtWidgets.QTableWidgetItem(matrixTest[i][j]))
+        self.tblInutTest.resizeColumnsToContents()
+
+    ''' Загрузка входного теста '''
     def loadInputTestFile(self):
         try:
             file = QtWidgets.QFileDialog.getOpenFileName(self, 'Выберите тестовый пример')[0]
@@ -124,12 +281,7 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
                     #self.txtInputTest.setText(data)
                     self.workApi.loadData(data=data, fileWay=file)
 
-                    self.tblInutTest.setColumnCount(len(self.workApi.currTestData.getLstTestData()[0]))
-                    self.tblInutTest.setRowCount(len(self.workApi.currTestData.getLstTestData()))
-                    for i in range(len(self.workApi.currTestData.getLstTestData())):
-                        for j in range(len(self.workApi.currTestData.getLstTestData()[0])):
-                            self.tblInutTest.setItem(i, j, QtWidgets.QTableWidgetItem(self.workApi.currTestData.getLstTestData()[i][j]))
-                    self.tblInutTest.resizeColumnsToContents()
+                    self.updTblInputTest()
             except:
                 self.lblInputTest.clear()
                 self.txtInputTest.clear()
@@ -253,12 +405,15 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
     ''' Добавление метода '''
     def addMethod(self):
         try:
-            if self.nameMethod.toPlainText() == '' or self.workApi.createMethod(self.nameMethod.toPlainText()) == StrRetConts.retBat:
+            if self.nameMethod.toPlainText() == '' or self.workApi.createMethod([self.nameMethod.toPlainText(), self.spnCountThread.value(),
+                                                                                 self.spnCountRowStart.value() - 1, self.spnCountRowEnd.value() - 1,
+                                                                                 self.spnSleepWork.value(), self.spnTimeWait.value()]) == StrRetConts.retBat:
                 return self.lblMsg.setText(msgError.addMethod)
             self.updateAfterSelect()
             self.lblMsg.setText(msgConfirm.addMethod)
             self.countMethod += 1
         except:
+            print('Ошибка:\n', traceback.format_exc())
             self.lblMsg.setText(msgError.addMethod)
 
     ''' Переход между методами '''
@@ -283,10 +438,65 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
     ''' Вычисление по выбранному методу '''
     def calcThisMethod(self):
         try:
-            startTime = time.time()
             res = self.workApi.calcMethod()
+            newThread = threading.Thread(target=self.updateCalc, args=[self.workApi, self.sgnUpdExec,
+                                                                       self.getAllBtnArray(), self.sgnUpdTbl])
+            newThread.start()
             if res == StrRetConts.retBat:
                 raise ValueError()
+        except:
+            print('Ошибка:\n', traceback.format_exc())
+            self.lblMsg.setText(msgError.successCalc)
+
+    ''' Получить все кнопки которые надо заблокировать на время вычисления '''
+    def getAllBtnArray(self):
+        return [self.btnCalcThisMethod, self.btnCalcTo, self.btnNextMethod, self.btnPrevMethod,
+                self.btnSaveResByte, self.btnSaveThisMethod, self.btnSaveAllMethod,
+                self.btnDelThisMethod, self.btnDelAllMethod, self.btnLoadMethods, self.btnAddMethod,
+                self.btnLoadResFile, self.btnLoadExecFile, self.btnLoadInputTest,
+                self.tblChgTest, self.btnAddStrEditTest, self.btnChgAll, self.btnClearChgAll, self.btnFindChgAll]
+
+    ''' Обновление данных формы во время работы метода '''
+    def updateCalc(self, workApi, sgnUpdExec, arrayBtnLock, sgnUpdTbl):
+        startTime = time.time()
+        try:
+            for btn in arrayBtnLock:
+                btn.setEnabled(False)
+            maxByte = workApi.getMaxCountByte()
+            oldThisCountByte = workApi.getThisCalcByte() - 1
+            while (workApi.checkEndCalc()):
+                if oldThisCountByte != workApi.getThisCalcByte():
+                    sgnUpdExec.emit((workApi.getThisCalcByte() + 1) * 100 / maxByte,
+                                    "Вычисление! номер байта: " +
+                                     str(workApi.getThisCalcByte() + 1) + " / " + str(maxByte),
+                                    int(time.time() - startTime)
+                                    )
+                    sgnUpdTbl.emit()
+                    oldThisCountByte = workApi.getThisCalcByte()
+            for btn in arrayBtnLock:
+                btn.setEnabled(True)
+            if workApi.getThisCalcByte() + 1 == maxByte:
+                msgSend = msgConfirm.successCalc
+            else:
+                msgSend = msgError.successCalc
+            sgnUpdExec.emit(0,
+                            msgSend,
+                            int(time.time() - startTime)
+                            )
+            sgnUpdTbl.emit()
+        except:
+            for btn in arrayBtnLock:
+                btn.setEnabled(True)
+            sgnUpdExec.emit(0,
+                            msgError.successCalc,
+                            int(time.time() - startTime)
+                            )
+            sgnUpdTbl.emit()
+
+    ''' Задать в результирующую таблицу данные '''
+    def setResTable(self, res):
+        try:
+            self.tblRes.setRowCount(0)
             i = 0
             moreStr = res.split('\n')
             self.tblRes.setRowCount(len(moreStr))
@@ -298,17 +508,16 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
                 self.tblRes.setItem(i, 3, QtWidgets.QTableWidgetItem(dataStr[3]))
                 i += 1
             self.tblRes.resizeColumnsToContents()
-            #self.txtRes.setText(res)
-            self.lcdNumber.display(int(time.time() - startTime))
-            self.lblMsg.setText(msgConfirm.successCalc)
         except:
-            self.lblMsg.setText(msgError.successCalc)
+            self.tblRes.setRowCount(0)
+            self.lblMsg.setText("нет результатов для этого метода")
 
-    """ Обновление данных на экране (label) """
+    """ Обновление данных на экране данных """
     def updateAfterSelect(self):
         self.lblThisMethod.setText(self.workApi.getNameThisMethod())
         self.lblPrevMethod.setText(self.workApi.getNamePrevMethod())
         self.lblNextMethod.setText(self.workApi.getNameNextMethod())
+        self.setResTable(res=self.workApi.dataForTable())
 
 def main():
     app = QtWidgets.QApplication(sys.argv)  # Новый экземпляр QApplication

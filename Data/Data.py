@@ -30,7 +30,7 @@ class Data(IData):
     def makeStrData(self):
         resStr = ""
         for note in self.lstNotes:
-            resStr += note.nameFunction + "|" + note.resFunction + "|" + ' '.join(note.lstBit) + "|" + ' '.join(note.lstPosition) + "\n"
+            resStr += note.nameFunction + "|" + note.resFunction + "|" + ' '.join(note.lstBit) + "|" + ' '.join(str(pos) for pos in note.lstPosition) + "\n"
         resStr = resStr[:-1]
         return resStr
 
@@ -57,4 +57,12 @@ class Data(IData):
         return copyLstNote
 
     def addOneNote(self, note):
-        self.lstNotes.append(note)
+        searchNote = self.searchForNameFunc(note.nameFunction)
+        if searchNote != 'not found':
+            newByte = list(set(note.lstPosition) - set(searchNote.lstPosition))
+            if newByte != []:
+                for oneBytePos in newByte:
+                    searchNote.lstBit.append(note.lstBit[note.lstPosition.index(oneBytePos)])
+                    searchNote.lstPosition.append(oneBytePos)
+        else:
+            self.lstNotes.append(note)

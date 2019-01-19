@@ -10,3 +10,7 @@ class IMethod(ABC):
     @abstractmethod
     def exportJSON(self):
         pass
+
+    @abstractmethod
+    def makeReport(self):
+        pass
