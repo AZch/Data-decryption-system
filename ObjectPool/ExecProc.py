@@ -64,9 +64,9 @@ class ExecProc(Thread):
         # self.__proc = proc
         # proc.wait() # ждем пока программа отработает и выдаст результат
         timeSleep = random.randint(1, 11)
-        print(timeSleep)
-        time.sleep(1)
-        print('after')
+        #print(timeSleep)
+        #time.sleep(1)
+        #print('after')
 
         dataStr = self.getStrFromFile(self.resFile) # получаем результат (функции, которые изменились)
         self.method.setResData(data=dataStr)

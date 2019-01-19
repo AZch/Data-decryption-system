@@ -2,13 +2,15 @@ from Methods.IMethod import IMethod
 from Data.Note import Note
 
 class Method(IMethod):
-    def __init__(self, name):
+    def __init__(self, name, countProc, timeWait):
         self.nextMethod = None
         self.prevMethod = None
         self.resData = None
         self._resStrData = ""
         self._baseResData = ""
         self.name = name
+        self.__countProc__ = countProc
+        self.__timeWait__ = timeWait
         pass
 
     def __getBaseData__(self, execProcPool, execFileWay, resFileWay, testData):
@@ -54,7 +56,7 @@ class Method(IMethod):
                 nameFunction = nameFunction.translate({ord(char): None for char in '\n'})
                 resFunction = resFunction.translate({ord(char): None for char in '\n'})
                 noteCompare.append(Note(nameFunction=nameFunction, resFunction=resFunction,  # добавляем новую запись
-                                         lstBit=[byte], lstPosition=[position]))
+                                         lstBit=byte, lstPosition=position))
             i += 1
         return noteCompare
 
@@ -67,6 +69,18 @@ class Method(IMethod):
 
         for note in notes:
             self.resData.addOneNote(note)
+
+    def addByPosRes(self, notes):
+        if notes == 'wait':
+            return notes
+        try:
+            resNote = Note("", "", notes[0].lstBit, notes[0].lstPosition)
+            for note in notes:
+                resNote.nameFunction += note.nameFunction + "\n"
+                resNote.resFunction += note.resFunction + "\n"
+            self.resData.addSimpleOneNote(resNote)
+        except:
+            pass
 
     # работа со следующими методами
     def next(self): # получить следующий метод

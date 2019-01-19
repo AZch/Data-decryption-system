@@ -32,6 +32,12 @@ class TestData():
         file.write(self.getStrTestData())
         file.close()
 
+    def getByteByPos(self, positions):
+        bytes = list()
+        for pos in positions:
+            bytes.append(self.__workLstTestData[pos])
+        return bytes
+
     def saveBaseToFile(self):
         fileSave = self.testFileWay
         file = open(fileSave, 'w')

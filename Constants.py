@@ -50,16 +50,6 @@ class msgWarning():
     noFileLoad = "Не выбран файл для работы"
     noReleaseMethod = "Данный метод не реализован"
 
-class jsonWord():
-    method = "method"
-    name = "name"
-    type = "type"
-
-    mCheck = "MethodCheck"
-
-    startTime = "startTime"
-    endTime = "endTime"
-
 class msgChgNum():
     badPosition = "Ошибка: данного адреса не обнаружено"
     badHexNum = "Ошибка: число не является шестнадцетиричным"
@@ -68,3 +58,31 @@ class msgChgNum():
     confirmCancelChg = "Откат прошел успешно"
     confirmFind = "Байт найден"
     badAction = "Произвести действие не удалось"
+
+class jsonWord():
+    method = "method"
+    name = "name"
+    type = "type"
+
+    mCheck = "MethodCheck"
+    mBruteForce = "MBruteForce"
+
+    mTimeSleep='timeSleep'
+    mPosStart='posStart'
+    mPosEnd='posEnd'
+    mCountProc='countProc'
+    mTimeWait='timeWait'
+    mLstPosition='lstPosition'
+    mCountRandom='countRandom'
+    mCountForce='countForce'
+
+    readCfg = 'readCfg'
+    readCfgMethods = 'methods'
+    readCfgFiles = 'readFiles'
+    readCfgChgVal = 'chgVal'
+
+    testFile='testFile'
+    execFile='execFile'
+    endResFile='endResFile'
+
+    configName='openCfg.json'

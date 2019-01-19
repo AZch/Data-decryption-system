@@ -2,6 +2,8 @@ import threading
 
 from Methods.Method import Method
 from FactoryMethods.FactoryMethodCheck import FactoryMethodCheck
+from FactoryMethods.FactoryMBruteForce import FactoryMBruteForce
+from FactoryMethods.FactoryMethod import FactoryMethod
 from Data.Data import Data
 from Data.TestData import TestData
 from Constants import StrRetConts
@@ -43,12 +45,14 @@ class WorkApi():
         self.currTestData = None       # 4. текущие введенные данные
         self.factoryMethods = None # 5. фабрика для создания методов
         self.resDataWay = ""
+        self.testDataWay=""
         self.execFileName = ""
         self.currThread = None
 
     """ 1. работа с данными """
     ''' 1.1. загрузка '''
     def loadData(self, data, fileWay):
+        self.testDataWay=fileWay
         self.currTestData = TestData(testFileWay=fileWay)
         self.currTestData.loadData(strData=data)
         return StrRetConts.retGood
@@ -116,13 +120,20 @@ class WorkApi():
         except:
             return StrRetConts.retBat
 
+    def setFactoryBruteForce(self):
+        try:
+            self.factoryMethods = FactoryMBruteForce()
+            return StrRetConts.retGood
+        except:
+            return StrRetConts.retBat
+
     def clearFactory(self):
         self.factoryMethods = None
 
     """ 4. работа с методами """
     ''' 4.1. создание методов '''
     def createMethod(self, nameMethod):
-        if (not isinstance(self.factoryMethods, FactoryMethodCheck)):
+        if (not isinstance(self.factoryMethods, FactoryMethod)):
             print("Не правильный формат фабрики метода")
             return StrRetConts.retBat
         self.__addMethod(method=self.factoryMethods.createMethod(param=nameMethod))
@@ -163,7 +174,6 @@ class WorkApi():
     def getThisCalcByte(self):
         return self.currMethod.getThisCalcByte()
 
-
     ''' 4.3. удаление метода '''
     def delMethod(self):
         if (self.currMethod == None):
@@ -188,25 +198,56 @@ class WorkApi():
             return StrRetConts.retBat
 
     ''' 4.4. загрузка метода(ов) из json файла '''
-    def loadJSONFile(self, dataStr):
+    def loadJSONMethods(self, dataStr):
         try:
             if dataStr[jsonWord.method] != None:
                 self.__parseOneMethod(dataStr=dataStr[jsonWord.method])
         except:
             countMethod = 1
-            while dataStr[jsonWord.method + str(countMethod)] != None:
-                self.__parseOneMethod(dataStr=dataStr[jsonWord.method + str(countMethod)][jsonWord.method])
-                countMethod += 1
-                try:
-                    dataStr[jsonWord.method + str(countMethod)]
-                except:
-                    return StrRetConts.retGood
+            try:
+                while dataStr[jsonWord.method + str(countMethod)] != None:
+                    self.__parseOneMethod(dataStr=dataStr[jsonWord.method + str(countMethod)][jsonWord.method])
+                    countMethod += 1
+                    try:
+                        dataStr[jsonWord.method + str(countMethod)]
+                    except:
+                        return StrRetConts.retGood
+            except:
+                return StrRetConts.retGood
+
+    ''' 4.4. загрузка метода(ов) из json файла '''
+    def loadJSONFiles(self, dataStr):
+        try:
+            loadFile = open(dataStr[jsonWord.testFile], 'r')
+            with loadFile:
+                data = loadFile.read()
+                self.loadData(data=data, fileWay=dataStr[jsonWord.testFile])
+        except:
+            pass
+        try:
+            self.execFileName = dataStr[jsonWord.execFile]
+        except:
+            pass
+        try:
+            self.resDataWay = dataStr[jsonWord.endResFile]
+        except:
+            pass
 
     ''' загрузка одного метода '''
     def __parseOneMethod(self, dataStr):
         if dataStr[jsonWord.type] == jsonWord.mCheck:
-            factoryMethodCheck = FactoryMethodCheck()
-            self.__addMethod(factoryMethodCheck.createMethod(dataStr[jsonWord.name]))
+            self.factoryMethods = FactoryMethodCheck()
+            self.__addMethod(self.factoryMethods.createMethod([dataStr[jsonWord.name], dataStr[jsonWord.mCountProc],
+                                                             dataStr[jsonWord.mPosStart], dataStr[jsonWord.mPosEnd],
+                                                             dataStr[jsonWord.mTimeSleep], dataStr[jsonWord.mTimeWait]]))
+        elif dataStr[jsonWord.type] == jsonWord.mBruteForce:
+            self.factoryMethods = FactoryMBruteForce()
+            lst = list()
+            lst.extend(
+                int(strPos) for strPos in dataStr[jsonWord.mLstPosition].split())
+            self.__addMethod(self.factoryMethods.createMethod([dataStr[jsonWord.name], dataStr[jsonWord.mCountProc],
+                                                               dataStr[jsonWord.mTimeWait], lst, dataStr[jsonWord.mCountForce]]))
+
         else:
             print("Данного метода еще нету")
 
@@ -240,6 +281,20 @@ class WorkApi():
             print("Неверный формат метода")
             return StrRetConts.retBat
 
+    def exportAllMethods(self):
+        if self.currMethod == None:
+            return {}
+        currMethod = self.currMethod
+        self.goStartMethod()
+        countMethods = 1
+        data = {}
+        data[jsonWord.method + str(countMethods)] = self.exportMethod()
+        while self.goNextMethod() != StrRetConts.retBat:
+            countMethods += 1
+            data[jsonWord.method + str(countMethods)] = self.exportMethod()
+        self.currMethod = currMethod
+        return data
+
     ''' 5.3. сохрание входных данных в файл '''
     def saveResData(self):
         if (isinstance(self.currMethod, Method)):
@@ -252,7 +307,6 @@ class WorkApi():
         return StrRetConts.retBat
 
     ''' 5.3. сохрание входных данных в файл '''
-
     def dataForTable(self):
         if (isinstance(self.currMethod, Method)):
             if (isinstance(self.currMethod.getResData(), Data)):
@@ -265,3 +319,5 @@ class WorkApi():
 
     def saveResDataByte(self):
         return self.currTestData.getStrTestData()
+
+

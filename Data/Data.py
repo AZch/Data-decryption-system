@@ -66,3 +66,6 @@ class Data(IData):
                     searchNote.lstPosition.append(oneBytePos)
         else:
             self.lstNotes.append(note)
+
+    def addSimpleOneNote(self, note):
+        self.lstNotes.append(note)
