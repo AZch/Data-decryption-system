@@ -153,7 +153,7 @@ class TestData():
         i = 0
         while i < len(self.__workLstTestData):
             for j in range(self.__yDiv):
-                strTestData += str(self.__workLstTestData[i]) + ','
+                strTestData += str(self.__workLstTestData[i]).upper() + ','
                 i += 1
             strTestData += '\\\n'
         strTestData = strTestData[:-3]
@@ -165,7 +165,7 @@ class TestData():
         i = 0
         while i < len(self.__baseLstTestData):
             for j in range(self.__yDiv):
-                strTestData += str(self.__baseLstTestData[i]) + ','
+                strTestData += str(self.__baseLstTestData[i]).upper() + ','
                 i += 1
             strTestData += '\\\n'
         strTestData = strTestData[:-3]

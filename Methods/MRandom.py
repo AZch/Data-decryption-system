@@ -27,8 +27,9 @@ class MRandom(Method):
         for onePos in self.__lstPosRand:
             lstStartValue.append(data.getLstTestData()[onePos])
 
-        countRand = 0
-        while countRand < self.__countRand:
+        self.thisCalcByte = 0
+        while self.thisCalcByte < self.__countRand:
+            print(data.getByteByPos(self.__lstPosRand))
             i = 0
             while i < len(self.__lstPosRand):
                data.randVal(hexPos=hex(self.__lstPosRand[i]))
@@ -42,12 +43,13 @@ class MRandom(Method):
                 pass
             self.addByPosRes(notes=self.compareData(position=self.__lstPosRand, byte=data.getByteByPos(self.__lstPosRand)))  # добавлем различия
 
-        countRand += 1
+            self.thisCalcByte += 1
         i = 0
         for onePos in self.__lstPosRand:
             data.chgValue(hex(onePos)[2:], lstStartValue[i])
             i += 1
         data.saveBaseToFile()
+        self.thisCalcByte = self.getMaxCountByte()
         return self.resData
 
     def exportJSON(self):

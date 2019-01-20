@@ -61,6 +61,7 @@ class MBruteForce(Method):
             data.chgValue(hex(onePos)[2:], lstStartValue[i])
             i += 1
         data.saveBaseToFile()
+        self.thisCalcByte = self.getMaxCountByte()
         return self.resData
 
     def exportJSON(self):

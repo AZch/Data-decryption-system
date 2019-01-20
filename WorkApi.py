@@ -155,7 +155,7 @@ class WorkApi():
         self.__addMethod(method=self.factoryMethods.createMethod(param=nameMethod))
 
     def getMaxCountByte(self):
-        return self.currMethod.getMaxCountByte(self.currTestData)
+        return self.currMethod.getMaxCountByte()
 
     def __addMethod(self, method):
         try:

@@ -30,6 +30,7 @@ class MCompBase(Method):
         self.thisCalcByte = 1
 
         data.saveBaseToFile()
+        self.thisCalcByte = self.getMaxCountByte()
         return self.resData
 
     def exportJSON(self):
