@@ -17,6 +17,7 @@ from Constants import jsonWord
 from Constants import NumConst
 from Constants import StrConst
 from Constants import msgChgNum
+from Constants import typeMethod
 
 import design  # Это наш конвертированный файл дизайна
 import designOpenTbl
@@ -34,11 +35,31 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
         self.setupUi(self)  # Это нужно для инициализации нашего дизайна
         self.countMethod = 0
 
-        self.cmbMethods.addItems(["Проверка", "Метод проверки"])
+        self.cmbMethods.addItems([typeMethod.typeCheck, typeMethod.typeBruteForce,
+                                  typeMethod.typeRandom, typeMethod.typeCompBase])
         self.__initAPI()
         self.__initBtn()
         self.__initSgn()
         self.__initResTbl()
+        self.__initDataFromCfg()
+        self.workApi.setFactoryCheck()
+
+    def __initDataFromCfg(self):
+        file = open(jsonWord.configName, 'r')
+        with file:
+            data = file.read()
+            self.jsonData = json.loads(data)
+            self.currCfg = self.jsonData[jsonWord.readCfg]
+            self.currCfgMethods = self.jsonData[self.currCfg][jsonWord.readCfgMethods]
+            self.currCfgFiles = self.jsonData[self.currCfg][jsonWord.readCfgFiles]
+            self.currCfgChgVal = self.jsonData[self.currCfg][jsonWord.readCfgChgVal]
+
+            self.workApi.loadJSONMethods(dataStr=self.jsonData[self.currCfgMethods])
+            self.updateAfterSelect()
+            self.workApi.loadJSONFiles(dataStr=self.jsonData[self.currCfgFiles])
+            self.updTblInputTest()
+            self.updNameFiles()
+            self.updChgTbl(self.jsonData[self.currCfgChgVal])
 
     ''' Инициализация таблицы с результатом '''
     def __initResTbl(self):
@@ -55,7 +76,6 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
     ''' Инициализация API '''
     def __initAPI(self):
         self.workApi = WorkApi()
-        self.workApi.setFactoryCheck()
 
     ''' Инициализация сигналов '''
     def __initSgn(self):
@@ -66,7 +86,7 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
     def __initBtn(self):
         self.cmbMethods.activated[str].connect(self.setFactory)
         self.btnLoadExecFile.clicked.connect(self.loadExecFile)
-        self.btnExit.clicked.connect(QtCore.QCoreApplication.instance().quit)
+        self.btnExit.clicked.connect(self.__exitForm)
         self.btnLoadInputTest.clicked.connect(self.loadInputTestFile)
         self.btnAddMethod.clicked.connect(self.addMethod)
         self.btnCalcThisMethod.clicked.connect(self.calcThisMethod)
@@ -100,15 +120,20 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
 
     ''' Добавление новых кнопок и полей для изменения входных данных '''
     def addStrToEditTest(self):
+        self.addWithStartData("0", "00")
+
+    def addWithStartData(self, posStr, byteStr):
         rowPosition = self.tblChgTest.rowCount()
         self.tblChgTest.insertRow(rowPosition)
 
         # Поля для позиции
         txtEditPosition = QtWidgets.QTextEdit(self.tblChgTest)
+        txtEditPosition.setText(posStr)
         self.tblChgTest.setCellWidget(rowPosition, 0, txtEditPosition)
 
         # Поле для нового значения
         txtEditNewVal = QtWidgets.QTextEdit(self.tblChgTest)
+        txtEditNewVal.setText(byteStr)
         self.tblChgTest.setCellWidget(rowPosition, 1, txtEditNewVal)
 
         # Кнопка применения введенных изменений
@@ -121,7 +146,7 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
 
         # Кнопка отмены изменений
         btn = QtWidgets.QPushButton(self.tblChgTest)
-        btn.setText('Убрать')
+        btn.setText('Начальное')
         self.tblChgTest.setCellWidget(rowPosition, 3, btn)
         btn.clicked.connect(
             lambda *args, rowPosition=rowPosition: self.__cnclValueTestData(txtEditPosition, txtEditNewVal)
@@ -135,7 +160,28 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
             lambda *args, rowPosition=rowPosition: self.__getValByAddr(txtEditPosition, txtEditNewVal)
         )
 
+        # Кнопка удаления строки
+        btn = QtWidgets.QPushButton(self.tblChgTest)
+        btn.setText('Убрать')
+        self.tblChgTest.setCellWidget(rowPosition, 5, btn)
+        btn.clicked.connect(
+            lambda *args, rowPosition=rowPosition: self.__delRowChgTbl(self.tblChgTest.currentRow())
+        )
+
         self.tblRes.resizeColumnsToContents()
+
+    def __delRowChgTbl(self, row):
+        self.tblChgTest.removeRow(row)
+
+    def updChgTbl(self, data):
+        try:
+            count = 0
+            # True, тк как читаем до тех пор, пока в данных записи будут
+            while True:
+                self.addWithStartData(data[str(count)].split("->")[0], data[str(count)].split("->")[1])
+                count += 1
+        except:
+            pass
 
     ''' Проверка полей при изменении/поиске/откате тестовых данных '''
     def __checkChgField(self, txtEditPosition, txtEditNewVal):
@@ -187,6 +233,61 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
                 self.lblMsg.setText(msgChgNum.confirmCancelChg)
         except:
             self.lblMsg.setText(msgChgNum.badAction)
+
+    def makeCfg(self):
+        dataToCfg = {}
+        dataToCfg[jsonWord.readCfg] = self.currCfg
+        dataToCfg[self.currCfg] = {}
+        dataToCfg[self.currCfg][jsonWord.readCfgMethods] = self.currCfgMethods
+        dataToCfg[self.currCfg][jsonWord.readCfgFiles] = self.currCfgFiles
+        dataToCfg[self.currCfg][jsonWord.readCfgChgVal] = self.currCfgChgVal
+
+        dataToCfg[self.currCfgMethods] = self.workApi.exportAllMethods()
+
+        dataToCfg[self.currCfgFiles] = {}
+        dataToCfg[self.currCfgFiles][jsonWord.testFile] = self.workApi.testDataWay
+        dataToCfg[self.currCfgFiles][jsonWord.execFile] = self.workApi.execFileName
+        dataToCfg[self.currCfgFiles][jsonWord.endResFile] = self.workApi.resDataWay
+
+        rowChgTblCount = self.tblChgTest.rowCount()
+        dataToCfg[self.currCfgChgVal] = {}
+        for i in range(rowChgTblCount):
+            dataToCfg[self.currCfgChgVal][str(i)] = self.tblChgTest.cellWidget(i, 0).toPlainText() + \
+                                                    "->" + self.tblChgTest.cellWidget(i, 1).toPlainText()
+        return dataToCfg
+
+    def __compareDataInCfg(self, firstData, secondData):
+        firstDataStr = str(firstData)
+        secondDataStr = str(secondData)
+        if len(firstDataStr) != len(secondDataStr):
+            return False
+        for i in range(len(firstDataStr)):
+            if firstDataStr[i] != secondDataStr[i]:
+                return False
+        return True
+
+    def compareCfg(self, firstCfg, secondCfg):
+        if not self.__compareDataInCfg(firstCfg[self.currCfgMethods], secondCfg[self.currCfgMethods]):
+            return False
+        if not self.__compareDataInCfg(firstCfg[self.currCfgFiles], secondCfg[self.currCfgFiles]):
+            return False
+        if not self.__compareDataInCfg(firstCfg[self.currCfgChgVal], secondCfg[self.currCfgChgVal]):
+            return False
+        return True
+
+    ''' Закрытие формы '''
+    def __exitForm(self):
+        dataToCfg = self.makeCfg()
+        if not self.compareCfg(dataToCfg, self.jsonData):
+            qMessBox = QtWidgets.QMessageBox
+            if qMessBox.question(self, 'Перезапись конфига', 'С последнего запуска вы внесли изменения в программу, '
+                                                             'перезаписать конфиг с текущими значениями?',
+                                 qMessBox.Yes | qMessBox.No) == qMessBox.Yes:
+                fileCfg = open(jsonWord.configName, 'w')
+                fileCfg.write(json.dumps(dataToCfg))
+                fileCfg.close()
+
+        QtCore.QCoreApplication.instance().quit()
 
     ''' Получить значение по адресу в тестовых данных '''
     def __getValByAddr(self, txtEditPosition, txtEditVal):
@@ -257,14 +358,17 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
 
     ''' Обновление таблицы с входным тестом '''
     def updTblInputTest(self):
-        matrixTest = self.workApi.currTestData.makeMatrixData()
-        self.tblInutTest.setColumnCount(len(matrixTest[0]))
-        self.tblInutTest.setRowCount(len(matrixTest))
-        for i in range(len(matrixTest)):
-            for j in range(len(matrixTest[i])):
-                self.tblInutTest.setItem(i, j,
-                                         QtWidgets.QTableWidgetItem(matrixTest[i][j]))
-        self.tblInutTest.resizeColumnsToContents()
+        try:
+            matrixTest = self.workApi.currTestData.makeMatrixData()
+            self.tblInutTest.setColumnCount(len(matrixTest[0]))
+            self.tblInutTest.setRowCount(len(matrixTest))
+            for i in range(len(matrixTest)):
+                for j in range(len(matrixTest[i])):
+                    self.tblInutTest.setItem(i, j,
+                                             QtWidgets.QTableWidgetItem(matrixTest[i][j]))
+            self.tblInutTest.resizeColumnsToContents()
+        except:
+            pass
 
     ''' Загрузка входного теста '''
     def loadInputTestFile(self):
@@ -289,6 +393,27 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
             self.lblMsg.setText(msgConfirm.loadFile)
         except:
             self.lblMsg.setText(msgError.loadFile)
+
+    def updNameFiles(self):
+        try:
+            file = self.workApi.testDataWay
+            waySplit = file.split('/')
+            self.lblInputTest.setText(waySplit[len(waySplit) - 1])
+        except:
+            pass
+        try:
+            file = self.workApi.execFileName
+            waySplit = file.split('/')
+            self.lblExecFile.setText(waySplit[len(waySplit) - 1])
+        except:
+            pass
+        try:
+            file = self.workApi.resDataWay
+            waySplit = file.split('/')
+            self.lblExecFile.setText(waySplit[len(waySplit) - 1])
+        except:
+            pass
+
 
     """ Работа с методами """
     ''' Сохранение метода '''
@@ -315,7 +440,7 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
                 loadFile = open(file, 'r')
                 with loadFile:
                     data = loadFile.read()
-                    self.workApi.loadJSONFile(dataStr=json.loads(data))
+                    self.workApi.loadJSONMethods(dataStr=json.loads(data))
             except:
                 return self.lblMsg.setText(msgError.loadFile)
             self.lblMsg.setText(msgConfirm.loadFile)
@@ -392,22 +517,54 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
 
     ''' Задание фабрик методов '''
     def setFactory(self, text):
-        if (text == "Проверка"):
+        if (text == typeMethod.typeCheck):
             self.workApi.setFactoryCheck()
-        elif (text == "Метод проверки"):
-            self.workApi.clearFactory()
-            return self.lblMsg.setText(msgWarning.noReleaseMethod)
+            self.lblStartAllPos.setText('c')
+            self.lblToCount.setText('по')
+        elif (text == typeMethod.typeBruteForce):
+            self.workApi.setFactoryBruteForce()
+            self.lblStartAllPos.setText('Позиции (16 ричная, без 0х и h)')
+            self.lblToCount.setText('Количество раз,-1 полный перебор')
+        elif (text == typeMethod.typeRandom):
+            self.workApi.setFactoryRandom()
+            self.lblStartAllPos.setText('Позиции (16 ричная, без 0х и h)')
+            self.lblToCount.setText('Количество раз')
+        elif (text == typeMethod.typeCompBase):
+            self.workApi.setFactoryRandom()
+            self.lblStartAllPos.setText('')
+            self.lblToCount.setText('')
         else:
             self.workApi.clearFactory()
             return self.lblMsg.setText(msgWarning.noReleaseMethod)
         self.lblMsg.setText(msgConfirm.setReleaseMethod)
 
+    def getArrPos(self):
+        strLst = self.txtPosStart.toPlainText().split()
+        intLst = list()
+        for pos in strLst:
+            intLst.append(int(pos))
+        return intLst
+
+    def makeArrParam(self):
+        if str(self.cmbMethods.currentText()) == typeMethod.typeCheck:
+            return [self.nameMethod.toPlainText(), self.spnCountThread.value(),
+                     int(self.txtPosStart.toPlainText()), int(self.txtPosEnd.toPlainText()),
+                     self.spnSleepWork.value(), self.spnTimeWait.value()]
+        elif str(self.cmbMethods.currentText()) == typeMethod.typeBruteForce:
+            return [self.nameMethod.toPlainText(), self.spnCountThread.value(),
+                    self.spnTimeWait.value(), self.getArrPos(), int(self.txtPosEnd.toPlainText())]
+        elif str(self.cmbMethods.currentText()) == typeMethod.typeRandom:
+            return [self.nameMethod.toPlainText(), self.spnCountThread.value(),
+                    self.spnTimeWait.value(), self.getArrPos(), int(self.txtPosEnd.toPlainText())]
+        elif str(self.cmbMethods.currentText()) == typeMethod.typeCompBase:
+            return [self.nameMethod.toPlainText(), self.spnTimeWait.value()]
+        else:
+            return []
+
     ''' Добавление метода '''
     def addMethod(self):
         try:
-            if self.nameMethod.toPlainText() == '' or self.workApi.createMethod([self.nameMethod.toPlainText(), self.spnCountThread.value(),
-                                                                                 self.spnCountRowStart.value() - 1, self.spnCountRowEnd.value() - 1,
-                                                                                 self.spnSleepWork.value(), self.spnTimeWait.value()]) == StrRetConts.retBat:
+            if self.nameMethod.toPlainText() == '' or self.workApi.createMethod(self.makeArrParam()) == StrRetConts.retBat:
                 return self.lblMsg.setText(msgError.addMethod)
             self.updateAfterSelect()
             self.lblMsg.setText(msgConfirm.addMethod)

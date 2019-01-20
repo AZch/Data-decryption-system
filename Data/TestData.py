@@ -1,3 +1,5 @@
+import random
+
 class TestData():
     def __init__(self, testFileWay=""):
         self.__baseLstTestData = []
@@ -23,14 +25,22 @@ class TestData():
         self.__baseLstTestData = self.copyLstTestData()
         return self.__workLstTestData
 
-    def saveToFile(self):
+    def saveToFile(self, isBaseFile):
         fileSave = self.testFileWay
         file = open(fileSave, 'w')
         if file == '':
             return fileSave + " not open"
-
-        file.write(self.getStrTestData())
+        if isBaseFile:
+            file.write(self.saveBaseToFile())
+        else:
+            file.write(self.getStrTestData())
         file.close()
+
+    def getByteByPos(self, positions):
+        bytes = list()
+        for pos in positions:
+            bytes.append(self.__workLstTestData[pos])
+        return bytes
 
     def saveBaseToFile(self):
         fileSave = self.testFileWay
@@ -50,6 +60,12 @@ class TestData():
         else:
             self.__workLstTestData[pos] = res
 
+    def randVal(self, hexPos, maxVal="ff", minVal="00"):
+        minVal = int('0x' + minVal, 16)
+        maxVal = int('0x' + maxVal, 16)
+        newVal = random.randint(minVal, maxVal)
+        self.chgValue(hexPos=hexPos, newVal=hex(newVal)[2:])
+
     def decDot(self, pos):
         if hex(int('0x' + self.__workLstTestData[pos], 16))[2:] == '0':
             self.__workLstTestData[pos] = 'ff'
@@ -65,6 +81,8 @@ class TestData():
 
     def chgValue(self, hexPos, newVal):
         intVal = int(hexPos, 16)
+        if len(newVal) == 1:
+            newVal += "0" + str(newVal)
         self.__workLstTestData[intVal] = newVal
         return self.__workLstTestData
 

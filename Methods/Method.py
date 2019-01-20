@@ -2,18 +2,20 @@ from Methods.IMethod import IMethod
 from Data.Note import Note
 
 class Method(IMethod):
-    def __init__(self, name):
+    def __init__(self, name, countProc, timeWait):
         self.nextMethod = None
         self.prevMethod = None
         self.resData = None
         self._resStrData = ""
         self._baseResData = ""
         self.name = name
+        self.__countProc__ = countProc
+        self.__timeWait__ = timeWait
         pass
 
-    def __getBaseData__(self, execProcPool, execFileWay, resFileWay, testData):
+    def __getBaseData__(self, execProcPool, execFileWay, resFileWay, testData, isBase):
         proc = self.__getProc__(procPool=execProcPool, execFileWay=execFileWay, resFileWay=resFileWay,
-                                testData=testData, byte=0, bytePos=0)
+                                testData=testData, byte=0, bytePos=0, isBase=isBase)
         proc.start()
         # ожидаем завершения потока и получаем новый
         while self.addRes(execProcPool.wait()) == 'wait':
@@ -25,13 +27,14 @@ class Method(IMethod):
         self._baseResData = self._resStrData
         return self._baseResData
 
-    def __getProc__(self, procPool, execFileWay, resFileWay, testData, bytePos, byte):
+    def __getProc__(self, procPool, execFileWay, resFileWay, testData, bytePos, byte, isBase):
         proc = 'wait'
         while proc == 'wait':
             proc = procPool.getProc(execFile=execFileWay, resFile=resFileWay,  # инициализуем поток
                                         bytePos=bytePos,
                                         byte=byte,
-                                        method=self, testData=testData)
+                                        method=self, testData=testData,
+                                        isBaseFile=isBase)
         return proc
 
     def compareData(self, position, byte):
@@ -54,7 +57,7 @@ class Method(IMethod):
                 nameFunction = nameFunction.translate({ord(char): None for char in '\n'})
                 resFunction = resFunction.translate({ord(char): None for char in '\n'})
                 noteCompare.append(Note(nameFunction=nameFunction, resFunction=resFunction,  # добавляем новую запись
-                                         lstBit=[byte], lstPosition=[position]))
+                                         lstBit=byte, lstPosition=position))
             i += 1
         return noteCompare
 
@@ -67,6 +70,18 @@ class Method(IMethod):
 
         for note in notes:
             self.resData.addOneNote(note)
+
+    def addByPosRes(self, notes):
+        if notes == 'wait':
+            return notes
+        try:
+            resNote = Note("", "", notes[0].lstBit, notes[0].lstPosition)
+            for note in notes:
+                resNote.nameFunction += note.nameFunction + "/"
+                resNote.resFunction += note.resFunction + "/"
+            self.resData.addSimpleOneNote(resNote)
+        except:
+            pass
 
     # работа со следующими методами
     def next(self): # получить следующий метод

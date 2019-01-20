@@ -11,17 +11,17 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_openTbl(object):
     def setupUi(self, openTbl):
         openTbl.setObjectName("openTbl")
-        openTbl.resize(1022, 649)
+        openTbl.resize(861, 484)
         self.tblData = QtWidgets.QTableWidget(openTbl)
-        self.tblData.setGeometry(QtCore.QRect(10, 20, 1001, 591))
+        self.tblData.setGeometry(QtCore.QRect(10, 10, 841, 431))
         self.tblData.setObjectName("tblData")
         self.tblData.setColumnCount(0)
         self.tblData.setRowCount(0)
         self.btnUpdTbl = QtWidgets.QPushButton(openTbl)
-        self.btnUpdTbl.setGeometry(QtCore.QRect(10, 0, 75, 23))
+        self.btnUpdTbl.setGeometry(QtCore.QRect(590, 450, 111, 23))
         self.btnUpdTbl.setObjectName("btnUpdTbl")
         self.btnExit = QtWidgets.QPushButton(openTbl)
-        self.btnExit.setGeometry(QtCore.QRect(940, 610, 75, 23))
+        self.btnExit.setGeometry(QtCore.QRect(740, 450, 111, 23))
         self.btnExit.setObjectName("btnExit")
 
         self.retranslateUi(openTbl)

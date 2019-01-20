@@ -1,0 +1,4 @@
+{"readCfg": "default", 
+"default": {"methods": "loadMehtods", "readFiles": "ReadFiles", "chgVal": "chgValue"}, 
+"loadMehtods": {}, 
+"ReadFiles": {"testFile": "", "execFile": "", "endResFile": ""}, "chgValue": {}}

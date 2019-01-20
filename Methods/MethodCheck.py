@@ -13,12 +13,10 @@ from threading import Thread
 class MethodCheck(Method):
 
     def __init__(self, name, timeSleep, posStart, posEnd, countProc, timeWait):
-        super().__init__(name=name)
+        super().__init__(name=name, countProc=countProc, timeWait=timeWait)
         self.__timeSleep = timeSleep
         self.__posStart = posStart
         self.__posEnd = posEnd
-        self.__countProc = countProc
-        self.__timeWait = timeWait
         self.thisCalcStr = 0
         self.thisCalcByte = 0
 
@@ -34,9 +32,9 @@ class MethodCheck(Method):
             return 0
 
         self.resData = Data() # инициализирем объект данных для результата
-        execProcPool = ExecProcPool(self.__countProc, maxWait=self.__timeWait) # инициализируем заданное количество процессов
+        execProcPool = ExecProcPool(self.__countProc__, maxWait=self.__timeWait__) # инициализируем заданное количество процессов
         isBaseData = self.__getBaseData__(execProcPool=execProcPool, execFileWay=execFileWay,
-                                          resFileWay=resFileWay, testData=testData)
+                                          resFileWay=resFileWay, testData=testData, isBase=False)
         if isBaseData == 0:
             return isBaseData
 
@@ -50,19 +48,19 @@ class MethodCheck(Method):
             # получаем новый поток
             proc = self.__getProc__(procPool=execProcPool, execFileWay=execFileWay, resFileWay=resFileWay,
                                     testData=testData, byte=testData.getLstTestData()[pos],
-                                    bytePos=pos)
+                                    bytePos=pos, isBase=False)
             proc.start() # запускаем поток (запускается бат файл и формируется список результатов)
             while self.addRes(execProcPool.wait()) == 'wait': # ожидаем пока не будет доступен поток
                 pass
-            self.addRes(notes=self.compareData(position=pos, byte=testData.getLstTestData()[pos]))  # добавлем различия
+            self.addRes(notes=self.compareData(position=[pos], byte=[testData.getLstTestData()[pos]]))  # добавлем различия
             testData.decDot(pos)
             pos += 1
         testData.saveToFile() # сохраняем последний раз файл с правильными данными
         # дожидаемся последний поток
         while self.addRes(execProcPool.wait()) == 'wait':  # ожидаем пока не будет доступен поток
             pass
-        self.addRes(notes=self.compareData(position=posByteSave,
-                                                         byte=testData.getLstTestData()[posByteSave]))  # добавлем различия
+        self.addRes(notes=self.compareData(position=[posByteSave],
+                                                         byte=[testData.getLstTestData()[posByteSave]]))  # добавлем различия
         testData.saveBaseToFile()
         return self.resData
 
@@ -71,6 +69,11 @@ class MethodCheck(Method):
         data[jsonWord.method] = {
             jsonWord.name : self.name,
             jsonWord.type : jsonWord.mCheck,
+            jsonWord.mTimeSleep : self.__timeSleep,
+            jsonWord.mTimeWait : self.__timeWait__,
+            jsonWord.mCountProc : self.__countProc__,
+            jsonWord.mPosStart : self.__posStart,
+            jsonWord.mPosEnd : self.__posEnd
         }
         return data
 
