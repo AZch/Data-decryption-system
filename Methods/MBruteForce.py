@@ -88,3 +88,6 @@ class MBruteForce(Method):
             for i in range(countFun):
                 resStr += splitFun[i] + "|" + splitRes[i] + "\n"
         return resStr
+
+    def getMaxCountByte(self):
+        return (self.__countForce)

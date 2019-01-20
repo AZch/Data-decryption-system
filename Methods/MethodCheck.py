@@ -17,8 +17,6 @@ class MethodCheck(Method):
         self.__timeSleep = timeSleep
         self.__posStart = posStart
         self.__posEnd = posEnd
-        self.thisCalcStr = 0
-        self.thisCalcByte = 0
 
     def makeReport(self):
         resStr = "Функции: \n"
@@ -55,7 +53,7 @@ class MethodCheck(Method):
             self.addRes(notes=self.compareData(position=[pos], byte=[testData.getLstTestData()[pos]]))  # добавлем различия
             testData.decDot(pos)
             pos += 1
-        testData.saveToFile() # сохраняем последний раз файл с правильными данными
+        testData.saveToFile(isBaseFile=False) # сохраняем последний раз файл с правильными данными
         # дожидаемся последний поток
         while self.addRes(execProcPool.wait()) == 'wait':  # ожидаем пока не будет доступен поток
             pass
@@ -77,11 +75,5 @@ class MethodCheck(Method):
         }
         return data
 
-    def getMaxCountByte(self, testData):
+    def getMaxCountByte(self):
         return (self.__posEnd + 1 - self.__posStart)
-
-    def getThisCalcStr(self):
-        return self.thisCalcStr
-
-    def getThisCalcByte(self):
-        return self.thisCalcByte

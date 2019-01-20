@@ -184,9 +184,6 @@ class WorkApi():
     def checkEndCalc(self):
         return self.currThread.isAlive()
 
-    def getThisCalcStr(self):
-        return self.currMethod.getThisCalcStr()
-
     def getThisCalcByte(self):
         return self.currMethod.getThisCalcByte()
 

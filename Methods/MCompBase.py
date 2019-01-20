@@ -27,6 +27,7 @@ class MCompBase(Method):
         while self.addRes(execProcPool.wait()) == 'wait':  # ожидаем пока не будет доступен поток
             pass
         self.addRes(notes=self.compareData(position=[], byte=[]))  # добавлем различия
+        self.thisCalcByte = 1
 
         data.saveBaseToFile()
         return self.resData
@@ -45,3 +46,6 @@ class MCompBase(Method):
         for note in self.resData.getData():
             resStr += note.nameFunction + "|" + note.resFunction + "\n"
         return resStr
+
+    def getMaxCountByte(self):
+        return (1)

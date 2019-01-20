@@ -31,7 +31,7 @@ class TestData():
         if file == '':
             return fileSave + " not open"
         if isBaseFile:
-            file.write(self.saveBaseToFile())
+            file.write(self.getBaseStrTestData())
         else:
             file.write(self.getStrTestData())
         file.close()
@@ -82,7 +82,7 @@ class TestData():
     def chgValue(self, hexPos, newVal):
         intVal = int(hexPos, 16)
         if len(newVal) == 1:
-            newVal += "0" + str(newVal)
+            newVal = "0" + str(newVal)
         self.__workLstTestData[intVal] = newVal
         return self.__workLstTestData
 

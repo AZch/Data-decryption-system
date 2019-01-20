@@ -11,7 +11,11 @@ class Method(IMethod):
         self.name = name
         self.__countProc__ = countProc
         self.__timeWait__ = timeWait
+        self.thisCalcByte = 0
         pass
+
+    def getThisCalcByte(self):
+        return self.thisCalcByte
 
     def __getBaseData__(self, execProcPool, execFileWay, resFileWay, testData, isBase):
         proc = self.__getProc__(procPool=execProcPool, execFileWay=execFileWay, resFileWay=resFileWay,

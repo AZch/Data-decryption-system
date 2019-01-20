@@ -14,3 +14,7 @@ class IMethod(ABC):
     @abstractmethod
     def makeReport(self):
         pass
+
+    @abstractmethod
+    def getMaxCountByte(self):
+        pass

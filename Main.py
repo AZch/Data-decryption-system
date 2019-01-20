@@ -410,7 +410,7 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
         try:
             file = self.workApi.resDataWay
             waySplit = file.split('/')
-            self.lblExecFile.setText(waySplit[len(waySplit) - 1])
+            self.lblResFile.setText(waySplit[len(waySplit) - 1])
         except:
             pass
 
@@ -530,7 +530,7 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
             self.lblStartAllPos.setText('Позиции (16 ричная, без 0х и h)')
             self.lblToCount.setText('Количество раз')
         elif (text == typeMethod.typeCompBase):
-            self.workApi.setFactoryRandom()
+            self.workApi.setFactoryCompBase()
             self.lblStartAllPos.setText('')
             self.lblToCount.setText('')
         else:
