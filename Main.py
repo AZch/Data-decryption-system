@@ -542,7 +542,7 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
         strLst = self.txtPosStart.toPlainText().split()
         intLst = list()
         for pos in strLst:
-            intLst.append(int(pos))
+            intLst.append(int('0x' + pos, 16))
         return intLst
 
     def makeArrParam(self):
