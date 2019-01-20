@@ -13,9 +13,9 @@ class Method(IMethod):
         self.__timeWait__ = timeWait
         pass
 
-    def __getBaseData__(self, execProcPool, execFileWay, resFileWay, testData):
+    def __getBaseData__(self, execProcPool, execFileWay, resFileWay, testData, isBase):
         proc = self.__getProc__(procPool=execProcPool, execFileWay=execFileWay, resFileWay=resFileWay,
-                                testData=testData, byte=0, bytePos=0)
+                                testData=testData, byte=0, bytePos=0, isBase=isBase)
         proc.start()
         # ожидаем завершения потока и получаем новый
         while self.addRes(execProcPool.wait()) == 'wait':
@@ -27,13 +27,14 @@ class Method(IMethod):
         self._baseResData = self._resStrData
         return self._baseResData
 
-    def __getProc__(self, procPool, execFileWay, resFileWay, testData, bytePos, byte):
+    def __getProc__(self, procPool, execFileWay, resFileWay, testData, bytePos, byte, isBase):
         proc = 'wait'
         while proc == 'wait':
             proc = procPool.getProc(execFile=execFileWay, resFile=resFileWay,  # инициализуем поток
                                         bytePos=bytePos,
                                         byte=byte,
-                                        method=self, testData=testData)
+                                        method=self, testData=testData,
+                                        isBaseFile=isBase)
         return proc
 
     def compareData(self, position, byte):
@@ -76,8 +77,8 @@ class Method(IMethod):
         try:
             resNote = Note("", "", notes[0].lstBit, notes[0].lstPosition)
             for note in notes:
-                resNote.nameFunction += note.nameFunction + "\n"
-                resNote.resFunction += note.resFunction + "\n"
+                resNote.nameFunction += note.nameFunction + "/"
+                resNote.resFunction += note.resFunction + "/"
             self.resData.addSimpleOneNote(resNote)
         except:
             pass

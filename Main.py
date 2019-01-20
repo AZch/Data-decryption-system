@@ -17,6 +17,7 @@ from Constants import jsonWord
 from Constants import NumConst
 from Constants import StrConst
 from Constants import msgChgNum
+from Constants import typeMethod
 
 import design  # Это наш конвертированный файл дизайна
 import designOpenTbl
@@ -34,7 +35,8 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
         self.setupUi(self)  # Это нужно для инициализации нашего дизайна
         self.countMethod = 0
 
-        self.cmbMethods.addItems(["Проверка", "Перебор"])
+        self.cmbMethods.addItems([typeMethod.typeCheck, typeMethod.typeBruteForce,
+                                  typeMethod.typeRandom, typeMethod.typeCompBase])
         self.__initAPI()
         self.__initBtn()
         self.__initSgn()
@@ -515,10 +517,22 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
 
     ''' Задание фабрик методов '''
     def setFactory(self, text):
-        if (text == "Проверка"):
+        if (text == typeMethod.typeCheck):
             self.workApi.setFactoryCheck()
-        elif (text == "Перебор"):
+            self.lblStartAllPos.setText('c')
+            self.lblToCount.setText('по')
+        elif (text == typeMethod.typeBruteForce):
             self.workApi.setFactoryBruteForce()
+            self.lblStartAllPos.setText('Позиции (16 ричная, без 0х и h)')
+            self.lblToCount.setText('Количество раз,-1 полный перебор')
+        elif (text == typeMethod.typeRandom):
+            self.workApi.setFactoryRandom()
+            self.lblStartAllPos.setText('Позиции (16 ричная, без 0х и h)')
+            self.lblToCount.setText('Количество раз')
+        elif (text == typeMethod.typeCompBase):
+            self.workApi.setFactoryRandom()
+            self.lblStartAllPos.setText('')
+            self.lblToCount.setText('')
         else:
             self.workApi.clearFactory()
             return self.lblMsg.setText(msgWarning.noReleaseMethod)
@@ -532,13 +546,18 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
         return intLst
 
     def makeArrParam(self):
-        if str(self.cmbMethods.currentText()) == 'Проверка':
+        if str(self.cmbMethods.currentText()) == typeMethod.typeCheck:
             return [self.nameMethod.toPlainText(), self.spnCountThread.value(),
                      int(self.txtPosStart.toPlainText()), int(self.txtPosEnd.toPlainText()),
                      self.spnSleepWork.value(), self.spnTimeWait.value()]
-        elif str(self.cmbMethods.currentText()) == 'Перебор':
+        elif str(self.cmbMethods.currentText()) == typeMethod.typeBruteForce:
             return [self.nameMethod.toPlainText(), self.spnCountThread.value(),
                     self.spnTimeWait.value(), self.getArrPos(), int(self.txtPosEnd.toPlainText())]
+        elif str(self.cmbMethods.currentText()) == typeMethod.typeRandom:
+            return [self.nameMethod.toPlainText(), self.spnCountThread.value(),
+                    self.spnTimeWait.value(), self.getArrPos(), int(self.txtPosEnd.toPlainText())]
+        elif str(self.cmbMethods.currentText()) == typeMethod.typeCompBase:
+            return [self.nameMethod.toPlainText(), self.spnTimeWait.value()]
         else:
             return []
 

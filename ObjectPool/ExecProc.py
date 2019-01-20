@@ -10,8 +10,9 @@ import time
 from Methods.Method import Method
 
 class ExecProc(Thread):
-    def __init__(self, execFile, resFile, bytePos, byte, method, pool, testData):
+    def __init__(self, execFile, resFile, bytePos, byte, method, pool, testData, isBaseFile):
         Thread.__init__(self)
+        self.__isBaseFile = isBaseFile
         self.execFile = execFile
         self.resFile = resFile
         self.__bytePos = bytePos
@@ -54,15 +55,15 @@ class ExecProc(Thread):
 
     def run(self):
         self.startTime = time.time() # запоминем время старта потока
-        self.__testData.saveToFile() # сохраняем измененные данные во входной файл
-        # proc = subprocess.Popen( # запускаем переданный файл
-        #     self.execFile,
-        #     cwd=self.execFile.split(
-        #         "/" + self.execFile.split('/')[len(self.execFile.split('/')) - 1]
-        #     )[0],
-        #     creationflags=subprocess.CREATE_NEW_CONSOLE)
-        # self.__proc = proc
-        # proc.wait() # ждем пока программа отработает и выдаст результат
+        self.__testData.saveToFile(isBaseFile=self.__isBaseFile) # сохраняем измененные данные во входной файл
+        proc = subprocess.Popen( # запускаем переданный файл
+            self.execFile,
+            cwd=self.execFile.split(
+                "/" + self.execFile.split('/')[len(self.execFile.split('/')) - 1]
+            )[0],
+            creationflags=subprocess.CREATE_NEW_CONSOLE)
+        self.__proc = proc
+        proc.wait() # ждем пока программа отработает и выдаст результат
         timeSleep = random.randint(1, 11)
         #print(timeSleep)
         #time.sleep(1)
@@ -80,4 +81,4 @@ class ExecProc(Thread):
         except:
             pass
         return ExecProc(execFile=self.execFile, resFile=self.resFile, bytePos=self.__bytePos,
-        byte=self.__byte, method=self.method, pool=self.pool, testData=self.__testData)
+        byte=self.__byte, method=self.method, pool=self.pool, testData=self.__testData, isBaseFile=self.__isBaseFile)

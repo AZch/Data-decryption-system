@@ -4,11 +4,11 @@ from Data.Data import Data
 from ObjectPool.ExecProcPool import ExecProcPool
 from Constants import jsonWord
 
-class MBruteForce(Method):
-    def __init__(self, name, countProc, timeWait, lstPosBruteForce, countForce):
+class MRandom(Method):
+    def __init__(self, name, countProc, timeWait, lstPosRand, countRand):
         super().__init__(name, countProc, timeWait)
-        self.__lstPosBruteForce = lstPosBruteForce
-        self.__countForce = countForce
+        self.__lstPosRand = lstPosRand
+        self.__countRand = countRand
 
     def calc(self, data, resFileWay, execFileWay):
         if (not isinstance(data, TestData)):
@@ -24,29 +24,15 @@ class MBruteForce(Method):
 
         # запоминаем все начальные значения
         lstStartValue = list()
-        for onePos in self.__lstPosBruteForce:
+        for onePos in self.__lstPosRand:
             lstStartValue.append(data.getLstTestData()[onePos])
 
-        # пока на последнем элементе не сделаем цикла, что вернят нас к началу и будет означать перебор всех элементов
-        isLastCycle = False
-        countForce = 0
-        while not isLastCycle:
-            if self.__countForce > 0 and countForce > self.__countForce:
-                break
-            else:
-                countForce += 1
-            print(data.getByteByPos(self.__lstPosBruteForce))
+        countRand = 0
+        while countRand < self.__countRand:
             i = 0
-            while i < len(self.__lstPosBruteForce):
-               data.incDot(self.__lstPosBruteForce[i])
-               # если новое инкрементированное значение совпадает с начальным на этой позиции
-               if data.getLstTestData()[self.__lstPosBruteForce[i]].upper() != lstStartValue[i].upper():
-                   break
-               elif i == len(self.__lstPosBruteForce) - 1:
-                   isLastCycle = True
+            while i < len(self.__lstPosRand):
+               data.randVal(hexPos=hex(self.__lstPosRand[i]))
                i += 1
-            if isLastCycle: # сразу выходим, чтобы еще раз не прогонять программу
-                break
             self._resStrData = ""  # обнуляем строку с даннымии в которую будет записан результат
             proc = self.__getProc__(procPool=execProcPool, execFileWay=execFileWay, resFileWay=resFileWay,
                                     testData=data, byte=0,
@@ -54,10 +40,11 @@ class MBruteForce(Method):
             proc.start()  # запускаем поток (запускается бат файл и формируется список результатов)
             while self.addByPosRes(execProcPool.wait()) == 'wait':  # ожидаем пока не будет доступен поток
                 pass
-            self.addByPosRes(notes=self.compareData(position=self.__lstPosBruteForce, byte=data.getByteByPos(self.__lstPosBruteForce)))  # добавлем различия
+            self.addByPosRes(notes=self.compareData(position=self.__lstPosRand, byte=data.getByteByPos(self.__lstPosRand)))  # добавлем различия
 
+        countRand += 1
         i = 0
-        for onePos in self.__lstPosBruteForce:
+        for onePos in self.__lstPosRand:
             data.chgValue(hex(onePos)[2:], lstStartValue[i])
             i += 1
         data.saveBaseToFile()
@@ -67,11 +54,11 @@ class MBruteForce(Method):
         data = {}
         data[jsonWord.method] = {
             jsonWord.name: self.name,
-            jsonWord.type: jsonWord.mBruteForce,
+            jsonWord.type: jsonWord.mRand,
             jsonWord.mTimeWait: self.__timeWait__,
             jsonWord.mCountProc: self.__countProc__,
-            jsonWord.mLstPosition: ' '.join(str(pos) for pos in self.__lstPosBruteForce),
-            jsonWord.mCountForce:self.__countForce
+            jsonWord.mLstPosition: ' '.join(str(pos) for pos in self.__lstPosRand),
+            jsonWord.mCountRandom:self.__countRand
         }
         return data
 

@@ -34,7 +34,7 @@ class MethodCheck(Method):
         self.resData = Data() # инициализирем объект данных для результата
         execProcPool = ExecProcPool(self.__countProc__, maxWait=self.__timeWait__) # инициализируем заданное количество процессов
         isBaseData = self.__getBaseData__(execProcPool=execProcPool, execFileWay=execFileWay,
-                                          resFileWay=resFileWay, testData=testData)
+                                          resFileWay=resFileWay, testData=testData, isBase=False)
         if isBaseData == 0:
             return isBaseData
 
@@ -48,19 +48,19 @@ class MethodCheck(Method):
             # получаем новый поток
             proc = self.__getProc__(procPool=execProcPool, execFileWay=execFileWay, resFileWay=resFileWay,
                                     testData=testData, byte=testData.getLstTestData()[pos],
-                                    bytePos=pos)
+                                    bytePos=pos, isBase=False)
             proc.start() # запускаем поток (запускается бат файл и формируется список результатов)
             while self.addRes(execProcPool.wait()) == 'wait': # ожидаем пока не будет доступен поток
                 pass
-            self.addRes(notes=self.compareData(position=pos, byte=testData.getLstTestData()[pos]))  # добавлем различия
+            self.addRes(notes=self.compareData(position=[pos], byte=[testData.getLstTestData()[pos]]))  # добавлем различия
             testData.decDot(pos)
             pos += 1
         testData.saveToFile() # сохраняем последний раз файл с правильными данными
         # дожидаемся последний поток
         while self.addRes(execProcPool.wait()) == 'wait':  # ожидаем пока не будет доступен поток
             pass
-        self.addRes(notes=self.compareData(position=posByteSave,
-                                                         byte=testData.getLstTestData()[posByteSave]))  # добавлем различия
+        self.addRes(notes=self.compareData(position=[posByteSave],
+                                                         byte=[testData.getLstTestData()[posByteSave]]))  # добавлем различия
         testData.saveBaseToFile()
         return self.resData
 

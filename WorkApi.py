@@ -3,6 +3,8 @@ import threading
 from Methods.Method import Method
 from FactoryMethods.FactoryMethodCheck import FactoryMethodCheck
 from FactoryMethods.FactoryMBruteForce import FactoryMBruteForce
+from FactoryMethods.FactoryMCompBase import FactoryMCompBase
+from FactoryMethods.FactoryMRandom import FactoryMRandom
 from FactoryMethods.FactoryMethod import FactoryMethod
 from Data.Data import Data
 from Data.TestData import TestData
@@ -127,6 +129,20 @@ class WorkApi():
         except:
             return StrRetConts.retBat
 
+    def setFactoryRandom(self):
+        try:
+            self.factoryMethods = FactoryMRandom()
+            return StrRetConts.retGood
+        except:
+            return StrRetConts.retBat
+
+    def setFactoryCompBase(self):
+        try:
+            self.factoryMethods = FactoryMCompBase()
+            return StrRetConts.retGood
+        except:
+            return StrRetConts.retBat
+
     def clearFactory(self):
         self.factoryMethods = None
 
@@ -247,7 +263,17 @@ class WorkApi():
                 int(strPos) for strPos in dataStr[jsonWord.mLstPosition].split())
             self.__addMethod(self.factoryMethods.createMethod([dataStr[jsonWord.name], dataStr[jsonWord.mCountProc],
                                                                dataStr[jsonWord.mTimeWait], lst, dataStr[jsonWord.mCountForce]]))
-
+        elif dataStr[jsonWord.type] == jsonWord.mRand:
+            self.factoryMethods = FactoryMRandom()
+            lst = list()
+            lst.extend(
+                int(strPos) for strPos in dataStr[jsonWord.mLstPosition].split())
+            self.__addMethod(self.factoryMethods.createMethod([dataStr[jsonWord.name], dataStr[jsonWord.mCountProc],
+                                                               dataStr[jsonWord.mTimeWait], lst,
+                                                               dataStr[jsonWord.mCountRandom]]))
+        elif dataStr[jsonWord.type] == jsonWord.mCompBase:
+            self.factoryMethods = FactoryMCompBase()
+            self.__addMethod(self.factoryMethods.createMethod([dataStr[jsonWord.name], dataStr[jsonWord.mTimeWait]]))
         else:
             print("Данного метода еще нету")
 

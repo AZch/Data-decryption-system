@@ -21,7 +21,7 @@ class ExecProcPool():
             return 'wait'
         return lstNoteToLong
 
-    def getProc(self, execFile, resFile, bytePos, byte, method, testData):
+    def getProc(self, execFile, resFile, bytePos, byte, method, testData, isBaseFile):
         ret = self.wait()
         if ret == 'wait':
             return ret
@@ -33,7 +33,7 @@ class ExecProcPool():
         else:
             if self.__thisCount < self.__maxCountProc:
                 self.__thisCount += 1
-                proc = ExecProc(execFile, resFile, bytePos, byte, method, self, testData=testData)
+                proc = ExecProc(execFile, resFile, bytePos, byte, method, self, testData=testData, isBaseFile=isBaseFile)
                 self.__workProc.append(proc)
                 return proc
             else:

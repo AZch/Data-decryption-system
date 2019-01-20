@@ -82,8 +82,8 @@
    <widget class="QLabel" name="lblExecFile">
     <property name="geometry">
      <rect>
-      <x>900</x>
-      <y>210</y>
+      <x>890</x>
+      <y>280</y>
       <width>161</width>
       <height>16</height>
      </rect>
@@ -440,9 +440,9 @@
     <property name="geometry">
      <rect>
       <x>790</x>
-      <y>200</y>
+      <y>230</y>
       <width>271</width>
-      <height>31</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="text">
@@ -522,7 +522,7 @@
     <property name="geometry">
      <rect>
       <x>900</x>
-      <y>280</y>
+      <y>330</y>
       <width>161</width>
       <height>16</height>
      </rect>
@@ -599,7 +599,7 @@
    <widget class="QLabel" name="label_13">
     <property name="geometry">
      <rect>
-      <x>900</x>
+      <x>890</x>
       <y>70</y>
       <width>141</width>
       <height>16</height>
@@ -613,26 +613,13 @@
     <property name="geometry">
      <rect>
       <x>790</x>
-      <y>135</y>
+      <y>130</y>
       <width>171</width>
       <height>21</height>
      </rect>
     </property>
     <property name="text">
      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Байты проверки (с последним)&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="lblResFile_2">
-    <property name="geometry">
-     <rect>
-      <x>900</x>
-      <y>330</y>
-      <width>161</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
     </property>
    </widget>
    <widget class="QTableWidget" name="tblChgTest">
@@ -770,7 +757,7 @@
     <property name="geometry">
      <rect>
       <x>790</x>
-      <y>250</y>
+      <y>260</y>
       <width>91</width>
       <height>16</height>
      </rect>
@@ -821,35 +808,35 @@
    <widget class="QLabel" name="lblStartAllPos">
     <property name="geometry">
      <rect>
-      <x>785</x>
-      <y>150</y>
-      <width>121</width>
+      <x>795</x>
+      <y>140</y>
+      <width>261</width>
       <height>21</height>
      </rect>
     </property>
     <property name="text">
-     <string>  с | ,позиции перебора</string>
+     <string>с</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_10">
+   <widget class="QLabel" name="lblToCount">
     <property name="geometry">
      <rect>
-      <x>790</x>
-      <y>170</y>
-      <width>121</width>
+      <x>800</x>
+      <y>180</y>
+      <width>261</width>
       <height>21</height>
      </rect>
     </property>
     <property name="text">
-     <string> по | кол-во перебора</string>
+     <string>по</string>
     </property>
    </widget>
    <widget class="QTextEdit" name="txtPosStart">
     <property name="geometry">
      <rect>
-      <x>910</x>
-      <y>150</y>
-      <width>151</width>
+      <x>790</x>
+      <y>160</y>
+      <width>271</width>
       <height>21</height>
      </rect>
     </property>
@@ -857,9 +844,9 @@
    <widget class="QTextEdit" name="txtPosEnd">
     <property name="geometry">
      <rect>
-      <x>910</x>
-      <y>170</y>
-      <width>151</width>
+      <x>790</x>
+      <y>200</y>
+      <width>271</width>
       <height>21</height>
      </rect>
     </property>

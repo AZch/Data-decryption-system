@@ -59,6 +59,12 @@ class msgChgNum():
     confirmFind = "Байт найден"
     badAction = "Произвести действие не удалось"
 
+class typeMethod():
+    typeCheck = "Проверка"
+    typeBruteForce = "Перебор"
+    typeCompBase = "Сравнение с исходным"
+    typeRandom = "Рандомизация"
+
 class jsonWord():
     method = "method"
     name = "name"
@@ -66,6 +72,8 @@ class jsonWord():
 
     mCheck = "MethodCheck"
     mBruteForce = "MBruteForce"
+    mRand = "MRand"
+    mCompBase = "MCompBase"
 
     mTimeSleep='timeSleep'
     mPosStart='posStart'
