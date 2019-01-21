@@ -68,7 +68,7 @@ class MRandom(Method):
         resStr = "Отчет: \n"
         for note in self.resData.getData():
             resStr += "Позиции=байты: \n"
-            for i in range(note.lstBit):
+            for i in range(len(note.lstBit)):
                 resStr += str(note.lstPosition[i]) + " = " + str(note.lstBit[i]) + ","
             resStr = resStr[:-1] + "\n" + "Функции:\n"
             splitFun = note.nameFunction.split('/')

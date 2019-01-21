@@ -632,7 +632,7 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
                     oldThisCountByte = workApi.getThisCalcByte()
             for btn in arrayBtnLock:
                 btn.setEnabled(True)
-            if workApi.getThisCalcByte() + 1 == maxByte:
+            if workApi.getThisCalcByte() == maxByte:
                 msgSend = msgConfirm.successCalc
             else:
                 msgSend = msgError.successCalc
