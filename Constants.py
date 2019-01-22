@@ -95,6 +95,13 @@ class jsonWord():
 
     configName='openCfg.json'
 
+    db = 'db'
+    dbName = 'name'
+    dbHost = 'host'
+    dbPosrt = 'port'
+    dbUser = 'user'
+    dbPsw = 'password'
+
 class styles():
     lblStyleGood = "QLabel { color : green; }"
     lblStyleBad = "QLabel { color : red; }"

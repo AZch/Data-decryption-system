@@ -8,7 +8,7 @@ from Data.TestData import TestData
 from Constants import jsonWord
 from ObjectPool.ExecProcPool import ExecProcPool
 from ObjectPool.ExecProc import ExecProc
-from threading import Thread
+from DataDB.GRUB import *
 
 class MethodCheck(Method):
 
@@ -38,16 +38,19 @@ class MethodCheck(Method):
 
         posByteSave = 0 # содержат позицию байтов, которые поток проверяет (для последнего шага проверки)
         pos = self.__posStart
+        task = Add.addTask(method=jsonWord.mCheck, userName="anton")
         while pos <= self.__posEnd:
             posByteSave = pos
             self.thisCalcByte = pos - self.__posStart
             testData.incDot(pos) # изменяем данные в одной позиции
             self._resStrData = "" # обнуляем строку с даннымии в которую будет записан результат
             # получаем новый поток
-            proc = self.__getProc__(procPool=execProcPool, execFileWay=execFileWay, resFileWay=resFileWay,
-                                    testData=testData, byte=testData.getLstTestData()[pos],
-                                    bytePos=pos, isBase=False)
-            proc.start() # запускаем поток (запускается бат файл и формируется список результатов)
+            Add.addProc(flagExec=-1, inputTest=testData.getStrTestData(), resFile="", taskDDS=task, pos=str([pos]),
+                        bytes=str([testData.getLstTestData()[pos]]))
+            # proc = self.__getProc__(procPool=execProcPool, execFileWay=execFileWay, resFileWay=resFileWay,
+            #                         testData=testData, byte=testData.getLstTestData()[pos],
+            #                         bytePos=pos, isBase=False)
+            # proc.start() # запускаем поток (запускается бат файл и формируется список результатов)
             while self.addRes(execProcPool.wait()) == 'wait': # ожидаем пока не будет доступен поток
                 pass
             self.addRes(notes=self.compareData(position=[pos], byte=[testData.getLstTestData()[pos]]))  # добавлем различия

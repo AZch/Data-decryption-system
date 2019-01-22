@@ -1,1 +1,46 @@
-{"readCfg": "default", "default": {"methods": "loadMehtods", "readFiles": "ReadFiles", "chgVal": "chgValue"}, "loadMehtods": {"method1": {"method": {"name": "\u0441\u0440\u0430\u0432\u043d 40", "type": "MCompBase", "timeWait": 40}}}, "ReadFiles": {"testFile": "C:/Users/anton/PycharmProjects/test/dump.reg", "execFile": "", "endResFile": ""}, "chgValue": {"0": "1->1"}}
+{
+    "db": {
+        "name": "dds",
+        "host": "localhost",
+        "port": 3307,
+        "user": "root",
+        "password": "Tezibo44"
+    },
+    "readCfg": "default",
+    "default": {
+        "methods": "loadMehtods",
+        "readFiles": "ReadFiles",
+        "chgVal": "chgValue"
+    },
+    "loadMehtods": {
+        "method1": {
+            "method": {
+                "name": "сравн 40",
+                "type": "MCompBase",
+                "timeWait": 40
+            }
+        },
+        "method2": {
+            "method": {
+                "name": "123",
+                "type": "MethodCheck",
+                "timeSleep": 0,
+                "timeWait": 40,
+                "countProc": 1,
+                "posStart": 2,
+                "posEnd": 5
+            }
+        }
+    },
+    "ReadFiles": {
+        "testFile": "C:/Users/anton/PycharmProjects/test/dump.reg",
+        "execFile": "",
+        "endResFile": ""
+    },
+    "chgValue": {
+        "0": "1->1",
+        "1": "14->45",
+        "2": "0->00",
+        "3": "0->00"
+    }
+}
