@@ -94,3 +94,7 @@ class jsonWord():
     endResFile='endResFile'
 
     configName='openCfg.json'
+
+class styles():
+    lblStyleGood = "QLabel { color : green; }"
+    lblStyleBad = "QLabel { color : red; }"

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1085</width>
-    <height>608</height>
+    <width>1224</width>
+    <height>610</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,8 +17,8 @@
    <widget class="QPushButton" name="btnLoadExecFile">
     <property name="geometry">
      <rect>
-      <x>790</x>
-      <y>300</y>
+      <x>770</x>
+      <y>430</y>
       <width>271</width>
       <height>31</height>
      </rect>
@@ -30,7 +30,7 @@
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>800</x>
+      <x>930</x>
       <y>10</y>
       <width>91</width>
       <height>16</height>
@@ -40,10 +40,10 @@
      <string>Добавить метод:</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_2">
+   <widget class="QLabel" name="lblType">
     <property name="geometry">
      <rect>
-      <x>800</x>
+      <x>930</x>
       <y>30</y>
       <width>41</width>
       <height>16</height>
@@ -53,10 +53,10 @@
      <string>Тип:</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_3">
+   <widget class="QLabel" name="lblName">
     <property name="geometry">
      <rect>
-      <x>800</x>
+      <x>930</x>
       <y>50</y>
       <width>61</width>
       <height>16</height>
@@ -66,11 +66,11 @@
      <string>Название:</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_4">
+   <widget class="QLabel" name="lblExecFileHeader">
     <property name="geometry">
      <rect>
-      <x>790</x>
-      <y>280</y>
+      <x>770</x>
+      <y>410</y>
       <width>101</width>
       <height>16</height>
      </rect>
@@ -82,9 +82,9 @@
    <widget class="QLabel" name="lblExecFile">
     <property name="geometry">
      <rect>
-      <x>890</x>
-      <y>280</y>
-      <width>161</width>
+      <x>870</x>
+      <y>410</y>
+      <width>171</width>
       <height>16</height>
      </rect>
     </property>
@@ -95,8 +95,8 @@
    <widget class="QLabel" name="label_6">
     <property name="geometry">
      <rect>
-      <x>790</x>
-      <y>380</y>
+      <x>770</x>
+      <y>510</y>
       <width>71</width>
       <height>16</height>
      </rect>
@@ -108,8 +108,8 @@
    <widget class="QLabel" name="lblInputTest">
     <property name="geometry">
      <rect>
-      <x>870</x>
-      <y>380</y>
+      <x>850</x>
+      <y>510</y>
       <width>191</width>
       <height>16</height>
      </rect>
@@ -121,9 +121,9 @@
    <widget class="QTextEdit" name="nameMethod">
     <property name="geometry">
      <rect>
-      <x>860</x>
+      <x>990</x>
       <y>50</y>
-      <width>201</width>
+      <width>221</width>
       <height>21</height>
      </rect>
     </property>
@@ -131,8 +131,8 @@
    <widget class="QPushButton" name="btnLoadInputTest">
     <property name="geometry">
      <rect>
-      <x>790</x>
-      <y>400</y>
+      <x>770</x>
+      <y>530</y>
       <width>271</width>
       <height>31</height>
      </rect>
@@ -144,8 +144,8 @@
    <widget class="QPushButton" name="btnNextMethod">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>280</y>
+      <x>920</x>
+      <y>320</y>
       <width>121</width>
       <height>23</height>
      </rect>
@@ -157,8 +157,8 @@
    <widget class="QPushButton" name="btnPrevMethod">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>300</y>
+      <x>920</x>
+      <y>340</y>
       <width>121</width>
       <height>23</height>
      </rect>
@@ -170,9 +170,9 @@
    <widget class="QPushButton" name="btnDelThisMethod">
     <property name="geometry">
      <rect>
-      <x>610</x>
-      <y>260</y>
-      <width>161</width>
+      <x>920</x>
+      <y>250</y>
+      <width>141</width>
       <height>31</height>
      </rect>
     </property>
@@ -183,9 +183,9 @@
    <widget class="QPushButton" name="btnDelAllMethod">
     <property name="geometry">
      <rect>
-      <x>610</x>
-      <y>290</y>
-      <width>161</width>
+      <x>1070</x>
+      <y>250</y>
+      <width>141</width>
       <height>31</height>
      </rect>
     </property>
@@ -193,39 +193,13 @@
      <string>Удалить все методы</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="btnSaveThisMethod">
-    <property name="geometry">
-     <rect>
-      <x>440</x>
-      <y>260</y>
-      <width>161</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Сохранить этот метод</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="btnSaveAllMethod">
-    <property name="geometry">
-     <rect>
-      <x>440</x>
-      <y>290</y>
-      <width>161</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Сохранить все методы</string>
-    </property>
-   </widget>
    <widget class="QLabel" name="lblNextMethod">
     <property name="geometry">
      <rect>
-      <x>140</x>
-      <y>280</y>
-      <width>121</width>
-      <height>16</height>
+      <x>1050</x>
+      <y>320</y>
+      <width>161</width>
+      <height>21</height>
      </rect>
     </property>
     <property name="text">
@@ -235,10 +209,10 @@
    <widget class="QLabel" name="lblPrevMethod">
     <property name="geometry">
      <rect>
-      <x>140</x>
-      <y>300</y>
-      <width>121</width>
-      <height>16</height>
+      <x>1050</x>
+      <y>340</y>
+      <width>161</width>
+      <height>20</height>
      </rect>
     </property>
     <property name="text">
@@ -248,8 +222,8 @@
    <widget class="QLabel" name="label_12">
     <property name="geometry">
      <rect>
-      <x>50</x>
-      <y>260</y>
+      <x>960</x>
+      <y>300</y>
       <width>91</width>
       <height>16</height>
      </rect>
@@ -261,9 +235,9 @@
    <widget class="QLabel" name="lblThisMethod">
     <property name="geometry">
      <rect>
-      <x>140</x>
-      <y>260</y>
-      <width>121</width>
+      <x>1050</x>
+      <y>300</y>
+      <width>161</width>
       <height>16</height>
      </rect>
     </property>
@@ -274,9 +248,9 @@
    <widget class="QPushButton" name="btnCalcThisMethod">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>320</y>
-      <width>251</width>
+      <x>920</x>
+      <y>370</y>
+      <width>121</width>
       <height>23</height>
      </rect>
     </property>
@@ -287,10 +261,10 @@
    <widget class="QPushButton" name="btnSaveTest">
     <property name="geometry">
      <rect>
-      <x>270</x>
-      <y>260</y>
+      <x>550</x>
+      <y>10</y>
       <width>161</width>
-      <height>31</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="text">
@@ -300,10 +274,10 @@
    <widget class="QPushButton" name="btnSaveResByte">
     <property name="geometry">
      <rect>
-      <x>270</x>
-      <y>290</y>
-      <width>161</width>
-      <height>31</height>
+      <x>190</x>
+      <y>10</y>
+      <width>101</width>
+      <height>21</height>
      </rect>
     </property>
     <property name="text">
@@ -313,9 +287,9 @@
    <widget class="QPushButton" name="btnCalcTo">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>340</y>
-      <width>171</width>
+      <x>1040</x>
+      <y>370</y>
+      <width>131</width>
       <height>23</height>
      </rect>
     </property>
@@ -326,9 +300,9 @@
    <widget class="QSpinBox" name="spnToMethod">
     <property name="geometry">
      <rect>
-      <x>180</x>
-      <y>340</y>
-      <width>81</width>
+      <x>1170</x>
+      <y>370</y>
+      <width>41</width>
       <height>22</height>
      </rect>
     </property>
@@ -352,7 +326,7 @@
    <widget class="QLabel" name="label_15">
     <property name="geometry">
      <rect>
-      <x>270</x>
+      <x>360</x>
       <y>10</y>
       <width>101</width>
       <height>16</height>
@@ -365,9 +339,9 @@
    <widget class="QPushButton" name="btnExit">
     <property name="geometry">
      <rect>
-      <x>1000</x>
+      <x>1050</x>
       <y>540</y>
-      <width>71</width>
+      <width>161</width>
       <height>23</height>
      </rect>
     </property>
@@ -378,22 +352,22 @@
    <widget class="QLabel" name="label_16">
     <property name="geometry">
      <rect>
-      <x>790</x>
-      <y>440</y>
-      <width>201</width>
+      <x>1050</x>
+      <y>400</y>
+      <width>131</width>
       <height>21</height>
      </rect>
     </property>
     <property name="text">
-     <string>Время выполнения теста (секунды):</string>
+     <string>Время выполнения теста</string>
     </property>
    </widget>
    <widget class="QLCDNumber" name="lcdNumber">
     <property name="geometry">
      <rect>
-      <x>980</x>
-      <y>440</y>
-      <width>81</width>
+      <x>1110</x>
+      <y>420</y>
+      <width>101</width>
       <height>21</height>
      </rect>
     </property>
@@ -413,8 +387,8 @@
    <widget class="QLabel" name="label_5">
     <property name="geometry">
      <rect>
-      <x>790</x>
-      <y>460</y>
+      <x>1050</x>
+      <y>440</y>
       <width>61</width>
       <height>16</height>
      </rect>
@@ -426,9 +400,9 @@
    <widget class="QLabel" name="lblMsg">
     <property name="geometry">
      <rect>
-      <x>860</x>
+      <x>1050</x>
       <y>460</y>
-      <width>201</width>
+      <width>161</width>
       <height>16</height>
      </rect>
     </property>
@@ -439,10 +413,10 @@
    <widget class="QPushButton" name="btnAddMethod">
     <property name="geometry">
      <rect>
-      <x>790</x>
-      <y>230</y>
-      <width>271</width>
-      <height>21</height>
+      <x>920</x>
+      <y>210</y>
+      <width>141</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
@@ -452,24 +426,11 @@
    <widget class="QComboBox" name="cmbMethods">
     <property name="geometry">
      <rect>
-      <x>860</x>
+      <x>990</x>
       <y>30</y>
-      <width>201</width>
+      <width>221</width>
       <height>22</height>
      </rect>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="btnLoadMethods">
-    <property name="geometry">
-     <rect>
-      <x>440</x>
-      <y>330</y>
-      <width>161</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Загрузить метод(ы)</string>
     </property>
    </widget>
    <widget class="QTableWidget" name="tblInutTest">
@@ -477,26 +438,26 @@
      <rect>
       <x>10</x>
       <y>30</y>
-      <width>251</width>
-      <height>221</height>
+      <width>341</width>
+      <height>331</height>
      </rect>
     </property>
    </widget>
    <widget class="QTableWidget" name="tblRes">
     <property name="geometry">
      <rect>
-      <x>270</x>
+      <x>360</x>
       <y>30</y>
-      <width>501</width>
-      <height>221</height>
+      <width>551</width>
+      <height>331</height>
      </rect>
     </property>
    </widget>
    <widget class="QPushButton" name="btnLoadResFile">
     <property name="geometry">
      <rect>
-      <x>790</x>
-      <y>350</y>
+      <x>770</x>
+      <y>480</y>
       <width>271</width>
       <height>31</height>
      </rect>
@@ -508,8 +469,8 @@
    <widget class="QLabel" name="label_7">
     <property name="geometry">
      <rect>
-      <x>790</x>
-      <y>330</y>
+      <x>770</x>
+      <y>460</y>
       <width>111</width>
       <height>16</height>
      </rect>
@@ -521,8 +482,8 @@
    <widget class="QLabel" name="lblResFile">
     <property name="geometry">
      <rect>
-      <x>900</x>
-      <y>330</y>
+      <x>880</x>
+      <y>460</y>
       <width>161</width>
       <height>16</height>
      </rect>
@@ -531,25 +492,12 @@
      <string/>
     </property>
    </widget>
-   <widget class="QSpinBox" name="spnCountThread">
-    <property name="geometry">
-     <rect>
-      <x>800</x>
-      <y>90</y>
-      <width>61</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <property name="maximum">
-     <number>999999999</number>
-    </property>
-   </widget>
    <widget class="QSpinBox" name="spnTimeWait">
     <property name="geometry">
      <rect>
-      <x>1000</x>
-      <y>110</y>
-      <width>61</width>
+      <x>1130</x>
+      <y>80</y>
+      <width>81</width>
       <height>22</height>
      </rect>
     </property>
@@ -557,37 +505,11 @@
      <number>999999999</number>
     </property>
    </widget>
-   <widget class="QSpinBox" name="spnSleepWork">
+   <widget class="QLabel" name="lblTimeWait">
     <property name="geometry">
      <rect>
-      <x>910</x>
-      <y>90</y>
-      <width>61</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <property name="maximum">
-     <number>999999999</number>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_9">
-    <property name="geometry">
-     <rect>
-      <x>790</x>
-      <y>70</y>
-      <width>91</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Кол-во потоков:</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_11">
-    <property name="geometry">
-     <rect>
-      <x>790</x>
-      <y>110</y>
+      <x>920</x>
+      <y>80</y>
       <width>211</width>
       <height>21</height>
      </rect>
@@ -596,24 +518,11 @@
      <string>Максимальное время ожидания потока:</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_13">
+   <widget class="QLabel" name="lblBytes">
     <property name="geometry">
      <rect>
-      <x>890</x>
-      <y>70</y>
-      <width>141</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Ожидание после запуска:</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_17">
-    <property name="geometry">
-     <rect>
-      <x>790</x>
-      <y>130</y>
+      <x>920</x>
+      <y>110</y>
       <width>171</width>
       <height>21</height>
      </rect>
@@ -665,7 +574,7 @@
    <widget class="QPushButton" name="btnAddStrEditTest">
     <property name="geometry">
      <rect>
-      <x>680</x>
+      <x>670</x>
       <y>370</y>
       <width>91</width>
       <height>31</height>
@@ -678,10 +587,10 @@
    <widget class="QProgressBar" name="prgExec">
     <property name="geometry">
      <rect>
-      <x>790</x>
-      <y>510</y>
-      <width>281</width>
-      <height>16</height>
+      <x>1050</x>
+      <y>520</y>
+      <width>171</width>
+      <height>20</height>
      </rect>
     </property>
     <property name="value">
@@ -691,7 +600,7 @@
    <widget class="QPushButton" name="btnChgAll">
     <property name="geometry">
      <rect>
-      <x>680</x>
+      <x>670</x>
       <y>410</y>
       <width>91</width>
       <height>31</height>
@@ -704,7 +613,7 @@
    <widget class="QLabel" name="label_19">
     <property name="geometry">
      <rect>
-      <x>790</x>
+      <x>1050</x>
       <y>480</y>
       <width>71</width>
       <height>16</height>
@@ -717,9 +626,9 @@
    <widget class="QLabel" name="lblExecuteProc">
     <property name="geometry">
      <rect>
-      <x>860</x>
-      <y>480</y>
-      <width>201</width>
+      <x>1050</x>
+      <y>500</y>
+      <width>171</width>
       <height>16</height>
      </rect>
     </property>
@@ -743,7 +652,7 @@
    <widget class="QPushButton" name="btnOpenResData">
     <property name="geometry">
      <rect>
-      <x>380</x>
+      <x>470</x>
       <y>10</y>
       <width>81</width>
       <height>21</height>
@@ -756,8 +665,8 @@
    <widget class="QLabel" name="label_20">
     <property name="geometry">
      <rect>
-      <x>790</x>
-      <y>260</y>
+      <x>770</x>
+      <y>390</y>
       <width>91</width>
       <height>16</height>
      </rect>
@@ -769,7 +678,7 @@
    <widget class="QPushButton" name="btnClearChgAll">
     <property name="geometry">
      <rect>
-      <x>680</x>
+      <x>670</x>
       <y>490</y>
       <width>91</width>
       <height>31</height>
@@ -782,7 +691,7 @@
    <widget class="QPushButton" name="btnFindChgAll">
     <property name="geometry">
      <rect>
-      <x>680</x>
+      <x>670</x>
       <y>530</y>
       <width>91</width>
       <height>31</height>
@@ -795,7 +704,7 @@
    <widget class="QPushButton" name="btnStartAll">
     <property name="geometry">
      <rect>
-      <x>680</x>
+      <x>670</x>
       <y>450</y>
       <width>91</width>
       <height>31</height>
@@ -808,8 +717,8 @@
    <widget class="QLabel" name="lblStartAllPos">
     <property name="geometry">
      <rect>
-      <x>795</x>
-      <y>140</y>
+      <x>920</x>
+      <y>120</y>
       <width>261</width>
       <height>21</height>
      </rect>
@@ -821,9 +730,9 @@
    <widget class="QLabel" name="lblToCount">
     <property name="geometry">
      <rect>
-      <x>800</x>
-      <y>180</y>
-      <width>261</width>
+      <x>920</x>
+      <y>160</y>
+      <width>291</width>
       <height>21</height>
      </rect>
     </property>
@@ -834,9 +743,9 @@
    <widget class="QTextEdit" name="txtPosStart">
     <property name="geometry">
      <rect>
-      <x>790</x>
-      <y>160</y>
-      <width>271</width>
+      <x>920</x>
+      <y>140</y>
+      <width>291</width>
       <height>21</height>
      </rect>
     </property>
@@ -844,11 +753,37 @@
    <widget class="QTextEdit" name="txtPosEnd">
     <property name="geometry">
      <rect>
-      <x>790</x>
-      <y>200</y>
-      <width>271</width>
+      <x>920</x>
+      <y>180</y>
+      <width>291</width>
       <height>21</height>
      </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btnEditMethod">
+    <property name="geometry">
+     <rect>
+      <x>1070</x>
+      <y>210</y>
+      <width>141</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Изменить метод</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_18">
+    <property name="geometry">
+     <rect>
+      <x>1050</x>
+      <y>420</y>
+      <width>61</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>(секунды):</string>
     </property>
    </widget>
   </widget>
@@ -857,7 +792,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1085</width>
+     <width>1224</width>
      <height>21</height>
     </rect>
    </property>

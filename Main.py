@@ -9,15 +9,7 @@ from PyQt5 import QtWidgets
 from PyQt5 import QtCore
 
 from WorkApi import WorkApi
-from Constants import msgWarning
-from Constants import msgConfirm
-from Constants import msgError
-from Constants import StrRetConts
-from Constants import jsonWord
-from Constants import NumConst
-from Constants import StrConst
-from Constants import msgChgNum
-from Constants import typeMethod
+from Constants import msgWarning, msgConfirm, msgError, StrRetConts, jsonWord, NumConst, StrConst, msgChgNum, typeMethod, styles
 
 import design  # Это наш конвертированный файл дизайна
 import designOpenTbl
@@ -37,6 +29,7 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
 
         self.cmbMethods.addItems([typeMethod.typeCheck, typeMethod.typeBruteForce,
                                   typeMethod.typeRandom, typeMethod.typeCompBase])
+        self.colorTypeDefault()
         self.__initAPI()
         self.__initBtn()
         self.__initSgn()
@@ -97,13 +90,14 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
         self.btnDelThisMethod.clicked.connect(self.delMethod)
         self.btnDelAllMethod.clicked.connect(self.delMethods)
         self.btnCalcTo.clicked.connect(self.calcTo)
-        self.btnSaveThisMethod.clicked.connect(self.saveMethod)
-        self.btnSaveAllMethod.clicked.connect(self.saveAllMethod)
-        self.btnLoadMethods.clicked.connect(self.loadMethod)
         self.btnLoadResFile.clicked.connect(self.loadTestResFile)
         self.btnAddStrEditTest.clicked.connect(self.addStrToEditTest)
         self.btnOpenInputData.clicked.connect(self.openNewWndInputTest)
         self.btnOpenResData.clicked.connect(self.openNewWndResData)
+        self.btnChgAll.clicked.connect(self.chgAll)
+        self.btnStartAll.clicked.connect(self.chgStartAll)
+        self.btnFindChgAll.clicked.connect(self.chgFindAll)
+        self.btnClearChgAll.clicked.connect(self.chgClearAll)
 
     ''' Сигнал обновления данных при выполнении метода '''
     def __sgnUpdExec(self, newValuePrg, newMsg, newValueLcd):
@@ -182,6 +176,22 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
                 count += 1
         except:
             pass
+
+    def chgAll(self):
+        for i in range(self.tblChgTest.rowCount()):
+            self.tblChgTest.cellWidget(i, 2).click()
+
+    def chgStartAll(self):
+        for i in range(self.tblChgTest.rowCount()):
+            self.tblChgTest.cellWidget(i, 3).click()
+
+    def chgFindAll(self):
+        for i in range(self.tblChgTest.rowCount()):
+            self.tblChgTest.cellWidget(i, 4).click()
+
+    def chgClearAll(self):
+        self.tblChgTest.setRowCount(0)
+
 
     ''' Проверка полей при изменении/поиске/откате тестовых данных '''
     def __checkChgField(self, txtEditPosition, txtEditNewVal):
@@ -414,7 +424,6 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
         except:
             pass
 
-
     """ Работа с методами """
     ''' Сохранение метода '''
     def saveMethod(self):
@@ -495,45 +504,54 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
         except:
             self.lblMsg.setText(msgError.delMethods)
 
-    ''' Вычисление до метода '''
-    def calcTo(self):
-        try:
-            if self.countMethod < self.spnToMethod.value():
-                return self.lblMsg.setText(msgWarning.toMachMethods)
-            countCalc = self.spnToMethod.value()
-            goPrev = True
-            while countCalc > 0:
-                countCalc -= 1
-                self.workApi.calcMethod()
-                self.workApi.saveResDataByte()
-                if self.workApi.goNextMethod() == StrRetConts.retBat:
-                    goPrev = False
-            if goPrev:
-                self.workApi.goPrevMethod()
-            self.lblMsg.setText(msgConfirm.successCalc)
-            self.updateAfterSelect()
-        except:
-            self.lblMsg.setText(msgError.successCalc)
+    def colorTypeDefault(self):
+        self.lblTimeWait.setStyleSheet(styles.lblStyleGood)
+        self.lblBytes.setStyleSheet(styles.lblStyleGood)
+        self.lblStartAllPos.setStyleSheet(styles.lblStyleGood)
+        self.lblToCount.setStyleSheet(styles.lblStyleGood)
+        self.lblType.setStyleSheet(styles.lblStyleGood)
+        self.lblName.setStyleSheet(styles.lblStyleGood)
+
+    def colorTypeCompBase(self):
+        self.lblTimeWait.setStyleSheet(styles.lblStyleGood)
+        self.lblBytes.setStyleSheet(styles.lblStyleBad)
+        self.lblStartAllPos.setStyleSheet(styles.lblStyleBad)
+        self.lblToCount.setStyleSheet(styles.lblStyleBad)
+        self.lblType.setStyleSheet(styles.lblStyleGood)
+        self.lblName.setStyleSheet(styles.lblStyleGood)
+
+    def colorTypeBad(self):
+        self.lblTimeWait.setStyleSheet(styles.lblStyleBad)
+        self.lblBytes.setStyleSheet(styles.lblStyleBad)
+        self.lblStartAllPos.setStyleSheet(styles.lblStyleBad)
+        self.lblToCount.setStyleSheet(styles.lblStyleBad)
+        self.lblType.setStyleSheet(styles.lblStyleBad)
+        self.lblName.setStyleSheet(styles.lblStyleBad)
 
     ''' Задание фабрик методов '''
     def setFactory(self, text):
         if (text == typeMethod.typeCheck):
+            self.colorTypeDefault()
             self.workApi.setFactoryCheck()
             self.lblStartAllPos.setText('c')
             self.lblToCount.setText('по')
         elif (text == typeMethod.typeBruteForce):
+            self.colorTypeDefault()
             self.workApi.setFactoryBruteForce()
             self.lblStartAllPos.setText('Позиции (16 ричная, без 0х и h)')
             self.lblToCount.setText('Количество раз,-1 полный перебор')
         elif (text == typeMethod.typeRandom):
+            self.colorTypeDefault()
             self.workApi.setFactoryRandom()
             self.lblStartAllPos.setText('Позиции (16 ричная, без 0х и h)')
             self.lblToCount.setText('Количество раз')
         elif (text == typeMethod.typeCompBase):
+            self.colorTypeCompBase()
             self.workApi.setFactoryCompBase()
             self.lblStartAllPos.setText('')
             self.lblToCount.setText('')
         else:
+            self.colorTypeBad()
             self.workApi.clearFactory()
             return self.lblMsg.setText(msgWarning.noReleaseMethod)
         self.lblMsg.setText(msgConfirm.setReleaseMethod)
@@ -547,14 +565,14 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
 
     def makeArrParam(self):
         if str(self.cmbMethods.currentText()) == typeMethod.typeCheck:
-            return [self.nameMethod.toPlainText(), self.spnCountThread.value(),
+            return [self.nameMethod.toPlainText(), 1,
                      int(self.txtPosStart.toPlainText()), int(self.txtPosEnd.toPlainText()),
-                     self.spnSleepWork.value(), self.spnTimeWait.value()]
+                     0, self.spnTimeWait.value()]
         elif str(self.cmbMethods.currentText()) == typeMethod.typeBruteForce:
-            return [self.nameMethod.toPlainText(), self.spnCountThread.value(),
+            return [self.nameMethod.toPlainText(), 1,
                     self.spnTimeWait.value(), self.getArrPos(), int(self.txtPosEnd.toPlainText())]
         elif str(self.cmbMethods.currentText()) == typeMethod.typeRandom:
-            return [self.nameMethod.toPlainText(), self.spnCountThread.value(),
+            return [self.nameMethod.toPlainText(), 1,
                     self.spnTimeWait.value(), self.getArrPos(), int(self.txtPosEnd.toPlainText())]
         elif str(self.cmbMethods.currentText()) == typeMethod.typeCompBase:
             return [self.nameMethod.toPlainText(), self.spnTimeWait.value()]
@@ -592,6 +610,29 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
         except:
             self.lblMsg.setText(msgWarning.noPrevMethod)
 
+    ''' Вычисление до метода '''
+    def calcTo(self):
+        try:
+            if self.countMethod < self.spnToMethod.value():
+                return self.lblMsg.setText(msgWarning.toMachMethods)
+            countCalc = self.spnToMethod.value()
+            goPrev = True
+            while countCalc > 0:
+                countCalc -= 1
+                res = self.workApi.calcMethod()
+                newThread = threading.Thread(target=self.updateCalc, args=[self.workApi, self.sgnUpdExec,
+                                                                           self.getAllBtnArray(), self.sgnUpdTbl])
+                newThread.start()
+                newThread.join()
+                if self.workApi.goNextMethod() == StrRetConts.retBat:
+                    goPrev = False
+            if goPrev:
+                self.workApi.goPrevMethod()
+            self.lblMsg.setText(msgConfirm.successCalc)
+            self.updateAfterSelect()
+        except:
+            self.lblMsg.setText(msgError.successCalc)
+
     ''' Вычисление по выбранному методу '''
     def calcThisMethod(self):
         try:
@@ -611,7 +652,8 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
                 self.btnSaveResByte, self.btnSaveThisMethod, self.btnSaveAllMethod,
                 self.btnDelThisMethod, self.btnDelAllMethod, self.btnLoadMethods, self.btnAddMethod,
                 self.btnLoadResFile, self.btnLoadExecFile, self.btnLoadInputTest,
-                self.tblChgTest, self.btnAddStrEditTest, self.btnChgAll, self.btnClearChgAll, self.btnFindChgAll]
+                self.tblChgTest, self.btnAddStrEditTest, self.btnChgAll, self.btnClearChgAll, self.btnFindChgAll,
+                self.btnStartAll]
 
     ''' Обновление данных формы во время работы метода '''
     def updateCalc(self, workApi, sgnUpdExec, arrayBtnLock, sgnUpdTbl):
@@ -642,6 +684,7 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
                             )
             sgnUpdTbl.emit()
         except:
+            print('Ошибка:\n', traceback.format_exc())
             for btn in arrayBtnLock:
                 btn.setEnabled(True)
             sgnUpdExec.emit(0,
