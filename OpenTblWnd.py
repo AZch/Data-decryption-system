@@ -18,4 +18,5 @@ class OpenTblWnd(QtWidgets.QDialog, designOpenTbl.Ui_openTbl):
                 self.tblData.setItem(i, j,
                                          QtWidgets.QTableWidgetItem(tbl.item(i, j)))
         self.tblData.resizeColumnsToContents()
+        self.btnUpdTbl.setVisible(False)
         pass

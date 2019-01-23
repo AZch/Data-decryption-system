@@ -3,6 +3,7 @@ from Data.TestData import TestData
 from Data.Data import Data
 from ObjectPool.ExecProcPool import ExecProcPool
 from Constants import jsonWord
+from DataDB.GRUB import *
 
 class MRandom(Method):
     def __init__(self, name, countProc, timeWait, lstPosRand, countRand):
@@ -14,11 +15,13 @@ class MRandom(Method):
         if (not isinstance(data, TestData)):
             print("Неверный формат входных данных")
             return 0
+        task = Add.addTask(method=jsonWord.mRand, userName="")
 
         self.resData = Data() # инициализирем объект данных для результата
         execProcPool = ExecProcPool(self.__countProc__, maxWait=self.__timeWait__) # инициализируем заданное количество процессов
-        isBaseData = self.__getBaseData__(execProcPool=execProcPool, execFileWay=execFileWay,
-                                          resFileWay=resFileWay, testData=data, isBase=False)
+        #isBaseData = self.__getBaseData__(execProcPool=execProcPool, execFileWay=execFileWay,
+        #                                  resFileWay=resFileWay, testData=data, isBase=False)
+        isBaseData = self.__getBaseData__(task, data, False)
         if isBaseData == 0:
             return isBaseData
 
@@ -35,20 +38,32 @@ class MRandom(Method):
                data.randVal(hexPos=hex(self.__lstPosRand[i]))
                i += 1
             self._resStrData = ""  # обнуляем строку с даннымии в которую будет записан результат
-            proc = self.__getProc__(procPool=execProcPool, execFileWay=execFileWay, resFileWay=resFileWay,
-                                    testData=data, byte=0,
-                                    bytePos=0, isBase=False)
-            proc.start()  # запускаем поток (запускается бат файл и формируется список результатов)
-            while self.addByPosRes(execProcPool.wait()) == 'wait':  # ожидаем пока не будет доступен поток
-                pass
-            self.addByPosRes(notes=self.compareData(position=self.__lstPosRand, byte=data.getByteByPos(self.__lstPosRand)))  # добавлем различия
-
+            # proc = self.__getProc__(procPool=execProcPool, execFileWay=execFileWay, resFileWay=resFileWay,
+            #                         testData=data, byte=0,
+            #                         bytePos=0, isBase=False)
+            # proc.start()  # запускаем поток (запускается бат файл и формируется список результатов)
+            # while self.addByPosRes(execProcPool.wait()) == 'wait':  # ожидаем пока не будет доступен поток
+            #     pass
+            # self.addByPosRes(notes=self.compareData(position=self.__lstPosRand, byte=data.getByteByPos(self.__lstPosRand)))  # добавлем различия
+            Add.addProc(flagExec=-1, inputTest=data.getStrTestData(), resFile="", taskDDS=task,
+                        pos=' '.join(str(pos) for pos in self.__lstPosRand),
+                        bytes=' '.join(str(byte) for byte in data.getByteByPos(self.__lstPosRand)), timewait=self.__timeWait__)
             self.thisCalcByte += 1
         i = 0
         for onePos in self.__lstPosRand:
             data.chgValue(hex(onePos)[2:], lstStartValue[i])
             i += 1
         data.saveBaseToFile()
+
+        while len(Select.selectProcByFlagIdOnly(-1, task)) > 0 or len(Select.selectProcByFlagIdOnly(0, task)) > 0:
+            pass
+        allRes = Select.selectProcByFlagIdOnly(1, task)
+        # дожидаемся последний поток
+        for oneRes in allRes:
+            self.addByPosRes(notes=self.compareData(position=oneRes.pos,
+                                                             byte=oneRes.bytes,
+                                                             resData=oneRes.resFile))  # добавлем различия
+
         self.thisCalcByte = self.getMaxCountByte()
         return self.resData
 

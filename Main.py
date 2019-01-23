@@ -18,27 +18,14 @@ from OpenTblWnd import OpenTblWnd
 from peewee import *
 from DataDB.Models import *
 
+databaseMain = MySQLDatabase('', user='', password='', host='', port=0)
+
 class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
     ''' Сигнналы (должны быть объявлены здесь) для обновления данных и таблицы при выполнении метода '''
     sgnUpdExec = QtCore.pyqtSignal(int, str, int, name='sgnUpdExec')
     sgnUpdTbl = QtCore.pyqtSignal(name='sgnUpdTbl')
 
     def __init__(self):
-        # mysqlDB = MySQLDatabase('dds', user='root', password='Tezibo44', host='localhost', port=3307)
-        # mysqlDB.connect()
-        # conn = pymysql.connect(
-        #     db="dds",
-        #     user="root",
-        #     password="Tezibo44",
-        #     host="localhost",
-        #     port=3307
-        # )
-        # cursor = conn.cursor()
-        #cursor.execute("insert into tasks (method, userName) value ('1check meth', '3check name')")
-        # conn.commit()
-        # conn.close()
-        # Это здесь нужно для доступа к переменным, методам
-        # и т.д. в файле design.py
         super().__init__()
         self.setupUi(self)  # Это нужно для инициализации нашего дизайна
         self.countMethod = 0
@@ -275,6 +262,7 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
         dataToCfg[jsonWord.db][jsonWord.dbPosrt] = self.dbPort
         dataToCfg[jsonWord.db][jsonWord.dbUser] = self.dbUser
         dataToCfg[jsonWord.db][jsonWord.dbPsw] = self.dbPsw
+        database = MySQLDatabase(self.dbName, user=self.dbUser, password=self.dbPsw, host=self.dbHost, port=self.dbPort)
 
         dataToCfg[jsonWord.readCfg] = self.currCfg
         dataToCfg[self.currCfg] = {}

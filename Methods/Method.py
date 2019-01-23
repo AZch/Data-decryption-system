@@ -1,5 +1,6 @@
 from Methods.IMethod import IMethod
 from Data.Note import Note
+from DataDB.GRUB import *
 
 class Method(IMethod):
     def __init__(self, name, countProc, timeWait):
@@ -17,13 +18,17 @@ class Method(IMethod):
     def getThisCalcByte(self):
         return self.thisCalcByte
 
-    def __getBaseData__(self, execProcPool, execFileWay, resFileWay, testData, isBase):
-        proc = self.__getProc__(procPool=execProcPool, execFileWay=execFileWay, resFileWay=resFileWay,
-                                testData=testData, byte=0, bytePos=0, isBase=isBase)
-        proc.start()
-        # ожидаем завершения потока и получаем новый
-        while self.addRes(execProcPool.wait()) == 'wait':
-            pass
+    def __getBaseData__(self, task, testData, isBaseData):
+        if not isBaseData:
+            Add.addProc(flagExec=-1, inputTest=testData.getBaseStrTestData(), resFile="", taskDDS=task, pos="", bytes="", timewait=self.__timeWait__)
+        else:
+            Add.addProc(flagExec=-1, inputTest=testData.getStrTestData(), resFile="", taskDDS=task, pos="-1", bytes="", timewait=self.__timeWait__)
+        while True:
+            retData = Select().selectProcByFlagId(1, task, bytes="", pos="")
+            if len(retData) > 0:
+                break
+        print([data.idProc for data in retData])
+        self._resStrData = retData[0].resFile
 
         if self._resStrData == "":
             print("Файл не отработал успешно на пустом результате")
@@ -41,12 +46,18 @@ class Method(IMethod):
                                         isBaseFile=isBase)
         return proc
 
-    def compareData(self, position, byte):
+    def compareData(self, position, byte, resData):
         resStrData = self._baseResData.split('\n')
-        compStrData = self._resStrData.split('\n')
+        compStrData = resData.split('\n')
         noteCompare = list()
         i = 0
         while i < len(resStrData) and i < len(compStrData):
+            if compStrData == 'nope':
+                posInt = list()
+                for onePos in position.split(' '):
+                    posInt.append(onePos)
+                noteCompare.append(Note(nameFunction="too long wait", resFunction="too long wait",  # добавляем новую запись
+                                        lstBit=byte.split(' '), lstPosition=posInt))
             if (resStrData[i] != compStrData[i]):
                 splitOneStrData = compStrData[i].split('│')
                 nameFunction = ""
@@ -60,8 +71,11 @@ class Method(IMethod):
                     resFunction += 'error'
                 nameFunction = nameFunction.translate({ord(char): None for char in '\n'})
                 resFunction = resFunction.translate({ord(char): None for char in '\n'})
+                posInt = list()
+                for onePos in position.split(' '):
+                    posInt.append(onePos)
                 noteCompare.append(Note(nameFunction=nameFunction, resFunction=resFunction,  # добавляем новую запись
-                                         lstBit=byte, lstPosition=position))
+                                         lstBit=byte.split(' '), lstPosition=posInt))
             i += 1
         return noteCompare
 

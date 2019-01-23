@@ -30,6 +30,27 @@
                 "posStart": 2,
                 "posEnd": 5
             }
+        },
+        "method3": {
+            "method": {
+                "name": "edfg",
+                "type": "MethodCheck",
+                "timeSleep": 0,
+                "timeWait": 40,
+                "countProc": 1,
+                "posStart": 10,
+                "posEnd": 15
+            }
+        },
+        "method4": {
+            "method": {
+                "name": "123123",
+                "type": "MBruteForce",
+                "timeWait": 40,
+                "countProc": 1,
+                "lstPosition": "12 13",
+                "countForce": 5
+            }
         }
     },
     "ReadFiles": {
