@@ -170,3 +170,12 @@ class Method(IMethod):
 
     def getName(self):
         return self.name
+
+    def getTimeWait(self):
+        return self.__timeWait__
+
+    def setName(self, name):
+        self.name = name
+
+    def setTimeWait(self, timeWait):
+        self.__timeWait__ = timeWait

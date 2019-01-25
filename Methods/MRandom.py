@@ -56,6 +56,7 @@ class MRandom(Method):
         data.saveBaseToFile()
 
         while len(Select.selectProcByFlagIdOnly(-1, task)) > 0 or len(Select.selectProcByFlagIdOnly(0, task)) > 0:
+            self.thisCalcByte = len(Select.selectProcByFlagIdOnly(1, task)) - 1
             pass
         allRes = Select.selectProcByFlagIdOnly(1, task)
         # дожидаемся последний поток
@@ -95,3 +96,15 @@ class MRandom(Method):
 
     def getMaxCountByte(self):
         return (self.__countRand)
+
+    def getLstPosRand(self):
+        return self.__lstPosRand
+
+    def getCountRand(self):
+        return self.__countRand
+
+    def setLstPosRand(self, lstPosRand):
+        self.__lstPosRand = lstPosRand
+
+    def setCountRand(self, countRand):
+        self.__countRand = countRand

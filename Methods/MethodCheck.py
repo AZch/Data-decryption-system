@@ -54,6 +54,7 @@ class MethodCheck(Method):
             testData.decDot(pos)
             pos += 1
         while len(Select.selectProcByFlagIdOnly(-1, task)) > 0 or len(Select.selectProcByFlagIdOnly(0, task)) > 0:
+            self.thisCalcByte = len(Select.selectProcByFlagIdOnly(1, task)) - 1
             pass
         allRes = Select.selectProcByFlagIdOnly(1, task)
         # дожидаемся последний поток
@@ -61,6 +62,7 @@ class MethodCheck(Method):
             self.addRes(notes=self.compareData(position=oneRes.pos,
                                                              byte=oneRes.bytes,
                                                              resData=oneRes.resFile))  # добавлем различия
+        self.thisCalcByte = self.getMaxCountByte()
         testData.saveBaseToFile()
         return self.resData
 
@@ -79,3 +81,9 @@ class MethodCheck(Method):
 
     def getMaxCountByte(self):
         return (self.__posEnd + 1 - self.__posStart)
+
+    def getPosStart(self):
+        return self.__posStart
+
+    def getPosEnd(self):
+        return self.__posEnd

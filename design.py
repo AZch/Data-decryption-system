@@ -71,7 +71,7 @@ class Ui_MainWindow(object):
         self.lblThisMethod.setGeometry(QtCore.QRect(1050, 300, 161, 16))
         self.lblThisMethod.setObjectName("lblThisMethod")
         self.btnCalcThisMethod = QtWidgets.QPushButton(self.centralwidget)
-        self.btnCalcThisMethod.setGeometry(QtCore.QRect(920, 370, 121, 23))
+        self.btnCalcThisMethod.setGeometry(QtCore.QRect(920, 370, 291, 31))
         self.btnCalcThisMethod.setObjectName("btnCalcThisMethod")
         self.btnSaveTest = QtWidgets.QPushButton(self.centralwidget)
         self.btnSaveTest.setGeometry(QtCore.QRect(550, 10, 161, 21))

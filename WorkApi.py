@@ -281,6 +281,96 @@ class WorkApi():
         except:
             return "NO"
 
+    def getTimeWaitThisMethod(self):
+        try:
+            return self.currMethod.getTimeWait()
+        except:
+            return 0
+
+    def getPosStartThisMethod(self):
+        try:
+            return self.currMethod.getPosStart()
+        except:
+            return -1
+
+    def getPosEndThisMethod(self):
+        try:
+            return self.currMethod.getPosEnd()
+        except:
+            return -1
+
+    def getRandomPosThisMethod(self):
+        try:
+            return self.currMethod.getLstPosRand()
+        except:
+            return -1
+
+    def getCountRandThisMethod(self):
+        try:
+            return self.currMethod.getCountRand()
+        except:
+            return -1
+
+    def getBFPosThisMethod(self):
+        try:
+            return self.currMethod.getLstPosBruteForce()
+        except:
+            return -1
+
+    def getCountBFThisMethod(self):
+        try:
+            return self.currMethod.getCountForce()
+        except:
+            return -1
+
+    def setNameThisMethod(self, name):
+        try:
+            return self.currMethod.setName(name)
+        except:
+            return "NO"
+
+    def setTimeWaitThisMethod(self, timeWait):
+        try:
+            return self.currMethod.setTimeWait(timeWait)
+        except:
+            return -1
+
+    def setPosStartThisMethod(self, posStart):
+        try:
+            return self.currMethod.setPosStart(posStart)
+        except:
+            return -1
+
+    def setPosEndThisMethod(self, posEnd):
+        try:
+            return self.currMethod.setPosEnd(posEnd)
+        except:
+            return -1
+
+    def setRandomPosThisMethod(self, lstRandPos):
+        try:
+            return self.currMethod.setLstPosRand(lstRandPos)
+        except:
+            return -1
+
+    def setCountRandThisMethod(self, countRand):
+        try:
+            return self.currMethod.setCountRand(countRand)
+        except:
+            return -1
+
+    def setBFPosThisMethod(self, BFPos):
+        try:
+            return self.currMethod.setLstPosBruteForce(BFPos)
+        except:
+            return -1
+
+    def setCountBFThisMethod(self, CountBF):
+        try:
+            return self.currMethod.setCountForce(CountBF)
+        except:
+            return -1
+
     ''' 4.4. получить имя следующего метода '''
     def getNameNextMethod(self):
         try:

@@ -17,7 +17,9 @@ import designOpenTbl
 from OpenTblWnd import OpenTblWnd
 from peewee import *
 from DataDB.Models import *
-
+from Methods.MBruteForce import MBruteForce
+from Methods.MethodCheck import MethodCheck
+from Methods.MRandom import MRandom
 databaseMain = MySQLDatabase('', user='', password='', host='', port=0)
 
 class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
@@ -108,6 +110,9 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
         self.btnStartAll.clicked.connect(self.chgStartAll)
         self.btnFindChgAll.clicked.connect(self.chgFindAll)
         self.btnClearChgAll.clicked.connect(self.chgClearAll)
+        self.btnEditMethod.clicked.connect(self.updateMethodData)
+        self.btnCalcTo.setVisible(False)
+        self.spnToMethod.setVisible(False)
 
     ''' Сигнал обновления данных при выполнении метода '''
     def __sgnUpdExec(self, newValuePrg, newMsg, newValueLcd):
@@ -730,12 +735,62 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
             self.tblRes.setRowCount(0)
             self.lblMsg.setText("нет результатов для этого метода")
 
+    def updateMethodData(self):
+        try:
+            self.workApi.setNameThisMethod(self.nameMethod.toPlainText())
+            self.workApi.setTimeWaitThisMethod(self.spnTimeWait.value())
+
+            if (isinstance(self.workApi.currMethod, MBruteForce)):
+                self.workApi.setBFPosThisMethod(self.getArrPos())
+                self.workApi.setCountBFThisMethod(int(self.txtPosEnd.toPlainText()))
+                self.lblStartAllPos.setText('Позиции (16 ричная, без 0х и h)')
+                self.lblToCount.setText('Количество раз,-1 полный перебор')
+            elif (isinstance(self.workApi.currMethod, MRandom)):
+                self.workApi.setRandomPosThisMethod(self.getArrPos())
+                self.workApi.setCountRandThisMethod(int(self.txtPosEnd.toPlainText()))
+                self.lblStartAllPos.setText('Позиции (16 ричная, без 0х и h)')
+                self.lblToCount.setText('Количество раз')
+            elif (isinstance(self.workApi.currMethod, MethodCheck)):
+                self.workApi.setPosStartThisMethod(int(self.txtPosStart.toPlainText()))
+                self.workApi.setPosEndThisMethod(int(self.txtPosEnd.toPlainText()))
+                self.lblStartAllPos.setText('c')
+                self.lblToCount.setText('по')
+            else:
+                return self.lblMsg.setText("Не удалось изменить данные метода")
+            self.lblMsg.setText("Данные метода изменены")
+        except:
+            return self.lblMsg.setText("Не удалось изменить данные метода")
+
     """ Обновление данных на экране данных """
     def updateAfterSelect(self):
         self.lblThisMethod.setText(self.workApi.getNameThisMethod())
         self.lblPrevMethod.setText(self.workApi.getNamePrevMethod())
         self.lblNextMethod.setText(self.workApi.getNameNextMethod())
         self.setResTable(res=self.workApi.dataForTable())
+        try:
+            self.nameMethod.setText(self.workApi.getNameThisMethod())
+            self.spnTimeWait.setValue(self.workApi.getTimeWaitThisMethod())
+
+            if (isinstance(self.workApi.currMethod, MBruteForce)):
+                self.txtPosStart.setText(' '.join(str(hex(pos)[2:]) for pos in self.workApi.getBFPosThisMethod()))
+                self.txtPosEnd.setText(str(self.workApi.getCountBFThisMethod()))
+                self.lblStartAllPos.setText('Позиции (16 ричная, без 0х и h)')
+                self.lblToCount.setText('Количество раз,-1 полный перебор')
+            elif (isinstance(self.workApi.currMethod, MRandom)):
+                self.txtPosStart.setText(' '.join(str(hex(pos)[2:]) for pos in self.workApi.getRandomPosThisMethod()))
+                self.txtPosEnd.setText(str(self.workApi.getCountRandThisMethod()))
+                self.lblStartAllPos.setText('Позиции (16 ричная, без 0х и h)')
+                self.lblToCount.setText('Количество раз')
+            elif (isinstance(self.workApi.currMethod, MethodCheck)):
+                self.txtPosStart.setText(str(hex(self.workApi.getPosStartThisMethod())[2:]))
+                self.txtPosEnd.setText(str(hex(self.workApi.getPosEndThisMethod())[2:]))
+                self.lblStartAllPos.setText('c')
+                self.lblToCount.setText('по')
+            else:
+                return self.lblMsg.setText("Не удалось загрузить данные метода")
+            self.lblMsg.setText("Данные метода загружены")
+        except:
+            return self.lblMsg.setText("Не удалось загрузить данные метода")
 
 def main():
     app = QtWidgets.QApplication(sys.argv)  # Новый экземпляр QApplication

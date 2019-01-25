@@ -70,6 +70,7 @@ class MBruteForce(Method):
 
 
         while len(Select.selectProcByFlagIdOnly(-1, task)) > 0 or len(Select.selectProcByFlagIdOnly(0, task)) > 0:
+            self.thisCalcByte = len(Select.selectProcByFlagIdOnly(1, task)) - 1
             pass
         allRes = Select.selectProcByFlagIdOnly(1, task)
         # дожидаемся последний поток
@@ -109,3 +110,15 @@ class MBruteForce(Method):
 
     def getMaxCountByte(self):
         return (self.__countForce)
+
+    def getLstPosBruteForce(self):
+        return self.__lstPosBruteForce
+
+    def getCountForce(self):
+        return self.__countForce
+
+    def setLstPosBruteForce(self, lstPostBF):
+        self.__lstPosBruteForce = lstPostBF
+
+    def setCountForce(self, countForce):
+        self.__countForce = countForce
