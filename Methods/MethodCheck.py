@@ -39,7 +39,7 @@ class MethodCheck(Method):
 
         posByteSave = 0 # содержат позицию байтов, которые поток проверяет (для последнего шага проверки)
         pos = self.__posStart
-        while pos <= self.__posEnd:
+        while pos <= self.__posEnd and pos < len(testData.getLstTestData()):
             posByteSave = pos
             self.thisCalcByte = pos - self.__posStart
             testData.incDot(pos) # изменяем данные в одной позиции
