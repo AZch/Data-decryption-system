@@ -61,9 +61,13 @@ class msgChgNum():
 
 class typeMethod():
     typeCheck = "Проверка"
+    typeCheckId = 0
     typeBruteForce = "Перебор"
-    typeCompBase = "Сравнение с исходным"
+    typeBruteForcekId = 1
     typeRandom = "Рандомизация"
+    typeRandomId = 2
+    typeCompBase = "Сравнение с исходным"
+    typeCompBaseId = 3
 
 class jsonWord():
     method = "method"

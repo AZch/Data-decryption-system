@@ -21,7 +21,7 @@ class MethodCheck(Method):
     def makeReport(self):
         resStr = "Функции: \n"
         for note in self.resData.getData():
-            resStr += note.nameFunction + " Позиции байтов: " + ' '.join(hex(posInt)[2:] + 'h' for posInt in note.lstPosition) + '\n'
+            resStr += note.nameFunction + " Позиции байтов: " + ' '.join(hex(int(posInt))[2:] + 'h' for posInt in note.lstPosition) + '\n'
         return resStr
 
     def calc(self, testData, resFileWay, execFileWay):
@@ -53,15 +53,17 @@ class MethodCheck(Method):
             # proc.start() # запускаем поток (запускается бат файл и формируется список результатов)
             testData.decDot(pos)
             pos += 1
-        while len(Select.selectProcByFlagIdOnly(-1, task)) > 0 or len(Select.selectProcByFlagIdOnly(0, task)) > 0:
-            self.thisCalcByte = len(Select.selectProcByFlagIdOnly(1, task)) - 1
-            pass
-        allRes = Select.selectProcByFlagIdOnly(1, task)
-        # дожидаемся последний поток
-        for oneRes in allRes:
-            self.addRes(notes=self.compareData(position=oneRes.pos,
-                                                             byte=oneRes.bytes,
-                                                             resData=oneRes.resFile))  # добавлем различия
+
+        self.updateRes(task)
+        # while len(Select.selectProcByFlagIdOnly(-1, task)) > 0 or len(Select.selectProcByFlagIdOnly(0, task)) > 0:
+        #     self.thisCalcByte = len(Select.selectProcByFlagIdOnly(1, task)) - 1
+        #     pass
+        # allRes = Select.selectProcByFlagIdOnly(1, task)
+        # # дожидаемся последний поток
+        # for oneRes in allRes:
+        #     self.addRes(notes=self.compareData(position=oneRes.pos,
+        #                                                      byte=oneRes.bytes,
+        #                                                      resData=oneRes.resFile))  # добавлем различия
         self.thisCalcByte = self.getMaxCountByte()
         testData.saveBaseToFile()
         return self.resData
@@ -87,3 +89,10 @@ class MethodCheck(Method):
 
     def getPosEnd(self):
         return self.__posEnd
+
+    def setPosStart(self, startPos):
+        self.__posStart = startPos
+
+
+    def setPosEnd(self, endPos):
+        self.__posEnd = endPos

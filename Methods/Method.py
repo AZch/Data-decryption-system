@@ -1,3 +1,5 @@
+import time
+
 from Methods.IMethod import IMethod
 from Data.Note import Note
 from DataDB.GRUB import *
@@ -29,6 +31,9 @@ class Method(IMethod):
                 break
         print([data.idProc for data in retData])
         self._resStrData = retData[0].resFile
+        Update.updProc(retData[0].idProc, flagExec=2, inputTest=retData[0].inputTest,
+                       resFile=retData[0].resFile,
+                       pos=retData[0].pos, bytes=retData[0].bytes, timewait=retData[0].timewait)
 
         if self._resStrData == "":
             print("Файл не отработал успешно на пустом результате")
@@ -46,37 +51,68 @@ class Method(IMethod):
                                         isBaseFile=isBase)
         return proc
 
+    def updateRes(self, task):
+        while len(Select.selectProcByFlagIdOnly(-1, task)) > 0 or len(Select.selectProcByFlagIdOnly(0, task)) > 0:
+            allExec = Select.selectProcByFlagIdOnly(0, task)
+            for oneExec in allExec:
+                if time.time() - oneExec.startTime > self.__timeWait__ * 2:
+                    Update.updProc(oneExec.idProc, flagExec=-1, inputTest=oneExec.inputTest,
+                                   resFile=oneExec.resFile,
+                                   pos=oneExec.pos, bytes=oneExec.bytes, timewait=oneExec.timewait)
+            self.thisCalcByte = len(Select.selectProcByFlagIdOnly(1, task)) - 1
+            allRes = Select.selectProcByFlagIdOnly(1, task)
+            for oneRes in allRes:
+                self.addByPosRes(notes=self.compareData(position=oneRes.pos,
+                                                        byte=oneRes.bytes,
+                                                        resData=oneRes.resFile))  # добавлем различия
+                Update.updProc(oneRes.idProc, flagExec=2, inputTest=oneRes.inputTest,
+                               resFile=oneRes.resFile,
+                               pos=oneRes.pos, bytes=oneRes.bytes, timewait=oneRes.timewait)
+            time.sleep(5)
+            pass
+        allRes = Select.selectProcByFlagIdOnly(1, task)
+        for oneRes in allRes:
+            self.addByPosRes(notes=self.compareData(position=oneRes.pos,
+                                                    byte=oneRes.bytes,
+                                                    resData=oneRes.resFile))  # добавлем различия
+            Update.updProc(oneRes.idProc, flagExec=2, inputTest=oneRes.inputTest,
+                           resFile=oneRes.resFile,
+                           pos=oneRes.pos, bytes=oneRes.bytes, timewait=oneRes.timewait)
+        # дожидаемся последний поток
+
     def compareData(self, position, byte, resData):
         resStrData = self._baseResData.split('\n')
         compStrData = resData.split('\n')
         noteCompare = list()
         i = 0
         while i < len(resStrData) and i < len(compStrData):
-            if compStrData == 'nope':
+            if resData == 'nope':
                 posInt = list()
                 for onePos in position.split(' '):
                     posInt.append(onePos)
                 noteCompare.append(Note(nameFunction="too long wait", resFunction="too long wait",  # добавляем новую запись
                                         lstBit=byte.split(' '), lstPosition=posInt))
-            if (resStrData[i] != compStrData[i]):
-                splitOneStrData = compStrData[i].split('│')
-                nameFunction = ""
-                resFunction = ""
-                try:
-                    nameFunction += splitOneStrData[0]
-                    resFunction += splitOneStrData[1] + " Дата: "
-                    resFunction += splitOneStrData[2]
-                except:
-                    nameFunction += 'error'
-                    resFunction += 'error'
-                nameFunction = nameFunction.translate({ord(char): None for char in '\n'})
-                resFunction = resFunction.translate({ord(char): None for char in '\n'})
-                posInt = list()
-                for onePos in position.split(' '):
-                    posInt.append(onePos)
-                noteCompare.append(Note(nameFunction=nameFunction, resFunction=resFunction,  # добавляем новую запись
-                                         lstBit=byte.split(' '), lstPosition=posInt))
-            i += 1
+                return noteCompare
+            else:
+                if (resStrData[i] != compStrData[i]):
+                    splitOneStrData = compStrData[i].split('│')
+                    nameFunction = ""
+                    resFunction = ""
+                    try:
+                        nameFunction += splitOneStrData[0]
+                        resFunction += splitOneStrData[1] + " Дата: "
+                        resFunction += splitOneStrData[2]
+                    except:
+                        nameFunction += 'error'
+                        resFunction += 'error'
+                    nameFunction = nameFunction.translate({ord(char): None for char in '\n'})
+                    resFunction = resFunction.translate({ord(char): None for char in '\n'})
+                    posInt = list()
+                    for onePos in position.split(' '):
+                        posInt.append(onePos)
+                    noteCompare.append(Note(nameFunction=nameFunction, resFunction=resFunction,  # добавляем новую запись
+                                             lstBit=byte.split(' '), lstPosition=posInt))
+                i += 1
         return noteCompare
 
     def setResData(self, data):

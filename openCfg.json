@@ -4,7 +4,7 @@
         "host": "localhost",
         "port": 3307,
         "user": "root",
-        "password": "Tezibo44"
+        "password": ""
     },
     "readCfg": "default",
     "default": {
@@ -36,7 +36,7 @@
                 "name": "edfg",
                 "type": "MethodCheck",
                 "timeSleep": 0,
-                "timeWait": 40,
+                "timeWait": 20,
                 "countProc": 1,
                 "posStart": 10,
                 "posEnd": 15
@@ -51,17 +51,28 @@
                 "lstPosition": "12 13 14 15",
                 "countForce": 5
             }
+        },
+        "method5": {
+            "method": {
+                "name": "2222",
+                "type": "MethodCheck",
+                "timeSleep": 0,
+                "timeWait": 60,
+                "countProc": 1,
+                "posStart": 348,
+                "posEnd": 351
+            }
         }
     },
     "ReadFiles": {
-        "testFile": "C:/Users/anton/PycharmProjects/test/dump.reg",
+        "testFile": "C:/Users/anton/PycharmProjects/DataDecryptionSystemNew/dump000.reg",
         "execFile": "",
         "endResFile": ""
     },
     "chgValue": {
-        "0": "1->1",
-        "1": "14->45",
-        "2": "0->00",
-        "3": "0->00"
+        "0": "1->83",
+        "1": "14->CD",
+        "2": "0->04",
+        "3": "0->04"
     }
 }

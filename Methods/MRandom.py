@@ -55,15 +55,16 @@ class MRandom(Method):
             i += 1
         data.saveBaseToFile()
 
-        while len(Select.selectProcByFlagIdOnly(-1, task)) > 0 or len(Select.selectProcByFlagIdOnly(0, task)) > 0:
-            self.thisCalcByte = len(Select.selectProcByFlagIdOnly(1, task)) - 1
-            pass
-        allRes = Select.selectProcByFlagIdOnly(1, task)
-        # дожидаемся последний поток
-        for oneRes in allRes:
-            self.addByPosRes(notes=self.compareData(position=oneRes.pos,
-                                                             byte=oneRes.bytes,
-                                                             resData=oneRes.resFile))  # добавлем различия
+        self.updateRes(task)
+        # while len(Select.selectProcByFlagIdOnly(-1, task)) > 0 or len(Select.selectProcByFlagIdOnly(0, task)) > 0:
+        #     self.thisCalcByte = len(Select.selectProcByFlagIdOnly(1, task)) - 1
+        #     pass
+        # allRes = Select.selectProcByFlagIdOnly(1, task)
+        # # дожидаемся последний поток
+        # for oneRes in allRes:
+        #     self.addByPosRes(notes=self.compareData(position=oneRes.pos,
+        #                                                      byte=oneRes.bytes,
+        #                                                      resData=oneRes.resFile))  # добавлем различия
 
         self.thisCalcByte = self.getMaxCountByte()
         return self.resData
@@ -85,7 +86,7 @@ class MRandom(Method):
         for note in self.resData.getData():
             resStr += "Позиции=байты: \n"
             for i in range(len(note.lstBit)):
-                resStr += str(note.lstPosition[i]) + " = " + str(note.lstBit[i]) + ","
+                resStr += str(hex(int(note.lstPosition[i]))[2:]) + " = " + str(note.lstBit[i]) + ","
             resStr = resStr[:-1] + "\n" + "Функции:\n"
             splitFun = note.nameFunction.split('/')
             splitRes = note.resFunction.split('/')

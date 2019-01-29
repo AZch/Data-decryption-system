@@ -30,7 +30,7 @@ class Data(IData):
     def makeStrData(self):
         resStr = ""
         for note in self.lstNotes:
-            resStr += note.nameFunction + "|" + note.resFunction + "|" + ' '.join(str(bit) for bit in note.lstBit) + "|" + ' '.join(str(pos) for pos in note.lstPosition) + "\n"
+            resStr += note.nameFunction + "|" + note.resFunction + "|" + ' '.join(str(bit) for bit in note.lstBit) + "|" + ' '.join(hex(int(pos))[2:] for pos in note.lstPosition) + "\n"
         resStr = resStr[:-1]
         return resStr
 

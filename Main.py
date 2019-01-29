@@ -177,7 +177,7 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
             lambda *args, rowPosition=rowPosition: self.__delRowChgTbl(self.tblChgTest.currentRow())
         )
 
-        self.tblRes.resizeColumnsToContents()
+        self.tblChgTest.resizeColumnsToContents()
 
     def __delRowChgTbl(self, row):
         self.tblChgTest.removeRow(row)
@@ -589,7 +589,7 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
     def makeArrParam(self):
         if str(self.cmbMethods.currentText()) == typeMethod.typeCheck:
             return [self.nameMethod.toPlainText(), 1,
-                     int(self.txtPosStart.toPlainText()), int(self.txtPosEnd.toPlainText()),
+                     int('0x' + self.txtPosStart.toPlainText(), 16), int('0x' + self.txtPosEnd.toPlainText(), 16),
                      0, self.spnTimeWait.value()]
         elif str(self.cmbMethods.currentText()) == typeMethod.typeBruteForce:
             return [self.nameMethod.toPlainText(), 1,
@@ -676,7 +676,7 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
                 self.btnDelThisMethod, self.btnDelAllMethod, self.btnAddMethod,
                 self.btnLoadResFile, self.btnLoadExecFile, self.btnLoadInputTest,
                 self.tblChgTest, self.btnAddStrEditTest, self.btnChgAll, self.btnClearChgAll, self.btnFindChgAll,
-                self.btnStartAll]
+                self.btnStartAll, self.btnEditMethod]
 
     ''' Обновление данных формы во время работы метода '''
     def updateCalc(self, workApi, sgnUpdExec, arrayBtnLock, sgnUpdTbl):
@@ -751,14 +751,15 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
                 self.lblStartAllPos.setText('Позиции (16 ричная, без 0х и h)')
                 self.lblToCount.setText('Количество раз')
             elif (isinstance(self.workApi.currMethod, MethodCheck)):
-                self.workApi.setPosStartThisMethod(int(self.txtPosStart.toPlainText()))
-                self.workApi.setPosEndThisMethod(int(self.txtPosEnd.toPlainText()))
+                self.workApi.setPosStartThisMethod(int('0x' + self.txtPosStart.toPlainText(), 16))
+                self.workApi.setPosEndThisMethod(int('0x' + self.txtPosEnd.toPlainText(), 16))
                 self.lblStartAllPos.setText('c')
                 self.lblToCount.setText('по')
             else:
                 return self.lblMsg.setText("Не удалось изменить данные метода")
             self.lblMsg.setText("Данные метода изменены")
         except:
+            print('Ошибка:\n', traceback.format_exc())
             return self.lblMsg.setText("Не удалось изменить данные метода")
 
     """ Обновление данных на экране данных """
@@ -770,22 +771,26 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
         try:
             self.nameMethod.setText(self.workApi.getNameThisMethod())
             self.spnTimeWait.setValue(self.workApi.getTimeWaitThisMethod())
+            self.cmbMethods.setCurrentIndex(typeMethod.typeCompBaseId)
 
             if (isinstance(self.workApi.currMethod, MBruteForce)):
                 self.txtPosStart.setText(' '.join(str(hex(pos)[2:]) for pos in self.workApi.getBFPosThisMethod()))
                 self.txtPosEnd.setText(str(self.workApi.getCountBFThisMethod()))
                 self.lblStartAllPos.setText('Позиции (16 ричная, без 0х и h)')
                 self.lblToCount.setText('Количество раз,-1 полный перебор')
+                self.cmbMethods.setCurrentIndex(typeMethod.typeBruteForcekId)
             elif (isinstance(self.workApi.currMethod, MRandom)):
                 self.txtPosStart.setText(' '.join(str(hex(pos)[2:]) for pos in self.workApi.getRandomPosThisMethod()))
                 self.txtPosEnd.setText(str(self.workApi.getCountRandThisMethod()))
                 self.lblStartAllPos.setText('Позиции (16 ричная, без 0х и h)')
                 self.lblToCount.setText('Количество раз')
+                self.cmbMethods.setCurrentIndex(typeMethod.typeRandomId)
             elif (isinstance(self.workApi.currMethod, MethodCheck)):
                 self.txtPosStart.setText(str(hex(self.workApi.getPosStartThisMethod())[2:]))
                 self.txtPosEnd.setText(str(hex(self.workApi.getPosEndThisMethod())[2:]))
                 self.lblStartAllPos.setText('c')
                 self.lblToCount.setText('по')
+                self.cmbMethods.setCurrentIndex(typeMethod.typeCheckId)
             else:
                 return self.lblMsg.setText("Не удалось загрузить данные метода")
             self.lblMsg.setText("Данные метода загружены")

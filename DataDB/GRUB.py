@@ -1,5 +1,6 @@
 import peewee
 from DataDB.Models import *
+import time
 
 class Add:
     @staticmethod
@@ -9,7 +10,7 @@ class Add:
         return Tasks.get(Tasks.idTasks == row.idTasks)
 
     @staticmethod
-    def addProc(flagExec, inputTest, resFile, taskDDS, pos, bytes, timewait, userNameProc=""):
+    def addProc(flagExec, inputTest, resFile, taskDDS, timeStart = time.time(), pos="", bytes="", userNameProc="", timewait=""):
         task = taskDDS
         isExist = True
         try:
@@ -19,7 +20,7 @@ class Add:
 
         if isExist:
             row = Proc(flagExec=flagExec, inputTest=inputTest, resFile=resFile, pos=pos, bytes=bytes,
-                       userNameProc=userNameProc, timewait=timewait, tasks=task)
+                       userNameProc=userNameProc, timewait=timewait, tasks=task, timeStart=timeStart)
             row.save()
 
 
@@ -33,6 +34,10 @@ class Select():
         return Proc.select()
 
     @staticmethod
+    def selectProcByTask(id):
+        return Proc.get(Proc.idTaskProc == id)
+
+    @staticmethod
     def selectProcByFlag(flag):
         return Proc.get(Proc.flagExec == flag)
 
@@ -44,10 +49,6 @@ class Select():
     def selectProcByFlagIdOnly(flag, tasks):
         return Proc.select().where(Proc.flagExec == flag, Proc.tasks == tasks)
 
-    @staticmethod
-    def selectProcByTask(task):
-        return Proc.select().where(Proc.tasks == task)
-
 class Update():
     @staticmethod
     def updTask(id, method, userName = ""):
@@ -56,8 +57,8 @@ class Update():
         task.userName = userName
 
     @staticmethod
-    def updProc(id, flagExec, inputTest, resFile, pos="", bytes="", userNameProc="", timewait=""):
-        proc = Proc.get(Proc.idProc == id)
+    def updProc(id, flagExec, inputTest, resFile, pos, bytes, startTime=time.time(), userNameProc="", timewait=20):
+        proc = Proc.select().where(Proc.idProc == id).get()
         proc.flagExec = flagExec
         proc.inputTest = inputTest
         proc.resFile = resFile
@@ -65,6 +66,8 @@ class Update():
         proc.bytes = bytes
         proc.userNameProc = userNameProc
         proc.timewait = timewait
+        proc.startTime = startTime
+        proc.save()
 
 def checkNull(elem, task):
     if elem == "":
@@ -89,14 +92,15 @@ class Delete():
     @staticmethod
     def delProc(id = -1, flagExec = "", inputTest = "", resFile = "", pos="", bytes="", userNameProc="", timewait=""):
         if id == -1:
-            proc = Proc.get(checkNull(flagExec, Proc.flagExec),
-                            checkNull(inputTest, Proc.inputTest),
-                            checkNull(resFile, Proc.resFile),
-                            checkNull(pos, Proc.pos),
-                            checkNull(bytes, Proc.bytes),
-                            checkNull(userNameProc, Proc.userNameProc),
+            proc = Proc.get(checkNull(flagExec, Proc.flagExec) and
+                            checkNull(inputTest, Proc.inputTest) and
+                            checkNull(resFile, Proc.resFile) and
+                            checkNull(pos, Proc.pos) and
+                            checkNull(bytes, Proc.bytes) and
+                            checkNull(userNameProc, Proc.userNameProc) and
                             checkNull(timewait, Proc.timewait))
             proc.delete_instance()
         else:
             proc = Proc.get(Proc.idProc == id)
             proc.delete_instance()
+
