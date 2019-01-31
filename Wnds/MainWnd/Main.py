@@ -1,8 +1,6 @@
 import sys  # sys нужен для передачи argv в QApplication
-import os  # Отсюда нам понадобятся методы для отображения содержимого директорий
 import threading
 import time
-import json
 import traceback
 #import pymysql
 
@@ -12,9 +10,8 @@ from PyQt5 import QtCore
 from WorkApi import WorkApi
 from Constants import *
 
-import design  # Это наш конвертированный файл дизайна
-import designOpenTbl
-from OpenTblWnd import OpenTblWnd
+from Wnds.MainWnd import design
+from Wnds.OpenTblWnd.OpenTblWnd import OpenTblWnd
 from peewee import *
 from DataDB.Models import *
 from Methods.MBruteForce import MBruteForce

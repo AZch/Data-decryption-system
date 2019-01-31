@@ -6,6 +6,11 @@
         "user": "root",
         "password": ""
     },
+    "mail": {
+        "mailSmtp": "smtp.mail.ru",
+        "lgn": "resultworkdds@mail.ru",
+        "pswd": "data1decryption2system4"
+    },
     "readCfg": "default",
     "default": {
         "methods": "loadMehtods",
@@ -15,7 +20,7 @@
     "loadMehtods": {
         "method1": {
             "method": {
-                "name": "сравн 40",
+                "name": "пїЅпїЅпїЅпїЅпїЅ 40",
                 "type": "MCompBase",
                 "timeWait": 50
             }

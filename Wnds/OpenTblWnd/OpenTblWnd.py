@@ -1,9 +1,7 @@
 from PyQt5 import QtWidgets
-from PyQt5 import QtCore
 
-import time
+from Wnds.OpenTblWnd import designOpenTbl
 
-import designOpenTbl
 
 class OpenTblWnd(QtWidgets.QDialog, designOpenTbl.Ui_openTbl):
     def __init__(self, tbl):
