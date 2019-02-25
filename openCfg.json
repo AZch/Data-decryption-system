@@ -2,9 +2,15 @@
     "db": {
         "name": "dds",
         "host": "localhost",
-        "port": 3307,
-        "user": "root",
-        "password": ""
+        "port": 3306,
+        "user": "dds",
+        "password": "pswd"
+    },
+    "mail": {
+        "mailSmtp": "smtp.mail.ru",
+        "lgn": "resultworkdds@mail.ru",
+        "pswd": "data1decryption2system4",
+        "userMail": "1"
     },
     "readCfg": "default",
     "default": {
@@ -15,7 +21,7 @@
     "loadMehtods": {
         "method1": {
             "method": {
-                "name": "сравн 40",
+                "name": "ss 40",
                 "type": "MCompBase",
                 "timeWait": 50
             }
@@ -65,14 +71,9 @@
         }
     },
     "ReadFiles": {
-        "testFile": "C:/Users/anton/PycharmProjects/DataDecryptionSystemNew/dump000.reg",
+        "testFile": "",
         "execFile": "",
         "endResFile": ""
     },
-    "chgValue": {
-        "0": "1->83",
-        "1": "14->CD",
-        "2": "0->04",
-        "3": "0->04"
-    }
+    "chgValue": {}
 }

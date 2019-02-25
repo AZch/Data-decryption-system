@@ -59,7 +59,7 @@ class Method(IMethod):
                     Update.updProc(oneExec.idProc, flagExec=-1, inputTest=oneExec.inputTest,
                                    resFile=oneExec.resFile,
                                    pos=oneExec.pos, bytes=oneExec.bytes, timewait=oneExec.timewait)
-            self.thisCalcByte = len(Select.selectProcByFlagIdOnly(1, task)) - 1
+            self.thisCalcByte = len(Select.selectProcByFlagIdOnly(2, task)) - 1
             allRes = Select.selectProcByFlagIdOnly(1, task)
             for oneRes in allRes:
                 self.addByPosRes(notes=self.compareData(position=oneRes.pos,

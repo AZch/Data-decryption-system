@@ -51,6 +51,12 @@ class TestData():
         file.write(self.getBaseStrTestData())
         file.close()
 
+    def reverseDot(self, pos):
+        self.__workLstTestData[pos] = hex(int('0b' + bin(int('0x' + self.__workLstTestData[pos], 16))[2:]
+                                              .replace('1', 'a')
+                                              .replace('0','1')
+                                              .replace('a','0'), 2))[2:]
+
     def incDot(self, pos):
         res = hex(int('0x' + self.__workLstTestData[pos], 16) + 1)[2:]
         if len(res) == 1:

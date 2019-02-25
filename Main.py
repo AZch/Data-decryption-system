@@ -4,11 +4,13 @@ import threading
 import time
 import json
 import traceback
+import smtplib
 #import pymysql
 
 from PyQt5 import QtWidgets
 from PyQt5 import QtCore
 
+from DataDB import Models
 from WorkApi import WorkApi
 from Constants import *
 
@@ -47,6 +49,40 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
         with file:
             data = file.read()
             self.jsonData = json.loads(data)
+
+            self.mailSmtp = self.jsonData[jsonWord.mail][jsonWord.mailSmtp]
+            self.mailLgn = self.jsonData[jsonWord.mail][jsonWord.mailLgn]
+            self.mailPsw = self.jsonData[jsonWord.mail][jsonWord.mailPsw]
+            self.userMail = self.jsonData[jsonWord.mail][jsonWord.userMail]
+            while True:
+                if self.mailSmtp == "":
+                    print('smtp server(example: smtp.mail.ru): ')
+                    self.mailSmtp = input()
+                if self.mailLgn == "":
+                    print('mail login: ')
+                    self.mailLgn = input()
+                if self.mailPsw == "":
+                    print('mail password: ')
+                    self.mailPsw = input()
+                if self.userMail == "":
+                    print('mail to send result status: ')
+                    self.userMail = input()
+                try:
+                    self.smtpObj = smtplib.SMTP(self.mailSmtp, 587)
+                    self.smtpObj.starttls()
+                    resLgn = self.smtpObj.login(self.mailLgn, self.mailPsw)
+                    break
+                except:
+                    pass
+                print("data incorrect, please input correct data")
+                self.mailSmtp = ''
+                self.mailLgn = ''
+                self.mailPsw = ''
+                self.userMail = ''
+                print('Reconnect (y):')
+                self.isReconnect = input()
+                if self.isReconnect == 'n' or self.isReconnect == 'not':
+                    break
 
             self.dbName = self.jsonData[jsonWord.db][jsonWord.dbName]
             self.dbHost = self.jsonData[jsonWord.db][jsonWord.dbHost]
@@ -262,12 +298,18 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
     def makeCfg(self):
         dataToCfg = {}
         dataToCfg[jsonWord.db] = {}
-        dataToCfg[jsonWord.db][jsonWord.dbName] = self.dbName
-        dataToCfg[jsonWord.db][jsonWord.dbHost] = self.dbHost
-        dataToCfg[jsonWord.db][jsonWord.dbPosrt] = self.dbPort
-        dataToCfg[jsonWord.db][jsonWord.dbUser] = self.dbUser
-        dataToCfg[jsonWord.db][jsonWord.dbPsw] = self.dbPsw
-        database = MySQLDatabase(self.dbName, user=self.dbUser, password=self.dbPsw, host=self.dbHost, port=self.dbPort)
+        dataToCfg[jsonWord.db][jsonWord.dbName] = Models.DB
+        dataToCfg[jsonWord.db][jsonWord.dbHost] = Models.HOST
+        dataToCfg[jsonWord.db][jsonWord.dbPosrt] = Models.PORT
+        dataToCfg[jsonWord.db][jsonWord.dbUser] = Models.USER
+        dataToCfg[jsonWord.db][jsonWord.dbPsw] = Models.PASSWORD
+
+        dataToCfg[jsonWord.mail] = {}
+        dataToCfg[jsonWord.mail][jsonWord.mailSmtp] = self.mailSmtp
+        dataToCfg[jsonWord.mail][jsonWord.mailLgn] = self.mailLgn
+        dataToCfg[jsonWord.mail][jsonWord.mailPsw] = self.mailPsw
+        dataToCfg[jsonWord.mail][jsonWord.userMail] = self.userMail
+        #database = MySQLDatabase(self.dbName, user=self.dbUser, password=self.dbPsw, host=self.dbHost, port=self.dbPort)
 
         dataToCfg[jsonWord.readCfg] = self.currCfg
         dataToCfg[self.currCfg] = {}
@@ -305,6 +347,10 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
         if not self.__compareDataInCfg(firstCfg[self.currCfgFiles], secondCfg[self.currCfgFiles]):
             return False
         if not self.__compareDataInCfg(firstCfg[self.currCfgChgVal], secondCfg[self.currCfgChgVal]):
+            return False
+        if not self.__compareDataInCfg(firstCfg[jsonWord.db], secondCfg[jsonWord.db]):
+            return False
+        if not self.__compareDataInCfg(firstCfg[jsonWord.mail], secondCfg[jsonWord.mail]):
             return False
         return True
 
@@ -644,7 +690,8 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
                 countCalc -= 1
                 res = self.workApi.calcMethod()
                 newThread = threading.Thread(target=self.updateCalc, args=[self.workApi, self.sgnUpdExec,
-                                                                           self.getAllBtnArray(), self.sgnUpdTbl])
+                                                                           self.getAllBtnArray(), self.sgnUpdTbl,
+                                                                       self.smtpObj, self.mailLgn, self.userMail])
                 newThread.start()
                 newThread.join()
                 if self.workApi.goNextMethod() == StrRetConts.retBat:
@@ -661,7 +708,8 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
         try:
             res = self.workApi.calcMethod()
             newThread = threading.Thread(target=self.updateCalc, args=[self.workApi, self.sgnUpdExec,
-                                                                       self.getAllBtnArray(), self.sgnUpdTbl])
+                                                                       self.getAllBtnArray(), self.sgnUpdTbl,
+                                                                       self.smtpObj, self.mailLgn, self.userMail])
             newThread.start()
             if res == StrRetConts.retBat:
                 raise ValueError()
@@ -679,7 +727,7 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
                 self.btnStartAll, self.btnEditMethod]
 
     ''' Обновление данных формы во время работы метода '''
-    def updateCalc(self, workApi, sgnUpdExec, arrayBtnLock, sgnUpdTbl):
+    def updateCalc(self, workApi, sgnUpdExec, arrayBtnLock, sgnUpdTbl, smtpMail, fromMail, toMail):
         startTime = time.time()
         try:
             for btn in arrayBtnLock:
@@ -706,7 +754,15 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
                             int(time.time() - startTime)
                             )
             sgnUpdTbl.emit()
+            try:
+                smtpMail.sendmail(fromMail, toMail, "The calculation were successful")
+            except:
+                print('Ошибка:\n', traceback.format_exc())
         except:
+            try:
+                smtpMail.sendmail(fromMail, toMail, "An error in calculation")
+            except:
+                print('Ошибка:\n', traceback.format_exc())
             print('Ошибка:\n', traceback.format_exc())
             for btn in arrayBtnLock:
                 btn.setEnabled(True)

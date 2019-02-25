@@ -1,7 +1,10 @@
 from peewee import *
 from Constants import jsonWord
 import json
-file = open(jsonWord.configName, 'r')
+
+databaseMain = ""
+
+file = open(jsonWord.configName, 'r', encoding='utf-8')
 with file:
     data = file.read()
     jsonData = json.loads(data)
@@ -11,24 +14,32 @@ with file:
     HOST = jsonData[jsonWord.db][jsonWord.dbHost]
     PORT = jsonData[jsonWord.db][jsonWord.dbPosrt]
 
-if DB == "":
-    print("Database name:")
-    DB = input()
-if USER == "":
-    print("Database user name:")
-    USER = input()
-if PASSWORD == "":
-    print("Database password:")
-    PASSWORD = input()
-if HOST == "":
-    print("Database host name:")
-    HOST = input()
-if PORT == 0:
-    print("Database port:")
-    PORT = int(input())
-
-databaseMain = MySQLDatabase(DB, user=USER, password=PASSWORD, host=HOST, port=PORT)
-databaseMain.connect()
+while True:
+    if DB == "":
+        print("Database name:")
+        DB = input()
+    if USER == "":
+        print("Database user name:")
+        USER = input()
+    if PASSWORD == "":
+        print("Database password:")
+        PASSWORD = input()
+    if HOST == "":
+        print("Database host name:")
+        HOST = input()
+    if PORT == 0:
+        print("Database port:")
+        PORT = int(input())
+    try:
+        databaseMain = MySQLDatabase(DB, user=USER, password=PASSWORD, host=HOST, port=PORT)
+        databaseMain.connect()
+        break
+    except:
+        DB = ""
+        USER = ""
+        PASSWORD = ""
+        HOST = ""
+        PORT = 0
 
 class BaseModelDDS(Model):
     class Meta:

@@ -106,6 +106,12 @@ class jsonWord():
     dbUser = 'user'
     dbPsw = 'password'
 
+    mail = 'mail'
+    mailSmtp = 'mailSmtp'
+    mailLgn = 'lgn'
+    mailPsw = 'pswd'
+    userMail = 'userMail'
+
 class styles():
     lblStyleGood = "QLabel { color : green; }"
     lblStyleBad = "QLabel { color : red; }"
