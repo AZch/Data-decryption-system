@@ -6,6 +6,8 @@ from FactoryMethods.FactoryMBruteForce import FactoryMBruteForce
 from FactoryMethods.FactoryMCompBase import FactoryMCompBase
 from FactoryMethods.FactoryMRandom import FactoryMRandom
 from FactoryMethods.FactoryMethod import FactoryMethod
+from FactoryMethods.FactoryMMoreOneRand import FactoryMMoreOneRand
+from FactoryMethods.FactoryMReverse import FactoryMReverse
 from Data.Data import Data
 from Data.TestData import TestData
 from Constants import StrRetConts
@@ -140,6 +142,18 @@ class WorkApi():
         try:
             self.factoryMethods = FactoryMCompBase()
             return StrRetConts.retGood
+        except:
+            return StrRetConts.retBat
+
+    def setFactoryMMoreOneRand(self):
+        try:
+            self.factoryMethods = FactoryMMoreOneRand()
+        except:
+            return StrRetConts.retBat
+
+    def setFactoryMReverse(self):
+        try:
+            self.factoryMethods = FactoryMReverse()
         except:
             return StrRetConts.retBat
 

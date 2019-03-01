@@ -1,8 +1,6 @@
 import sys  # sys нужен для передачи argv в QApplication
-import os  # Отсюда нам понадобятся методы для отображения содержимого директорий
 import threading
 import time
-import json
 import traceback
 import smtplib
 #import pymysql
@@ -14,10 +12,8 @@ from DataDB import Models
 from WorkApi import WorkApi
 from Constants import *
 
-import design  # Это наш конвертированный файл дизайна
-import designOpenTbl
-from OpenTblWnd import OpenTblWnd
-from peewee import *
+from windows.MainWnd import design
+from windows.OpenTblWnd.OpenTblWnd import OpenTblWnd
 from DataDB.Models import *
 from Methods.MBruteForce import MBruteForce
 from Methods.MethodCheck import MethodCheck
@@ -31,7 +27,7 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
 
     def __init__(self):
         super().__init__()
-        self.setupUi(self)  # Это нужно для инициализации нашего дизайна
+        self.setupUi(self)
         self.countMethod = 0
 
         self.cmbMethods.addItems([typeMethod.typeCheck, typeMethod.typeBruteForce,

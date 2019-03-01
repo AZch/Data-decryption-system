@@ -8,9 +8,9 @@ from Data.TestData import TestData
 from Constants import jsonWord
 from ObjectPool.ExecProcPool import ExecProcPool
 from ObjectPool.ExecProc import ExecProc
-from DataDB.GRUB import *
+from DataDB.GRUD import *
 
-class MethodCheck(Method):
+class MMoreOneRand(Method):
 
     def __init__(self, name, timeSleep, posStart, posEnd, countProc, timeWait, countOneRand):
         super().__init__(name=name, countProc=countProc, timeWait=timeWait)

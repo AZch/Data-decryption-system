@@ -68,6 +68,11 @@ class typeMethod():
     typeRandomId = 2
     typeCompBase = "Сравнение с исходным"
     typeCompBaseId = 3
+    typeMoreOneRand = "Множественный рандом"
+    typeMoreOneRandId = 4;
+    typeReverse = "Реверс проверка"
+    typeReverseId = 5
+
 
 class jsonWord():
     method = "method"

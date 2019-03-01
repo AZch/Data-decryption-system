@@ -2,7 +2,7 @@ import time
 
 from Methods.IMethod import IMethod
 from Data.Note import Note
-from DataDB.GRUB import *
+from DataDB.GRUD import *
 
 class Method(IMethod):
     def __init__(self, name, countProc, timeWait):
