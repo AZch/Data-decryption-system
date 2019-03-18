@@ -72,7 +72,7 @@ class MReverse(Method):
         data = {}
         data[jsonWord.method] = {
             jsonWord.name : self.name,
-            jsonWord.type : jsonWord.mCheck,
+            jsonWord.type : jsonWord.mReverse,
             jsonWord.mTimeSleep : self.__timeSleep,
             jsonWord.mTimeWait : self.__timeWait__,
             jsonWord.mCountProc : self.__countProc__,

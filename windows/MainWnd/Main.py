@@ -31,7 +31,8 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
         self.countMethod = 0
 
         self.cmbMethods.addItems([typeMethod.typeCheck, typeMethod.typeBruteForce,
-                                  typeMethod.typeRandom, typeMethod.typeCompBase])
+                                  typeMethod.typeRandom, typeMethod.typeCompBase, typeMethod.typeMoreOneRand,
+                                  typeMethod.typeReverse])
         self.colorTypeDefault()
         self.__initAPI()
         self.__initBtn()

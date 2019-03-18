@@ -69,7 +69,7 @@ class typeMethod():
     typeCompBase = "Сравнение с исходным"
     typeCompBaseId = 3
     typeMoreOneRand = "Множественный рандом"
-    typeMoreOneRandId = 4;
+    typeMoreOneRandId = 4
     typeReverse = "Реверс проверка"
     typeReverseId = 5
 
@@ -83,6 +83,8 @@ class jsonWord():
     mBruteForce = "MBruteForce"
     mRand = "MRand"
     mCompBase = "MCompBase"
+    mMoreOneRand = "MMoreOneRand"
+    mReverse = "MReverse"
 
     mTimeSleep='timeSleep'
     mPosStart='posStart'

@@ -63,7 +63,7 @@ class MMoreOneRand(Method):
         data = {}
         data[jsonWord.method] = {
             jsonWord.name : self.name,
-            jsonWord.type : jsonWord.mCheck,
+            jsonWord.type : jsonWord.mMoreOneRand,
             jsonWord.mTimeSleep : self.__timeSleep,
             jsonWord.mTimeWait : self.__timeWait__,
             jsonWord.mCountProc : self.__countProc__,
@@ -81,9 +81,15 @@ class MMoreOneRand(Method):
     def getPosEnd(self):
         return self.__posEnd
 
+    def getTimeSleep(self):
+        return self.__timeSleep
+
     def setPosStart(self, startPos):
         self.__posStart = startPos
 
 
     def setPosEnd(self, endPos):
         self.__posEnd = endPos
+
+    def setTimeSleep(self, timeSleep):
+        self.__timeSleep = timeSleep
