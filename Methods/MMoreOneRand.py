@@ -12,9 +12,8 @@ from DataDB.GRUD import *
 
 class MMoreOneRand(Method):
 
-    def __init__(self, name, timeSleep, posStart, posEnd, countProc, timeWait, countOneRand):
+    def __init__(self, name, posStart, posEnd, countProc, timeWait, countOneRand):
         super().__init__(name=name, countProc=countProc, timeWait=timeWait)
-        self.__timeSleep = timeSleep
         self.__posStart = posStart
         self.__posEnd = posEnd
         self.__countOneRand = countOneRand
@@ -64,11 +63,11 @@ class MMoreOneRand(Method):
         data[jsonWord.method] = {
             jsonWord.name : self.name,
             jsonWord.type : jsonWord.mMoreOneRand,
-            jsonWord.mTimeSleep : self.__timeSleep,
             jsonWord.mTimeWait : self.__timeWait__,
             jsonWord.mCountProc : self.__countProc__,
             jsonWord.mPosStart : self.__posStart,
-            jsonWord.mPosEnd : self.__posEnd
+            jsonWord.mPosEnd : self.__posEnd,
+            jsonWord.mCountRandom: self.__countOneRand
         }
         return data
 
@@ -81,15 +80,9 @@ class MMoreOneRand(Method):
     def getPosEnd(self):
         return self.__posEnd
 
-    def getTimeSleep(self):
-        return self.__timeSleep
-
     def setPosStart(self, startPos):
         self.__posStart = startPos
 
 
     def setPosEnd(self, endPos):
         self.__posEnd = endPos
-
-    def setTimeSleep(self, timeSleep):
-        self.__timeSleep = timeSleep

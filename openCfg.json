@@ -1,16 +1,16 @@
 {
     "db": {
-        "name": "dds",
+        "name": "astah",
         "host": "localhost",
         "port": 3306,
-        "user": "dds",
-        "password": "pswd"
+        "user": "root",
+        "password": ""
     },
     "mail": {
         "mailSmtp": "smtp.mail.ru",
         "lgn": "resultworkdds@mail.ru",
         "pswd": "data1decryption2system4",
-        "userMail": "1"
+        "userMail": ""
     },
     "readCfg": "default",
     "default": {
@@ -60,13 +60,34 @@
         },
         "method5": {
             "method": {
-                "name": "2222",
+                "name": "Mchek",
                 "type": "MethodCheck",
                 "timeSleep": 0,
                 "timeWait": 60,
                 "countProc": 1,
                 "posStart": 348,
                 "posEnd": 351
+            }
+        },
+        "method6": {
+            "method": {
+                "name": "MMOR",
+                "type": "MMoreOneRand",
+                "timeWait": 70,
+                "countProc": 1,
+                "posStart": 348,
+                "posEnd": 351,
+                "countRandom": 12
+            }
+        },
+        "method7": {
+            "method": {
+                "name": "Rev",
+                "type": "MReverse",
+                "timeWait": 70,
+                "countProc": 1,
+                "posStart": 16,
+                "posEnd": 18
             }
         }
     },

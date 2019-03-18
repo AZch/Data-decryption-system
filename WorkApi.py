@@ -285,6 +285,16 @@ class WorkApi():
         elif dataStr[jsonWord.type] == jsonWord.mCompBase:
             self.factoryMethods = FactoryMCompBase()
             self.__addMethod(self.factoryMethods.createMethod([dataStr[jsonWord.name], dataStr[jsonWord.mTimeWait]]))
+        elif dataStr[jsonWord.type] == jsonWord.mReverse:
+            self.factoryMethods = FactoryMReverse()
+            self.__addMethod(self.factoryMethods.createMethod([dataStr[jsonWord.name], dataStr[jsonWord.mPosStart],
+                                                                   dataStr[jsonWord.mPosEnd], dataStr[jsonWord.mCountProc],
+                                                                   dataStr[jsonWord.mTimeWait]]))
+        elif dataStr[jsonWord.type] == jsonWord.mMoreOneRand:
+            self.factoryMethods = FactoryMMoreOneRand()
+            self.__addMethod(self.factoryMethods.createMethod([dataStr[jsonWord.name], dataStr[jsonWord.mPosStart],
+                                                                   dataStr[jsonWord.mPosEnd], dataStr[jsonWord.mCountProc],
+                                                                   dataStr[jsonWord.mTimeWait], dataStr[jsonWord.mCountRandom]]))
         else:
             print("Данного метода еще нету")
 

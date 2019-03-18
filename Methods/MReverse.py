@@ -12,9 +12,8 @@ from DataDB.GRUD import *
 
 class MReverse(Method):
 
-    def __init__(self, name, timeSleep, posStart, posEnd, countProc, timeWait):
+    def __init__(self, name, posStart, posEnd, countProc, timeWait):
         super().__init__(name=name, countProc=countProc, timeWait=timeWait)
-        self.__timeSleep = timeSleep
         self.__posStart = posStart
         self.__posEnd = posEnd
 
@@ -73,7 +72,6 @@ class MReverse(Method):
         data[jsonWord.method] = {
             jsonWord.name : self.name,
             jsonWord.type : jsonWord.mReverse,
-            jsonWord.mTimeSleep : self.__timeSleep,
             jsonWord.mTimeWait : self.__timeWait__,
             jsonWord.mCountProc : self.__countProc__,
             jsonWord.mPosStart : self.__posStart,

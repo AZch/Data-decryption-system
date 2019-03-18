@@ -616,6 +616,16 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
             self.workApi.setFactoryCompBase()
             self.lblStartAllPos.setText('')
             self.lblToCount.setText('')
+        elif (text == typeMethod.typeMoreOneRand):
+            self.colorTypeDefault()
+            self.workApi.setFactoryMMoreOneRand()
+            self.lblStartAllPos.setText('Позиции (16 ричная, без 0х и h) (начало и конец через пробел)')
+            self.lblToCount.setText('Количество раз на позицию')
+        elif (text == typeMethod.typeReverse):
+            self.colorTypeDefault()
+            self.workApi.setFactoryMReverse()
+            self.lblStartAllPos.setText('c')
+            self.lblToCount.setText('по')
         else:
             self.colorTypeBad()
             self.workApi.clearFactory()
@@ -642,6 +652,13 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
                     self.spnTimeWait.value(), self.getArrPos(), int(self.txtPosEnd.toPlainText())]
         elif str(self.cmbMethods.currentText()) == typeMethod.typeCompBase:
             return [self.nameMethod.toPlainText(), self.spnTimeWait.value()]
+        elif str(self.cmbMethods.currentText()) == typeMethod.typeMoreOneRand:
+            return [self.nameMethod.toPlainText(), int('0x' + self.txtPosStart.toPlainText().split(' ')[0], 16),
+                    int('0x' + self.txtPosStart.toPlainText().split(' ')[1], 16), 1,
+                    self.spnTimeWait.value(), int(self.txtPosEnd.toPlainText())]
+        elif str(self.cmbMethods.currentText()) == typeMethod.typeReverse:
+            return [self.nameMethod.toPlainText(), int('0x' + self.txtPosStart.toPlainText(), 16),
+                    int('0x' + self.txtPosEnd.toPlainText(), 16), 1, self.spnTimeWait.value()]
         else:
             return []
 

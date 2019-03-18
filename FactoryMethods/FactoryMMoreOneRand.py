@@ -3,5 +3,5 @@ from Methods.MMoreOneRand import MMoreOneRand
 
 class FactoryMMoreOneRand(FactoryMethod):
     def createMethod(self, param):
-        return MMoreOneRand(name=param[0], timeSleep=param[1], posStart=param[2], posEnd=param[3],
-                            countProc=param[4], timeWait=param[5], countOneRand=param[6])
+        return MMoreOneRand(name=param[0], posStart=param[1], posEnd=param[2],
+                            countProc=param[3], timeWait=param[4], countOneRand=param[5])
