@@ -5,8 +5,7 @@ import traceback
 import smtplib
 #import pymysql
 
-from PyQt5 import QtWidgets
-from PyQt5 import QtCore
+from PyQt5 import QtWidgets, QtCore, QtGui
 
 from DataDB import Models
 from WorkApi import WorkApi
@@ -18,6 +17,8 @@ from DataDB.Models import *
 from Methods.MBruteForce import MBruteForce
 from Methods.MethodCheck import MethodCheck
 from Methods.MRandom import MRandom
+from Methods.MMoreOneRand import MMoreOneRand
+from Methods.MReverse import MReverse
 databaseMain = MySQLDatabase('', user='', password='', host='', port=0)
 
 class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
@@ -122,6 +123,7 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
 
     ''' Инициализация кнопок '''
     def __initBtn(self):
+        self.__initImgBtn()
         self.cmbMethods.activated[str].connect(self.setFactory)
         self.btnLoadExecFile.clicked.connect(self.loadExecFile)
         self.btnExit.clicked.connect(self.__exitForm)
@@ -146,6 +148,10 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
         self.btnEditMethod.clicked.connect(self.updateMethodData)
         self.btnCalcTo.setVisible(False)
         self.spnToMethod.setVisible(False)
+
+    def __initImgBtn(self):
+        self.btnCalcThisMethod.setIcon(QtGui.QIcon(icons.calcThisMethod))
+        pass
 
     ''' Сигнал обновления данных при выполнении метода '''
     def __sgnUpdExec(self, newValuePrg, newMsg, newValueLcd):
@@ -825,6 +831,10 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
                 self.workApi.setPosEndThisMethod(int('0x' + self.txtPosEnd.toPlainText(), 16))
                 self.lblStartAllPos.setText('c')
                 self.lblToCount.setText('по')
+            elif (isinstance(self.workApi.currMethod, MMoreOneRand)):
+                #self.workApi
+                self.lblStartAllPos.setText('Позиции (16 ричная, без 0х и h) (начало и конец через пробел)')
+                self.lblToCount.setText('Количество раз на позицию')
             else:
                 return self.lblMsg.setText("Не удалось изменить данные метода")
             self.lblMsg.setText("Данные метода изменены")

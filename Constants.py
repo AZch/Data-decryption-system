@@ -73,6 +73,22 @@ class typeMethod():
     typeReverse = "Реверс проверка"
     typeReverseId = 5
 
+class icons():
+    wayIconPackage = 'resources/icons/'
+    btnPackage = 'btn/'
+    calcThisMethod = wayIconPackage + btnPackage + 'calcThisMethod.png'
+    prevMethod = wayIconPackage + btnPackage + 'prevMethod.png'
+    nextMethod = wayIconPackage + btnPackage + 'nextMethod.png'
+    currMethod = wayIconPackage + btnPackage + 'currentMethod.png'
+    addMethod = wayIconPackage + btnPackage + 'addMethod.png'
+    editMethod = wayIconPackage + btnPackage + 'editMethod.png'
+    delMethod = wayIconPackage + btnPackage + 'delMethod.png'
+    addByteChange = wayIconPackage + btnPackage + 'addByteChange.png'
+    delByteChange = wayIconPackage + btnPackage + 'delByteChange.png'
+    searchByteChange = wayIconPackage + btnPackage + 'searchByteChange.png'
+    startByteChange = wayIconPackage + btnPackage + 'startByteChange.png'
+    confirmByteChange = wayIconPackage + btnPackage + 'confirmByteChange.png'
+    all = wayIconPackage + btnPackage + 'all.png'
 
 class jsonWord():
     method = "method"

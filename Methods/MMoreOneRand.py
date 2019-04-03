@@ -40,16 +40,16 @@ class MMoreOneRand(Method):
         pos = self.__posStart
         while pos <= self.__posEnd and pos < len(testData.getLstTestData()):
             self.thisCalcByte = pos - self.__posStart
-            oldVal = testData.getByteByPos(pos)
+            oldVal = testData.getValByPos('0x' + str(pos))
             countRand = 0
             while countRand < self.__countOneRand:
-                testData.randVal(hexPos=pos) # изменяем данные в одной позиции
+                testData.randVal(hexPos='0x' + str(pos)) # изменяем данные в одной позиции
                 self._resStrData = "" # обнуляем строку с даннымии в которую будет записан результат
                 # получаем новый поток
                 Add.addProc(flagExec=-1, inputTest=testData.getStrTestData(), resFile="", taskDDS=task, pos=str(pos),
                             bytes=str(testData.getLstTestData()[pos]), timewait=self.__timeWait__)
                 countRand += 1
-            testData.chgValue(pos, oldVal)
+            testData.chgValue('0x' + str(pos), oldVal)
             pos += 1
 
         self.updateRes(task)
@@ -80,9 +80,14 @@ class MMoreOneRand(Method):
     def getPosEnd(self):
         return self.__posEnd
 
+    def getCountRand(self):
+        return self.__countOneRand
+
     def setPosStart(self, startPos):
         self.__posStart = startPos
 
-
     def setPosEnd(self, endPos):
         self.__posEnd = endPos
+
+    def setCountRandom(self, countRandom):
+        self.__countOneRand = countRandom
