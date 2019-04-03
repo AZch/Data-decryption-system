@@ -7,7 +7,6 @@ import smtplib
 
 from PyQt5 import QtWidgets, QtCore, QtGui
 
-from DataDB import Models
 from WorkApi import WorkApi
 from Constants import *
 

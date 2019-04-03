@@ -31,11 +31,11 @@ class MMoreOneRand(Method):
         task = Add.addTask(method=jsonWord.mCheck, userName="")
 
         self.resData = Data() # инициализирем объект данных для результата
-        execProcPool = ExecProcPool(self.__countProc__, maxWait=self.__timeWait__) # инициализируем заданное количество процессов
-        isBaseData = self.__getBaseData__(task, testData, False)
+        #execProcPool = ExecProcPool(self.__countProc__, maxWait=self.__timeWait__) # инициализируем заданное количество процессов
+        #isBaseData = self.__getBaseData__(task, testData, False)
 
-        if isBaseData == 0:
-            return isBaseData
+        #if isBaseData == 0:
+        #    return isBaseData
 
         pos = self.__posStart
         while pos <= self.__posEnd and pos < len(testData.getLstTestData()):
