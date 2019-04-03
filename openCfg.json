@@ -1,10 +1,10 @@
 {
     "db": {
-        "name": "astah",
+        "name": "dds",
         "host": "localhost",
         "port": 3306,
         "user": "root",
-        "password": ""
+        "password": "pswd"
     },
     "mail": {
         "mailSmtp": "smtp.mail.ru",
@@ -89,10 +89,31 @@
                 "posStart": 16,
                 "posEnd": 18
             }
+        },
+        "method8": {
+            "method": {
+                "name": "mr",
+                "type": "MMoreOneRand",
+                "timeWait": 70,
+                "countProc": 1,
+                "posStart": 2,
+                "posEnd": 5,
+                "countRandom": 3
+            }
+        },
+        "method9": {
+            "method": {
+                "name": "rp",
+                "type": "MReverse",
+                "timeWait": 70,
+                "countProc": 1,
+                "posStart": 3,
+                "posEnd": 7
+            }
         }
     },
     "ReadFiles": {
-        "testFile": "",
+        "testFile": "C:/dum.reg",
         "execFile": "",
         "endResFile": ""
     },

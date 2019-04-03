@@ -64,7 +64,7 @@ class Proc(BaseModelDDS):
     userNameProc = CharField(max_length=100)
     timewait = CharField(max_length=300)
     tasks = ForeignKeyField(Tasks, db_column='idTaskProc', related_name="proc")
-    startTime = IntegerField()
+    #startTime = IntegerField()
 
     class Meta:
         dbTable = 'proc'

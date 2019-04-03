@@ -38,6 +38,7 @@ class TestData():
 
     def getByteByPos(self, positions):
         bytes = list()
+        print('POS:::: ' + str(positions))
         for pos in positions:
             bytes.append(self.__workLstTestData[pos])
         return bytes

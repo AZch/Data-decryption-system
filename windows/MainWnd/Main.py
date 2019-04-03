@@ -8,7 +8,6 @@ import smtplib
 from PyQt5 import QtWidgets
 from PyQt5 import QtCore
 
-from DataDB import Models
 from WorkApi import WorkApi
 from Constants import *
 
@@ -18,6 +17,8 @@ from DataDB.Models import *
 from Methods.MBruteForce import MBruteForce
 from Methods.MethodCheck import MethodCheck
 from Methods.MRandom import MRandom
+from Methods.MMoreOneRand import MMoreOneRand
+from Methods.MReverse import MReverse
 databaseMain = MySQLDatabase('', user='', password='', host='', port=0)
 
 class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
@@ -825,6 +826,10 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
                 self.workApi.setPosEndThisMethod(int('0x' + self.txtPosEnd.toPlainText(), 16))
                 self.lblStartAllPos.setText('c')
                 self.lblToCount.setText('по')
+            elif (isinstance(self.workApi.currMethod, MMoreOneRand)):
+                #self.workApi
+                self.lblStartAllPos.setText('Позиции (16 ричная, без 0х и h) (начало и конец через пробел)')
+                self.lblToCount.setText('Количество раз на позицию')
             else:
                 return self.lblMsg.setText("Не удалось изменить данные метода")
             self.lblMsg.setText("Данные метода изменены")

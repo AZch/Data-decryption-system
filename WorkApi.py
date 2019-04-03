@@ -299,6 +299,8 @@ class WorkApi():
             print("Данного метода еще нету")
 
     ''' 4.4. получить имя текущего метода '''
+    #def s
+
     def getNameThisMethod(self):
         try:
             return self.currMethod.getName()
