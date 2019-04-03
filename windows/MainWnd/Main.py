@@ -5,8 +5,7 @@ import traceback
 import smtplib
 #import pymysql
 
-from PyQt5 import QtWidgets
-from PyQt5 import QtCore
+from PyQt5 import QtWidgets, QtCore, QtGui
 
 from WorkApi import WorkApi
 from Constants import *
@@ -123,6 +122,7 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
 
     ''' Инициализация кнопок '''
     def __initBtn(self):
+        self.__initImgBtn()
         self.cmbMethods.activated[str].connect(self.setFactory)
         self.btnLoadExecFile.clicked.connect(self.loadExecFile)
         self.btnExit.clicked.connect(self.__exitForm)
@@ -147,6 +147,10 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
         self.btnEditMethod.clicked.connect(self.updateMethodData)
         self.btnCalcTo.setVisible(False)
         self.spnToMethod.setVisible(False)
+
+    def __initImgBtn(self):
+        self.btnCalcThisMethod.setIcon(QtGui.QIcon(icons.calcThisMethod))
+        pass
 
     ''' Сигнал обновления данных при выполнении метода '''
     def __sgnUpdExec(self, newValuePrg, newMsg, newValueLcd):
