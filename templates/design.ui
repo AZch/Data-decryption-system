@@ -780,7 +780,7 @@
      <x>0</x>
      <y>0</y>
      <width>1651</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu">
@@ -801,7 +801,7 @@
     <property name="title">
      <string>Загрузить</string>
     </property>
-    <addaction name="action_5"/>
+    <addaction name="actLoadTest"/>
    </widget>
    <addaction name="menu"/>
    <addaction name="menu_2"/>
@@ -828,7 +828,7 @@
     <string>Результат</string>
    </property>
   </action>
-  <action name="action_5">
+  <action name="actLoadTest">
    <property name="text">
     <string>Тест</string>
    </property>
