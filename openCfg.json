@@ -91,13 +91,12 @@
         }
     },
     "ReadFiles": {
-        "testFile": "",
+        "testFile": "/home/az/PycharmProjects/dum.reg",
         "execFile": "",
         "endResFile": ""
     },
     "chgValue": {
-        "0": "0->00",
-        "1": "0->00",
-        "2": "0->00"
+        "0": "1->2",
+        "1": "0->00"
     }
 }

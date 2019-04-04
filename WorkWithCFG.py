@@ -16,41 +16,43 @@ class WorkWithCFG():
             workClass.mailLgn = workClass.jsonData[jsonWord.mail][jsonWord.mailLgn]
             workClass.mailPsw = workClass.jsonData[jsonWord.mail][jsonWord.mailPsw]
             workClass.userMail = workClass.jsonData[jsonWord.mail][jsonWord.userMail]
-            while True:
-                if workClass.mailSmtp == "":
-                    print('smtp server(example: smtp.mail.ru): ')
-                    workClass.mailSmtp = input()
-                if workClass.mailLgn == "":
-                    print('mail login: ')
-                    workClass.mailLgn = input()
-                if workClass.mailPsw == "":
-                    print('mail password: ')
-                    workClass.mailPsw = input()
-                if workClass.userMail == "":
-                    print('mail to send result status: ')
-                    workClass.userMail = input()
-                try:
-                    workClass.smtpObj = smtplib.SMTP(workClass.mailSmtp, 587)
-                    workClass.smtpObj.starttls()
-                    resLgn = workClass.smtpObj.login(workClass.mailLgn, workClass.mailPsw)
-                    break
-                except:
-                    pass
-                print("data incorrect, please input correct data")
-                workClass.mailSmtp = ''
-                workClass.mailLgn = ''
-                workClass.mailPsw = ''
-                workClass.userMail = ''
-                print('Reconnect y/n (y):')
-                workClass.isReconnect = input()
-                if workClass.isReconnect == 'n' or workClass.isReconnect == 'not':
-                    break
+            workClass.testConnMail(mailSmtp=workClass.mailSmtp, mailLgn=workClass.mailLgn,
+                                   mailPsw=workClass.mailPsw, userMail=workClass.userMail)
+            # while True:
+            #     if workClass.mailSmtp == "":
+            #         print('smtp server(example: smtp.mail.ru): ')
+            #         workClass.mailSmtp = input()
+            #     if workClass.mailLgn == "":
+            #         print('mail login: ')
+            #         workClass.mailLgn = input()
+            #     if workClass.mailPsw == "":
+            #         print('mail password: ')
+            #         workClass.mailPsw = input()
+            #     if workClass.userMail == "":
+            #         print('mail to send result status: ')
+            #         workClass.userMail = input()
+            #     try:
+            #         workClass.smtpObj = smtplib.SMTP(workClass.mailSmtp, 587)
+            #         workClass.smtpObj.starttls()
+            #         resLgn = workClass.smtpObj.login(workClass.mailLgn, workClass.mailPsw)
+            #         break
+            #     except:
+            #         pass
+            #     print("data incorrect, please input correct data")
+            #     workClass.mailSmtp = ''
+            #     workClass.mailLgn = ''
+            #     workClass.mailPsw = ''
+            #     workClass.userMail = ''
+            #     print('Reconnect y/n (y):')
+            #     workClass.isReconnect = input()
+            #     if workClass.isReconnect == 'n' or workClass.isReconnect == 'not':
+            #         break
 
-            workClass.dbName = workClass.jsonData[jsonWord.db][jsonWord.dbName]
-            workClass.dbHost = workClass.jsonData[jsonWord.db][jsonWord.dbHost]
-            workClass.dbPort = workClass.jsonData[jsonWord.db][jsonWord.dbPosrt]
-            workClass.dbUser = workClass.jsonData[jsonWord.db][jsonWord.dbUser]
-            workClass.dbPsw = workClass.jsonData[jsonWord.db][jsonWord.dbPsw]
+            workClass.DB = workClass.jsonData[jsonWord.db][jsonWord.dbName]
+            workClass.HOST = workClass.jsonData[jsonWord.db][jsonWord.dbHost]
+            workClass.PORT = workClass.jsonData[jsonWord.db][jsonWord.dbPosrt]
+            workClass.USER = workClass.jsonData[jsonWord.db][jsonWord.dbUser]
+            workClass.PASSWORD = workClass.jsonData[jsonWord.db][jsonWord.dbPsw]
 
             workClass.currCfg = workClass.jsonData[jsonWord.readCfg]
             workClass.currCfgMethods = workClass.jsonData[workClass.currCfg][jsonWord.readCfgMethods]
@@ -68,11 +70,11 @@ class WorkWithCFG():
     def makeCfg(self, classCall):
         dataToCfg = {}
         dataToCfg[jsonWord.db] = {}
-        dataToCfg[jsonWord.db][jsonWord.dbName] = Models.DB
-        dataToCfg[jsonWord.db][jsonWord.dbHost] = Models.HOST
-        dataToCfg[jsonWord.db][jsonWord.dbPosrt] = Models.PORT
-        dataToCfg[jsonWord.db][jsonWord.dbUser] = Models.USER
-        dataToCfg[jsonWord.db][jsonWord.dbPsw] = Models.PASSWORD
+        dataToCfg[jsonWord.db][jsonWord.dbName] = classCall.DB
+        dataToCfg[jsonWord.db][jsonWord.dbHost] = classCall.HOST
+        dataToCfg[jsonWord.db][jsonWord.dbPosrt] = classCall.PORT
+        dataToCfg[jsonWord.db][jsonWord.dbUser] = classCall.USER
+        dataToCfg[jsonWord.db][jsonWord.dbPsw] = classCall.PASSWORD
 
         dataToCfg[jsonWord.mail] = {}
         dataToCfg[jsonWord.mail][jsonWord.mailSmtp] = classCall.mailSmtp
