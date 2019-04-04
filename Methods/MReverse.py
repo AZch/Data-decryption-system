@@ -91,6 +91,5 @@ class MReverse(Method):
     def setPosStart(self, startPos):
         self.__posStart = startPos
 
-
     def setPosEnd(self, endPos):
         self.__posEnd = endPos

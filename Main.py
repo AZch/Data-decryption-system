@@ -8,6 +8,7 @@ import smtplib
 from PyQt5 import QtWidgets, QtCore, QtGui
 
 from DataDB import Models
+from Methods import MCompBase
 from WorkApi import WorkApi
 from Constants import *
 
@@ -18,6 +19,7 @@ from Methods.MBruteForce import MBruteForce
 from Methods.MethodCheck import MethodCheck
 from Methods.MRandom import MRandom
 from Methods.MMoreOneRand import MMoreOneRand
+from Methods.MCompBase import MCompBase
 from WorkWithCFG import *
 from Methods.MReverse import MReverse
 
@@ -374,6 +376,8 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
 
     ''' Задание фабрик методов '''
     def setFactory(self, text):
+        self.txtPosStart.setText("")
+        self.txtPosEnd.setText("")
         if (text == typeMethod.typeCheck):
             self.colorTypeDefault()
             self.workApi.setFactoryCheck()
@@ -601,9 +605,16 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
                 self.lblStartAllPos.setText('c')
                 self.lblToCount.setText('по')
             elif (isinstance(self.workApi.currMethod, MMoreOneRand)):
-                #self.workApi
+                self.workApi.setPosStartThisMethod(int('0x' + self.txtPosStart.toPlainText().split(' ')[0], 16))
+                self.workApi.setPosEndThisMethod(int('0x' + self.txtPosStart.toPlainText().split(' ')[1], 16))
+                self.workApi.setCountRandThisMethod(int(self.txtPosEnd.toPlainText()))
                 self.lblStartAllPos.setText('Позиции (16 ричная, без 0х и h) (начало и конец через пробел)')
                 self.lblToCount.setText('Количество раз на позицию')
+            elif (isinstance(self.workApi.currMethod, MReverse)):
+                self.workApi.setPosStartThisMethod(int('0x' + self.txtPosStart.toPlainText(), 16))
+                self.workApi.setPosEndThisMethod(int('0x' + self.txtPosEnd.toPlainText(), 16))
+                self.lblStartAllPos.setText('c')
+                self.lblToCount.setText('по')
             else:
                 return self.lblMsg.setText("Не удалось изменить данные метода")
             self.lblMsg.setText("Данные метода изменены")
@@ -640,6 +651,22 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
                 self.lblStartAllPos.setText('c')
                 self.lblToCount.setText('по')
                 self.cmbMethods.setCurrentIndex(typeMethod.typeCheckId)
+            elif (isinstance(self.workApi.currMethod, MCompBase)):
+                self.cmbMethods.setCurrentIndex(typeMethod.typeCompBaseId)
+                pass
+            elif (isinstance(self.workApi.currMethod, MReverse)):
+                self.txtPosStart.setText(str(hex(self.workApi.getPosStartThisMethod())[2:]))
+                self.txtPosEnd.setText(str(hex(self.workApi.getPosEndThisMethod())[2:]))
+                self.lblStartAllPos.setText('c')
+                self.lblToCount.setText('по')
+                self.cmbMethods.setCurrentIndex(typeMethod.typeReverseId)
+            elif (isinstance(self.workApi.currMethod, MMoreOneRand)):
+                self.txtPosStart.setText(str(hex(self.workApi.getPosStartThisMethod())[2:]) + " " +
+                                         str(hex(self.workApi.getPosEndThisMethod())[2:]))
+                self.txtPosEnd.setText(str(self.workApi.getCountRandThisMethod()))
+                self.lblStartAllPos.setText('Позиции (16 ричная, без 0х и h) (начало и конец через пробел)')
+                self.lblToCount.setText('Количество раз на позицию')
+                self.cmbMethods.setCurrentIndex(typeMethod.typeMoreOneRandId)
             else:
                 return self.lblMsg.setText("Не удалось загрузить данные метода")
             self.lblMsg.setText("Данные метода загружены")
