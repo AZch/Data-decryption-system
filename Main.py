@@ -11,7 +11,7 @@ from DataDB import Models
 from WorkApi import WorkApi
 from Constants import *
 
-from windows.MainWnd import design
+import design
 from windows.OpenTblWnd.OpenTblWnd import OpenTblWnd
 from DataDB.Models import *
 from Methods.MBruteForce import MBruteForce
@@ -156,6 +156,12 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
         self.btnAddMethod.setIcon(QtGui.QIcon(icons.addMethod))
         self.btnAddStrEditTest.setIcon(QtGui.QIcon(icons.addByteChange))
         self.btnEditMethod.setIcon(QtGui.QIcon(icons.editMethod))
+        self.btnDelThisMethod.setIcon(QtGui.QIcon(icons.delMethod))
+        self.btnClearChgAll.setIcon(QtGui.QIcon(icons.delAllByteChanges))
+        self.btnDelAllMethod.setIcon(QtGui.QIcon(icons.delAllMethods))
+        self.btnChgAll.setIcon(QtGui.QIcon(icons.confirmAllByteChanges))
+        self.btnStartAll.setIcon(QtGui.QIcon(icons.startAllByteChanges))
+        self.btnFindChgAll.setIcon(QtGui.QIcon(icons.searchAllByteChanges))
 
     ''' Сигнал обновления данных при выполнении метода '''
     def __sgnUpdExec(self, newValuePrg, newMsg, newValueLcd):
@@ -190,7 +196,8 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
 
         # Кнопка применения введенных изменений
         btn = QtWidgets.QPushButton(self.tblChgTest)
-        btn.setText('Готово')
+        btn.setText('')
+        btn.setIcon(QtGui.QIcon(icons.confirmByteChange))
         self.tblChgTest.setCellWidget(rowPosition, 2, btn)
         btn.clicked.connect(
             lambda *args, rowPosition=rowPosition: self.__chgValueTestData(txtEditPosition, txtEditNewVal)
@@ -198,7 +205,8 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
 
         # Кнопка отмены изменений
         btn = QtWidgets.QPushButton(self.tblChgTest)
-        btn.setText('Начальное')
+        btn.setText('')
+        btn.setIcon(QtGui.QIcon(icons.startByteChange))
         self.tblChgTest.setCellWidget(rowPosition, 3, btn)
         btn.clicked.connect(
             lambda *args, rowPosition=rowPosition: self.__cnclValueTestData(txtEditPosition, txtEditNewVal)
@@ -206,7 +214,8 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
 
         # Кнопка поиска байта по адресу
         btn = QtWidgets.QPushButton(self.tblChgTest)
-        btn.setText('Получить')
+        btn.setText('')
+        btn.setIcon(QtGui.QIcon(icons.searchByteChange))
         self.tblChgTest.setCellWidget(rowPosition, 4, btn)
         btn.clicked.connect(
             lambda *args, rowPosition=rowPosition: self.__getValByAddr(txtEditPosition, txtEditNewVal)
@@ -214,7 +223,8 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
 
         # Кнопка удаления строки
         btn = QtWidgets.QPushButton(self.tblChgTest)
-        btn.setText('Убрать')
+        btn.setText('')
+        btn.setIcon(QtGui.QIcon(icons.delByteChange))
         self.tblChgTest.setCellWidget(rowPosition, 5, btn)
         btn.clicked.connect(
             lambda *args, rowPosition=rowPosition: self.__delRowChgTbl(self.tblChgTest.currentRow())

@@ -89,6 +89,11 @@ class icons():
     startByteChange = wayIconPackage + btnPackage + 'startByteChange.png'
     confirmByteChange = wayIconPackage + btnPackage + 'confirmByteChange.png'
     all = wayIconPackage + btnPackage + 'all.png'
+    confirmAllByteChanges = wayIconPackage + btnPackage + 'confirmAllByteChange.png'
+    delAllByteChanges = wayIconPackage + btnPackage + 'delAllByteChange.png'
+    delAllMethods = wayIconPackage + btnPackage + 'delAllMethods.png'
+    searchAllByteChanges = wayIconPackage + btnPackage + 'searchAllByteChange.png'
+    startAllByteChanges = wayIconPackage + btnPackage + 'startAllByteChange.png'
 
 class jsonWord():
     method = "method"

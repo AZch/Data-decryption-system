@@ -11,7 +11,7 @@ from DataDB import Models
 from WorkApi import WorkApi
 from Constants import *
 
-from windows.MainWnd import design
+from windows.MainWnd import design1
 from windows.OpenTblWnd.OpenTblWnd import OpenTblWnd
 from DataDB.Models import *
 from Methods.MBruteForce import MBruteForce
@@ -21,7 +21,7 @@ from Methods.MMoreOneRand import MMoreOneRand
 from Methods.MReverse import MReverse
 databaseMain = MySQLDatabase('', user='', password='', host='', port=0)
 
-class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
+class MainWnd(QtWidgets.QMainWindow, design1.Ui_MainWindow):
     ''' Сигнналы (должны быть объявлены здесь) для обновления данных и таблицы при выполнении метода '''
     sgnUpdExec = QtCore.pyqtSignal(int, str, int, name='sgnUpdExec')
     sgnUpdTbl = QtCore.pyqtSignal(name='sgnUpdTbl')
