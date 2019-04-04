@@ -154,6 +154,19 @@
     </property>
    </column>
   </widget>
+  <widget class="QLabel" name="lblMsg">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>656</y>
+     <width>681</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>

@@ -1,4 +1,4 @@
-from PyQt5 import QtWidgets, QtGui
+from PyQt5 import QtWidgets, QtGui, QtCore
 
 import designOpenTbl
 from Constants import *
@@ -16,9 +16,10 @@ class OpenTblWnd(QtWidgets.QDialog, designOpenTbl.Ui_openTbl):
             for j in range(tbl.columnCount()):
                 self.tblData.setItem(i, j,
                                          QtWidgets.QTableWidgetItem(tbl.item(i, j)))
-        self.tblData.resizeColumnsToContents()
+        #self.tblData.resizeColumnsToContents()
         self.parentClass = parentClass
         self.__initBtnImg()
+        self.isTest = isTest
         if not isTest:
             self.tblChgTest.setEnabled(False)
             self.btnFindChgAll.setEnabled(False)
@@ -26,6 +27,14 @@ class OpenTblWnd(QtWidgets.QDialog, designOpenTbl.Ui_openTbl):
             self.btnChgAll.setEnabled(False)
             self.btnClearChgAll.setEnabled(False)
             self.btnAddStrEditTest.setEnabled(False)
+            self.tblData.setHorizontalHeaderLabels([
+                StrConst.сolumnNameFun, StrConst.columnNameRes, StrConst.columnByte, StrConst.columnLocByte
+            ])
+            self.tblData.horizontalHeaderItem(0).setToolTip(StrConst.сolumnNameFun)
+            self.tblData.horizontalHeaderItem(1).setToolTip(StrConst.columnNameRes)
+            self.tblData.horizontalHeaderItem(2).setToolTip(StrConst.columnByte)
+            self.tblData.horizontalHeaderItem(3).setToolTip(StrConst.columnLocByte)
+            self.tblData.resizeColumnsToContents()
         else:
             self.btnAddStrEditTest.clicked.connect(self.addToThisTbl)
             self.btnClearChgAll.clicked.connect(self.chgClearAll)
@@ -36,19 +45,35 @@ class OpenTblWnd(QtWidgets.QDialog, designOpenTbl.Ui_openTbl):
         self.btnUpdTbl.setVisible(False)
 
     def __initBtnImg(self):
+        identDiv = 10
         self.btnAddStrEditTest.setIcon(QtGui.QIcon(icons.addByteChange))
+        self.btnAddStrEditTest.setIconSize(self.__getQSize(identDiv, self.btnAddStrEditTest))
+
         self.btnClearChgAll.setIcon(QtGui.QIcon(icons.delAllByteChanges))
+        self.btnClearChgAll.setIconSize(self.__getQSize(identDiv, self.btnClearChgAll))
+
         # self.btnDelAllMethod.setIcon(QtGui.QIcon(icons.delAllMethods))
         self.btnChgAll.setIcon(QtGui.QIcon(icons.confirmAllByteChanges))
+        self.btnChgAll.setIconSize(self.__getQSize(identDiv, self.btnChgAll))
+
         self.btnStartAll.setIcon(QtGui.QIcon(icons.startAllByteChanges))
+        self.btnStartAll.setIconSize(self.__getQSize(identDiv, self.btnStartAll))
+
         self.btnFindChgAll.setIcon(QtGui.QIcon(icons.searchAllByteChanges))
+        self.btnFindChgAll.setIconSize(self.__getQSize(identDiv, self.btnFindChgAll))
+
+    def __getQSize(self, indentDiv, widget):
+        return QtCore.QSize(widget.size().width() - widget.size().width() / indentDiv,
+                         widget.size().height() - widget.size().height() / indentDiv
+                        )
 
     def closeWnd(self):
-        rowChgTblCount = self.tblChgTest.rowCount()
-        self.parentClass.dataChgVal = {}
-        for i in range(rowChgTblCount):
-            self.parentClass.dataChgVal[str(i)] = self.tblChgTest.cellWidget(i, 0).toPlainText() + \
-                                                         "->" + self.tblChgTest.cellWidget(i, 1).toPlainText()
+        if self.isTest:
+            rowChgTblCount = self.tblChgTest.rowCount()
+            self.parentClass.dataChgVal = {}
+            for i in range(rowChgTblCount):
+                self.parentClass.dataChgVal[str(i)] = self.tblChgTest.cellWidget(i, 0).toPlainText() + \
+                                                             "->" + self.tblChgTest.cellWidget(i, 1).toPlainText()
         self.close()
 
     ''' Добавление новых кнопок и полей для изменения входных данных '''
@@ -59,6 +84,7 @@ class OpenTblWnd(QtWidgets.QDialog, designOpenTbl.Ui_openTbl):
         self.addWithStartData(tbl, "0", "00")
 
     def addWithStartData(self, tbl, posStr, byteStr):
+        identDiv = 10
         rowPosition = tbl.rowCount()
         tbl.insertRow(rowPosition)
 
@@ -76,6 +102,7 @@ class OpenTblWnd(QtWidgets.QDialog, designOpenTbl.Ui_openTbl):
         btn = QtWidgets.QPushButton(tbl)
         btn.setText('')
         btn.setIcon(QtGui.QIcon(icons.confirmByteChange))
+        btn.setIconSize(self.__getQSize(identDiv, btn))
         tbl.setCellWidget(rowPosition, 2, btn)
         btn.clicked.connect(
             lambda *args, rowPosition=rowPosition: self.__chgValueTestData(txtEditPosition, txtEditNewVal)
@@ -85,6 +112,7 @@ class OpenTblWnd(QtWidgets.QDialog, designOpenTbl.Ui_openTbl):
         btn = QtWidgets.QPushButton(tbl)
         btn.setText('')
         btn.setIcon(QtGui.QIcon(icons.startByteChange))
+        btn.setIconSize(self.__getQSize(identDiv, btn))
         tbl.setCellWidget(rowPosition, 3, btn)
         btn.clicked.connect(
             lambda *args, rowPosition=rowPosition: self.__cnclValueTestData(txtEditPosition, txtEditNewVal)
@@ -94,6 +122,7 @@ class OpenTblWnd(QtWidgets.QDialog, designOpenTbl.Ui_openTbl):
         btn = QtWidgets.QPushButton(tbl)
         btn.setText('')
         btn.setIcon(QtGui.QIcon(icons.searchByteChange))
+        btn.setIconSize(self.__getQSize(identDiv, btn))
         tbl.setCellWidget(rowPosition, 4, btn)
         btn.clicked.connect(
             lambda *args, rowPosition=rowPosition: self.__getValByAddr(txtEditPosition, txtEditNewVal)
@@ -103,6 +132,7 @@ class OpenTblWnd(QtWidgets.QDialog, designOpenTbl.Ui_openTbl):
         btn = QtWidgets.QPushButton(tbl)
         btn.setText('')
         btn.setIcon(QtGui.QIcon(icons.delByteChange))
+        btn.setIconSize(self.__getQSize(identDiv, btn))
         tbl.setCellWidget(rowPosition, 5, btn)
         btn.clicked.connect(
             lambda *args, rowPosition=rowPosition: self.__delRowChgTbl(tbl.currentRow())
@@ -114,7 +144,7 @@ class OpenTblWnd(QtWidgets.QDialog, designOpenTbl.Ui_openTbl):
     def __getValByAddr(self, txtEditPosition, txtEditVal):
         try:
             if self.__checkChgField(txtEditPosition, txtEditVal):
-                findVal = self.workApi.currTestData.getValByPos(hexPos=txtEditPosition.toPlainText())
+                findVal = self.parentClass.workApi.currTestData.getValByPos(hexPos=txtEditPosition.toPlainText())
                 txtEditVal.setText(findVal)
                 self.lblMsg.setText(msgChgNum.confirmFind)
         except:
@@ -166,7 +196,7 @@ class OpenTblWnd(QtWidgets.QDialog, designOpenTbl.Ui_openTbl):
             except:
                 self.lblMsg.setText(msgChgNum.badPosition)
                 return False
-        if intNum >= len(self.workApi.currTestData.getLstTestData()):
+        if intNum >= len(self.parentClass.workApi.currTestData.getLstTestData()):
             self.lblMsg.setText(msgChgNum.badPosition)
             return False
         txtEditPosition.setText(hex(intNum)[2:])
@@ -184,7 +214,7 @@ class OpenTblWnd(QtWidgets.QDialog, designOpenTbl.Ui_openTbl):
     def __chgValueTestData(self, txtEditPosition, txtEditNewVal):
         try:
             if self.__checkChgField(txtEditPosition, txtEditNewVal):
-                self.workApi.currTestData.chgValue(hexPos=txtEditPosition.toPlainText(), newVal=txtEditNewVal.toPlainText())
+                self.parentClass.workApi.currTestData.chgValue(hexPos=txtEditPosition.toPlainText(), newVal=txtEditNewVal.toPlainText())
                 self.updTblInputTest()
                 self.lblMsg.setText(msgChgNum.confirmChg)
         except:
@@ -194,7 +224,7 @@ class OpenTblWnd(QtWidgets.QDialog, designOpenTbl.Ui_openTbl):
     def __cnclValueTestData(self, txtEditPosition, txtEditNewVal):
         try:
             if self.__checkChgField(txtEditPosition, txtEditNewVal):
-                self.workApi.currTestData.backStartValue(hexPos=txtEditPosition.toPlainText())
+                self.parentClass.workApi.currTestData.backStartValue(hexPos=txtEditPosition.toPlainText())
                 self.updTblInputTest()
                 self.lblMsg.setText(msgChgNum.confirmCancelChg)
         except:

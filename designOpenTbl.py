@@ -61,6 +61,10 @@ class Ui_openTbl(object):
         self.tblChgTest.setHorizontalHeaderItem(4, item)
         item = QtWidgets.QTableWidgetItem()
         self.tblChgTest.setHorizontalHeaderItem(5, item)
+        self.lblMsg = QtWidgets.QLabel(openTbl)
+        self.lblMsg.setGeometry(QtCore.QRect(10, 656, 681, 21))
+        self.lblMsg.setText("")
+        self.lblMsg.setObjectName("lblMsg")
 
         self.retranslateUi(openTbl)
         QtCore.QMetaObject.connectSlotsByName(openTbl)

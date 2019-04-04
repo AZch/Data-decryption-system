@@ -99,13 +99,30 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
         self.spnToMethod.setVisible(False)
 #        self.btnDelAllMethod.setVisible(False)
 
+    def __getQSize(self, indentDiv, widget):
+        return QtCore.QSize(widget.size().width() - widget.size().width() / indentDiv,
+                         widget.size().height() - widget.size().height() / indentDiv
+                        )
+
     def __initImgBtn(self):
+        identDiv = 10
         self.btnCalcThisMethod.setIcon(QtGui.QIcon(icons.calcThisMethod))
+        self.btnCalcThisMethod.setIconSize(self.__getQSize(identDiv, self.btnCalcThisMethod))
+
         self.btnNextMethod.setIcon(QtGui.QIcon(icons.nextMethod))
+        self.btnNextMethod.setIconSize(self.__getQSize(identDiv, self.btnNextMethod))
+
         self.btnPrevMethod.setIcon(QtGui.QIcon(icons.prevMethod))
+        self.btnPrevMethod.setIconSize(self.__getQSize(identDiv, self.btnPrevMethod))
+
         self.btnAddMethod.setIcon(QtGui.QIcon(icons.addMethod))
+        self.btnAddMethod.setIconSize(self.__getQSize(identDiv, self.btnAddMethod))
+
         self.btnEditMethod.setIcon(QtGui.QIcon(icons.editMethod))
+        self.btnEditMethod.setIconSize(self.__getQSize(identDiv, self.btnEditMethod))
+
         self.btnDelThisMethod.setIcon(QtGui.QIcon(icons.delMethod))
+        self.btnDelThisMethod.setIconSize(self.__getQSize(identDiv, self.btnDelThisMethod))
 
 
     ''' Сигнал обновления данных при выполнении метода '''
@@ -495,11 +512,8 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
     ''' Получить все кнопки которые надо заблокировать на время вычисления '''
     def getAllBtnArray(self):
         return [self.btnCalcThisMethod, self.btnCalcTo, self.btnNextMethod, self.btnPrevMethod,
-                self.btnSaveResByte,
-                self.btnDelThisMethod, self.btnDelAllMethod, self.btnAddMethod,
-                self.btnLoadResFile, self.btnLoadExecFile, self.btnLoadInputTest,
-                self.tblChgTest, self.btnAddStrEditTest, self.btnChgAll, self.btnClearChgAll, self.btnFindChgAll,
-                self.btnStartAll, self.btnEditMethod]
+                self.btnDelThisMethod, self.btnAddMethod,
+                self.btnEditMethod, self.menu, self.menu_2, self.menuLoadInputTest]
 
     ''' Обновление данных формы во время работы метода '''
     def updateCalc(self, workApi, sgnUpdExec, arrayBtnLock, sgnUpdTbl, smtpMail, fromMail, toMail):
