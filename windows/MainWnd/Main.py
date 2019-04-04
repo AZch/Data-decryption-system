@@ -7,6 +7,7 @@ import smtplib
 
 from PyQt5 import QtWidgets, QtCore, QtGui
 
+from DataDB import Models
 from WorkApi import WorkApi
 from Constants import *
 
@@ -150,7 +151,11 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
 
     def __initImgBtn(self):
         self.btnCalcThisMethod.setIcon(QtGui.QIcon(icons.calcThisMethod))
-        pass
+        self.btnNextMethod.setIcon(QtGui.QIcon(icons.nextMethod))
+        self.btnPrevMethod.setIcon(QtGui.QIcon(icons.prevMethod))
+        self.btnAddMethod.setIcon(QtGui.QIcon(icons.addMethod))
+        self.btnAddStrEditTest.setIcon(QtGui.QIcon(icons.addByteChange))
+        self.btnEditMethod.setIcon(QtGui.QIcon(icons.editMethod))
 
     ''' Сигнал обновления данных при выполнении метода '''
     def __sgnUpdExec(self, newValuePrg, newMsg, newValueLcd):
