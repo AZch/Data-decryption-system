@@ -4,6 +4,12 @@ import json
 
 databaseMain = ""
 
+DB = ''
+USER = ''
+PASSWORD = ''
+HOST = ''
+PORT = ''
+
 file = open(jsonWord.configName, 'r', encoding='utf-8')
 with file:
     data = file.read()
@@ -14,35 +20,59 @@ with file:
     HOST = jsonData[jsonWord.db][jsonWord.dbHost]
     PORT = jsonData[jsonWord.db][jsonWord.dbPosrt]
 
-while True:
-    if DB == "":
-        print("Database name:")
-        DB = input()
-    if USER == "":
-        print("Database user name:")
-        USER = input()
-    if PASSWORD == "":
-        print("Database password:")
-        PASSWORD = input()
-    if HOST == "":
-        print("Database host name:")
-        HOST = input()
-    if PORT == 0:
-        print("Database port:")
-        PORT = int(input())
+# while True:
+#     if DB == "":
+#         print("Database name:")
+#         DB = input()
+#     if USER == "":
+#         print("Database user name:")
+#         USER = input()
+#     if PASSWORD == "":
+#         print("Database password:")
+#         PASSWORD = input()
+#     if HOST == "":
+#         print("Database host name:")
+#         HOST = input()
+#     if PORT == 0:
+#         print("Database port:")
+#         PORT = int(input())
+#     try:
+#         databaseMain = MySQLDatabase(DB, user=USER, password=PASSWORD, host=HOST, port=PORT)
+#         databaseMain.connect()
+#         break
+#     except:
+#         DB = ""
+#         USER = ""
+#         PASSWORD = ""
+#         HOST = ""
+#         PORT = 0
+#         break
+
+def testConnect(DBcheck, USERcheck, PASSWORDcheck, HOSTcheck, PORTcheck):
     try:
-        databaseMain = MySQLDatabase(DB, user=USER, password=PASSWORD, host=HOST, port=PORT)
+        global DB, USER, PASSWORD, HOST, PORT
+        DB = DBcheck
+        USER = USERcheck
+        PASSWORD = PASSWORDcheck
+        HOST = HOSTcheck
+        PORT = PORTcheck
+        databaseMain.initialize(MySQLDatabase(DB, user=USER, password=PASSWORD, host=HOST, port=PORT))
         databaseMain.connect()
-        break
+        return True
     except:
-        DB = ""
-        USER = ""
-        PASSWORD = ""
-        HOST = ""
-        PORT = 0
+        return False
+
+try:
+    databaseMain = MySQLDatabase(DB, user=USER, password=PASSWORD, host=HOST, port=PORT)
+    databaseMain.connect()
+except:
+    print('cant Connect To DB')
+
+databaseMain = Proxy()
 
 class BaseModelDDS(Model):
     class Meta:
+        global databaseMain
         database = databaseMain
 
 class Tasks(BaseModelDDS):
@@ -64,7 +94,7 @@ class Proc(BaseModelDDS):
     userNameProc = CharField(max_length=100)
     timewait = CharField(max_length=300)
     tasks = ForeignKeyField(Tasks, db_column='idTaskProc', related_name="proc")
-    startTime = IntegerField()
+    #startTime = IntegerField()
 
     class Meta:
         dbTable = 'proc'

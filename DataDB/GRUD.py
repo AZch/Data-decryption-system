@@ -1,4 +1,4 @@
-import peewee
+from peewee import *
 from DataDB.Models import *
 import time
 
@@ -6,6 +6,7 @@ class Add:
     @staticmethod
     def addTask(method, userName = ""):
         row = Tasks(method=method.strip(), userName=userName)
+
         row.save()
         return Tasks.get(Tasks.idTasks == row.idTasks)
 

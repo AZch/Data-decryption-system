@@ -7,6 +7,7 @@ class StrConst():
     columnNameRes = "Результат функции"
     columnByte = "Байты"
     columnLocByte = "Положение байтов (с 0)"
+    noUse = "Не используется"
 
 class StrRetConts():
     retGood = "good"
@@ -25,6 +26,8 @@ class msgConfirm():
     delMethods = "Методы удалены"
     typeMethod = "Тип метода доступен"
 
+    conn = "Подключение удалось"
+
 class msgError():
     addMethod = "Ошибка при добавлении метода"
     loadFile = "Ошибка при загрузке файла"
@@ -36,6 +39,8 @@ class msgError():
     delMethod = "Ошибка при удалении метода"
     delMethods = "Ошибка удаления всех методов"
     typeMethod = "Ошибка при выборе типа"
+
+    conn = "Подключение не удалось"
 
 class msgWarning():
     formatMethod = "Неверный формат метода"
@@ -68,6 +73,32 @@ class typeMethod():
     typeRandomId = 2
     typeCompBase = "Сравнение с исходным"
     typeCompBaseId = 3
+    typeMoreOneRand = "Множественный рандом"
+    typeMoreOneRandId = 4
+    typeReverse = "Реверс проверка"
+    typeReverseId = 5
+
+class icons():
+    wayIconPackage = 'resources/icons/'
+    btnPackage = 'btn/'
+    calcThisMethod = wayIconPackage + btnPackage + 'calcThisMethod.png'
+    prevMethod = wayIconPackage + btnPackage + 'prevMethod.png'
+    nextMethod = wayIconPackage + btnPackage + 'nextMethod.png'
+    currMethod = wayIconPackage + btnPackage + 'currentMethod.png'
+    addMethod = wayIconPackage + btnPackage + 'addMethod.png'
+    editMethod = wayIconPackage + btnPackage + 'editMethod.png'
+    delMethod = wayIconPackage + btnPackage + 'delMethod.png'
+    addByteChange = wayIconPackage + btnPackage + 'addByteChange.png'
+    delByteChange = wayIconPackage + btnPackage + 'delByteChange.png'
+    searchByteChange = wayIconPackage + btnPackage + 'searchByteChange.png'
+    startByteChange = wayIconPackage + btnPackage + 'startByteChange.png'
+    confirmByteChange = wayIconPackage + btnPackage + 'confirmByteChange.png'
+    all = wayIconPackage + btnPackage + 'all.png'
+    confirmAllByteChanges = wayIconPackage + btnPackage + 'confirmAllByteChange.png'
+    delAllByteChanges = wayIconPackage + btnPackage + 'delAllByteChange.png'
+    delAllMethods = wayIconPackage + btnPackage + 'delAllMethods.png'
+    searchAllByteChanges = wayIconPackage + btnPackage + 'searchAllByteChange.png'
+    startAllByteChanges = wayIconPackage + btnPackage + 'startAllByteChange.png'
 
 class jsonWord():
     method = "method"
@@ -78,6 +109,8 @@ class jsonWord():
     mBruteForce = "MBruteForce"
     mRand = "MRand"
     mCompBase = "MCompBase"
+    mMoreOneRand = "MMoreOneRand"
+    mReverse = "MReverse"
 
     mTimeSleep='timeSleep'
     mPosStart='posStart'
@@ -115,3 +148,20 @@ class jsonWord():
 class styles():
     lblStyleGood = "QLabel { color : green; }"
     lblStyleBad = "QLabel { color : red; }"
+
+class idConnWnd():
+    idDB = 0
+    idMail = 1
+
+class connDB():
+    lbl0 = 'Название базы'
+    lbl1 = 'Пользователь базы'
+    lbl2 = 'Пароль к базе'
+    lbl3 = 'Хост базы'
+    lbl4 = 'Порт базы'
+
+class connMail():
+    lbl0 = 'smtp сервер (пример: smtp.mail.ru)'
+    lbl1 = 'Логин почты отправки'
+    lbl2 = 'Пароль почты отправки'
+    lbl3 = 'Почта, на которую будет производиться отправка'

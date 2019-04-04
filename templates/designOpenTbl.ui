@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>openTbl</class>
+ <widget class="QDialog" name="openTbl">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>842</width>
+    <height>682</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <widget class="QTableWidget" name="tblData">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>4</y>
+     <width>821</width>
+     <height>431</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btnUpdTbl">
+   <property name="geometry">
+    <rect>
+     <x>590</x>
+     <y>444</y>
+     <width>111</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Обновить</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btnExit">
+   <property name="geometry">
+    <rect>
+     <x>710</x>
+     <y>644</y>
+     <width>121</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Закрыть</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btnClearChgAll">
+   <property name="geometry">
+    <rect>
+     <x>760</x>
+     <y>564</y>
+     <width>71</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btnFindChgAll">
+   <property name="geometry">
+    <rect>
+     <x>760</x>
+     <y>604</y>
+     <width>71</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btnChgAll">
+   <property name="geometry">
+    <rect>
+     <x>760</x>
+     <y>484</y>
+     <width>71</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btnStartAll">
+   <property name="geometry">
+    <rect>
+     <x>760</x>
+     <y>524</y>
+     <width>71</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btnAddStrEditTest">
+   <property name="geometry">
+    <rect>
+     <x>760</x>
+     <y>444</y>
+     <width>41</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QTableWidget" name="tblChgTest">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>444</y>
+     <width>741</width>
+     <height>191</height>
+    </rect>
+   </property>
+   <column>
+    <property name="text">
+     <string>Адрес байта</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>Содержимое</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>Готово</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>Начальное</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>Поиск по адресу</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>Убрать</string>
+    </property>
+   </column>
+  </widget>
+  <widget class="QLabel" name="lblMsg">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>650</y>
+     <width>681</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

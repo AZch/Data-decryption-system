@@ -8,7 +8,7 @@ from Data.TestData import TestData
 from Constants import jsonWord
 from ObjectPool.ExecProcPool import ExecProcPool
 from ObjectPool.ExecProc import ExecProc
-from DataDB.GRUB import *
+from DataDB.GRUD import *
 
 class MethodCheck(Method):
 

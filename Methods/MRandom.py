@@ -3,7 +3,7 @@ from Data.TestData import TestData
 from Data.Data import Data
 from ObjectPool.ExecProcPool import ExecProcPool
 from Constants import jsonWord
-from DataDB.GRUB import *
+from DataDB.GRUD import *
 
 class MRandom(Method):
     def __init__(self, name, countProc, timeWait, lstPosRand, countRand):

@@ -6,6 +6,8 @@ from FactoryMethods.FactoryMBruteForce import FactoryMBruteForce
 from FactoryMethods.FactoryMCompBase import FactoryMCompBase
 from FactoryMethods.FactoryMRandom import FactoryMRandom
 from FactoryMethods.FactoryMethod import FactoryMethod
+from FactoryMethods.FactoryMMoreOneRand import FactoryMMoreOneRand
+from FactoryMethods.FactoryMReverse import FactoryMReverse
 from Data.Data import Data
 from Data.TestData import TestData
 from Constants import StrRetConts
@@ -143,6 +145,18 @@ class WorkApi():
         except:
             return StrRetConts.retBat
 
+    def setFactoryMMoreOneRand(self):
+        try:
+            self.factoryMethods = FactoryMMoreOneRand()
+        except:
+            return StrRetConts.retBat
+
+    def setFactoryMReverse(self):
+        try:
+            self.factoryMethods = FactoryMReverse()
+        except:
+            return StrRetConts.retBat
+
     def clearFactory(self):
         self.factoryMethods = None
 
@@ -271,10 +285,22 @@ class WorkApi():
         elif dataStr[jsonWord.type] == jsonWord.mCompBase:
             self.factoryMethods = FactoryMCompBase()
             self.__addMethod(self.factoryMethods.createMethod([dataStr[jsonWord.name], dataStr[jsonWord.mTimeWait]]))
+        elif dataStr[jsonWord.type] == jsonWord.mReverse:
+            self.factoryMethods = FactoryMReverse()
+            self.__addMethod(self.factoryMethods.createMethod([dataStr[jsonWord.name], dataStr[jsonWord.mPosStart],
+                                                                   dataStr[jsonWord.mPosEnd], dataStr[jsonWord.mCountProc],
+                                                                   dataStr[jsonWord.mTimeWait]]))
+        elif dataStr[jsonWord.type] == jsonWord.mMoreOneRand:
+            self.factoryMethods = FactoryMMoreOneRand()
+            self.__addMethod(self.factoryMethods.createMethod([dataStr[jsonWord.name], dataStr[jsonWord.mPosStart],
+                                                                   dataStr[jsonWord.mPosEnd], dataStr[jsonWord.mCountProc],
+                                                                   dataStr[jsonWord.mTimeWait], dataStr[jsonWord.mCountRandom]]))
         else:
             print("Данного метода еще нету")
 
     ''' 4.4. получить имя текущего метода '''
+    #def s
+
     def getNameThisMethod(self):
         try:
             return self.currMethod.getName()
@@ -425,7 +451,7 @@ class WorkApi():
             if (isinstance(self.currMethod.getResData(), Data)):
                 return self.currMethod.getResData().makeStrData()
             else:
-                print("Неверный формат результирующих данных")
+                print("Неверный формат результирующих данных метода")
         else:
             print("Неверный формат метода")
         return StrRetConts.retBat

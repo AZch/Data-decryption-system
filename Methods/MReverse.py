@@ -8,13 +8,12 @@ from Data.TestData import TestData
 from Constants import jsonWord
 from ObjectPool.ExecProcPool import ExecProcPool
 from ObjectPool.ExecProc import ExecProc
-from DataDB.GRUB import *
+from DataDB.GRUD import *
 
-class MethodCheck(Method):
+class MReverse(Method):
 
-    def __init__(self, name, timeSleep, posStart, posEnd, countProc, timeWait):
+    def __init__(self, name, posStart, posEnd, countProc, timeWait):
         super().__init__(name=name, countProc=countProc, timeWait=timeWait)
-        self.__timeSleep = timeSleep
         self.__posStart = posStart
         self.__posEnd = posEnd
 
@@ -72,8 +71,7 @@ class MethodCheck(Method):
         data = {}
         data[jsonWord.method] = {
             jsonWord.name : self.name,
-            jsonWord.type : jsonWord.mCheck,
-            jsonWord.mTimeSleep : self.__timeSleep,
+            jsonWord.type : jsonWord.mReverse,
             jsonWord.mTimeWait : self.__timeWait__,
             jsonWord.mCountProc : self.__countProc__,
             jsonWord.mPosStart : self.__posStart,
@@ -92,7 +90,6 @@ class MethodCheck(Method):
 
     def setPosStart(self, startPos):
         self.__posStart = startPos
-
 
     def setPosEnd(self, endPos):
         self.__posEnd = endPos
