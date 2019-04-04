@@ -1,10 +1,10 @@
 {
     "db": {
-        "name": "",
-        "host": "",
-        "port": 330,
-        "user": "",
-        "password": ""
+        "name": "dds",
+        "host": "localhost",
+        "port": 3306,
+        "user": "root",
+        "password": "pswd"
     },
     "mail": {
         "mailSmtp": "",
@@ -91,13 +91,12 @@
         }
     },
     "ReadFiles": {
-        "testFile": "",
+        "testFile": "C:/dum.reg",
         "execFile": "",
         "endResFile": ""
     },
     "chgValue": {
-        "0": "0->00",
-        "1": "0->00",
-        "2": "0->00"
+        "0": "1->2",
+        "1": "0->00"
     }
 }

@@ -30,11 +30,11 @@ class MReverse(Method):
         task = Add.addTask(method=jsonWord.mCheck, userName="")
 
         self.resData = Data() # инициализирем объект данных для результата
-        #execProcPool = ExecProcPool(self.__countProc__, maxWait=self.__timeWait__) # инициализируем заданное количество процессов
-        #isBaseData = self.__getBaseData__(task, testData, False)
+        execProcPool = ExecProcPool(self.__countProc__, maxWait=self.__timeWait__) # инициализируем заданное количество процессов
+        isBaseData = self.__getBaseData__(task, testData, False)
 
-        #if isBaseData == 0:
-        #    return isBaseData
+        if isBaseData == 0:
+            return isBaseData
 
         posByteSave = 0 # содержат позицию байтов, которые поток проверяет (для последнего шага проверки)
         pos = self.__posStart

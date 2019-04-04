@@ -257,8 +257,10 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
             file = QtWidgets.QFileDialog.getOpenFileName(self, 'Выберите тестовый пример')[0]
             if file == '' :
                 return self.lblMsg.setText(msgWarning.noFileLoad)
+            #print('load0' + file)
             waySplit = file.split('/')
-            self.lblInputTest.setText(waySplit[len(waySplit) - 1])
+            #self.lblInputTest.setText(waySplit[len(waySplit) - 1])
+            #print('load1')
             try :
                 loadFile = open(file, 'r')
                 with loadFile:
