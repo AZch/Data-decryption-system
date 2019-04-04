@@ -12,14 +12,14 @@ from WorkApi import WorkApi
 from Constants import *
 
 import design
-from windows.OpenTblWnd.OpenTblWnd import OpenTblWnd
+from OpenTblWnd import OpenTblWnd
 from DataDB.Models import *
 from Methods.MBruteForce import MBruteForce
 from Methods.MethodCheck import MethodCheck
 from Methods.MRandom import MRandom
 from Methods.MMoreOneRand import MMoreOneRand
+from WorkWithCFG import *
 from Methods.MReverse import MReverse
-databaseMain = MySQLDatabase('', user='', password='', host='', port=0)
 
 class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
     ''' Сигнналы (должны быть объявлены здесь) для обновления данных и таблицы при выполнении метода '''
@@ -39,66 +39,8 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
         self.__initBtn()
         self.__initSgn()
         self.__initResTbl()
-        self.__initDataFromCfg()
+        self.workWithCFG.initDataFromCfg(self)
         self.workApi.setFactoryCheck()
-
-    def __initDataFromCfg(self):
-        file = open(jsonWord.configName, 'r')
-        with file:
-            data = file.read()
-            self.jsonData = json.loads(data)
-
-            self.mailSmtp = self.jsonData[jsonWord.mail][jsonWord.mailSmtp]
-            self.mailLgn = self.jsonData[jsonWord.mail][jsonWord.mailLgn]
-            self.mailPsw = self.jsonData[jsonWord.mail][jsonWord.mailPsw]
-            self.userMail = self.jsonData[jsonWord.mail][jsonWord.userMail]
-            while True:
-                if self.mailSmtp == "":
-                    print('smtp server(example: smtp.mail.ru): ')
-                    self.mailSmtp = input()
-                if self.mailLgn == "":
-                    print('mail login: ')
-                    self.mailLgn = input()
-                if self.mailPsw == "":
-                    print('mail password: ')
-                    self.mailPsw = input()
-                if self.userMail == "":
-                    print('mail to send result status: ')
-                    self.userMail = input()
-                try:
-                    self.smtpObj = smtplib.SMTP(self.mailSmtp, 587)
-                    self.smtpObj.starttls()
-                    resLgn = self.smtpObj.login(self.mailLgn, self.mailPsw)
-                    break
-                except:
-                    pass
-                print("data incorrect, please input correct data")
-                self.mailSmtp = ''
-                self.mailLgn = ''
-                self.mailPsw = ''
-                self.userMail = ''
-                print('Reconnect (y):')
-                self.isReconnect = input()
-                if self.isReconnect == 'n' or self.isReconnect == 'not':
-                    break
-
-            self.dbName = self.jsonData[jsonWord.db][jsonWord.dbName]
-            self.dbHost = self.jsonData[jsonWord.db][jsonWord.dbHost]
-            self.dbPort = self.jsonData[jsonWord.db][jsonWord.dbPosrt]
-            self.dbUser = self.jsonData[jsonWord.db][jsonWord.dbUser]
-            self.dbPsw = self.jsonData[jsonWord.db][jsonWord.dbPsw]
-
-            self.currCfg = self.jsonData[jsonWord.readCfg]
-            self.currCfgMethods = self.jsonData[self.currCfg][jsonWord.readCfgMethods]
-            self.currCfgFiles = self.jsonData[self.currCfg][jsonWord.readCfgFiles]
-            self.currCfgChgVal = self.jsonData[self.currCfg][jsonWord.readCfgChgVal]
-
-            self.workApi.loadJSONMethods(dataStr=self.jsonData[self.currCfgMethods])
-            self.updateAfterSelect()
-            self.workApi.loadJSONFiles(dataStr=self.jsonData[self.currCfgFiles])
-            self.updTblInputTest()
-            self.updNameFiles()
-            self.updChgTbl(self.jsonData[self.currCfgChgVal])
 
     ''' Инициализация таблицы с результатом '''
     def __initResTbl(self):
@@ -115,6 +57,7 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
     ''' Инициализация API '''
     def __initAPI(self):
         self.workApi = WorkApi()
+        self.workWithCFG = WorkWithCFG()
 
     ''' Инициализация сигналов '''
     def __initSgn(self):
@@ -124,44 +67,46 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
     ''' Инициализация кнопок '''
     def __initBtn(self):
         self.__initImgBtn()
+        self.actOpenResData.triggered.connect(self.openNewWndResData)
+        self.actOpenInputData.triggered.connect(self.openNewWndInputTest)
+        self.actSaveResByte.triggered.connect(self.saveTestResByte)
+        self.actSaveTest.triggered.connect(self.saveTestRes)
+        self.menuLoadInputTest.triggered.connect(self.loadInputTestFile)
+
         self.cmbMethods.activated[str].connect(self.setFactory)
-        self.btnLoadExecFile.clicked.connect(self.loadExecFile)
+#        self.btnLoadExecFile.clicked.connect(self.loadExecFile)
         self.btnExit.clicked.connect(self.__exitForm)
-        self.btnLoadInputTest.clicked.connect(self.loadInputTestFile)
+        #self.btnLoadInputTest.clicked.connect(self.loadInputTestFile)
         self.btnAddMethod.clicked.connect(self.addMethod)
         self.btnCalcThisMethod.clicked.connect(self.calcThisMethod)
         self.btnNextMethod.clicked.connect(self.nextMethod)
         self.btnPrevMethod.clicked.connect(self.prevMethod)
-        self.btnSaveTest.clicked.connect(self.saveTestRes)
-        self.btnSaveResByte.clicked.connect(self.saveTestResByte)
+        #self.btnSaveTest.clicked.connect(self.saveTestRes)
+        #self.btnSaveResByte.clicked.connect(self.saveTestResByte)
         self.btnDelThisMethod.clicked.connect(self.delMethod)
-        self.btnDelAllMethod.clicked.connect(self.delMethods)
+#        self.btnDelAllMethod.clicked.connect(self.delMethods)
         self.btnCalcTo.clicked.connect(self.calcTo)
-        self.btnLoadResFile.clicked.connect(self.loadTestResFile)
-        self.btnAddStrEditTest.clicked.connect(self.addStrToEditTest)
-        self.btnOpenInputData.clicked.connect(self.openNewWndInputTest)
-        self.btnOpenResData.clicked.connect(self.openNewWndResData)
-        self.btnChgAll.clicked.connect(self.chgAll)
-        self.btnStartAll.clicked.connect(self.chgStartAll)
-        self.btnFindChgAll.clicked.connect(self.chgFindAll)
-        self.btnClearChgAll.clicked.connect(self.chgClearAll)
+#        self.btnLoadResFile.clicked.connect(self.loadTestResFile)
+#        self.btnAddStrEditTest.clicked.connect(self.addStrToEditTest)
+        #self.btnOpenInputData.clicked.connect(self.openNewWndInputTest)
+        #self.btnOpenResData.clicked.connect(self.openNewWndResData)
+#        self.btnChgAll.clicked.connect(self.chgAll)
+#        self.btnStartAll.clicked.connect(self.chgStartAll)
+#        self.btnFindChgAll.clicked.connect(self.chgFindAll)
+#        self.btnClearChgAll.clicked.connect(self.chgClearAll)
         self.btnEditMethod.clicked.connect(self.updateMethodData)
         self.btnCalcTo.setVisible(False)
         self.spnToMethod.setVisible(False)
+#        self.btnDelAllMethod.setVisible(False)
 
     def __initImgBtn(self):
         self.btnCalcThisMethod.setIcon(QtGui.QIcon(icons.calcThisMethod))
         self.btnNextMethod.setIcon(QtGui.QIcon(icons.nextMethod))
         self.btnPrevMethod.setIcon(QtGui.QIcon(icons.prevMethod))
         self.btnAddMethod.setIcon(QtGui.QIcon(icons.addMethod))
-        self.btnAddStrEditTest.setIcon(QtGui.QIcon(icons.addByteChange))
         self.btnEditMethod.setIcon(QtGui.QIcon(icons.editMethod))
         self.btnDelThisMethod.setIcon(QtGui.QIcon(icons.delMethod))
-        self.btnClearChgAll.setIcon(QtGui.QIcon(icons.delAllByteChanges))
-        self.btnDelAllMethod.setIcon(QtGui.QIcon(icons.delAllMethods))
-        self.btnChgAll.setIcon(QtGui.QIcon(icons.confirmAllByteChanges))
-        self.btnStartAll.setIcon(QtGui.QIcon(icons.startAllByteChanges))
-        self.btnFindChgAll.setIcon(QtGui.QIcon(icons.searchAllByteChanges))
+
 
     ''' Сигнал обновления данных при выполнении метода '''
     def __sgnUpdExec(self, newValuePrg, newMsg, newValueLcd):
@@ -176,205 +121,11 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
     def __sgnUpdTbl(self):
         self.setResTable(res=self.workApi.dataForTable())
 
-    ''' Добавление новых кнопок и полей для изменения входных данных '''
-    def addStrToEditTest(self):
-        self.addWithStartData("0", "00")
-
-    def addWithStartData(self, posStr, byteStr):
-        rowPosition = self.tblChgTest.rowCount()
-        self.tblChgTest.insertRow(rowPosition)
-
-        # Поля для позиции
-        txtEditPosition = QtWidgets.QTextEdit(self.tblChgTest)
-        txtEditPosition.setText(posStr)
-        self.tblChgTest.setCellWidget(rowPosition, 0, txtEditPosition)
-
-        # Поле для нового значения
-        txtEditNewVal = QtWidgets.QTextEdit(self.tblChgTest)
-        txtEditNewVal.setText(byteStr)
-        self.tblChgTest.setCellWidget(rowPosition, 1, txtEditNewVal)
-
-        # Кнопка применения введенных изменений
-        btn = QtWidgets.QPushButton(self.tblChgTest)
-        btn.setText('')
-        btn.setIcon(QtGui.QIcon(icons.confirmByteChange))
-        self.tblChgTest.setCellWidget(rowPosition, 2, btn)
-        btn.clicked.connect(
-            lambda *args, rowPosition=rowPosition: self.__chgValueTestData(txtEditPosition, txtEditNewVal)
-        )
-
-        # Кнопка отмены изменений
-        btn = QtWidgets.QPushButton(self.tblChgTest)
-        btn.setText('')
-        btn.setIcon(QtGui.QIcon(icons.startByteChange))
-        self.tblChgTest.setCellWidget(rowPosition, 3, btn)
-        btn.clicked.connect(
-            lambda *args, rowPosition=rowPosition: self.__cnclValueTestData(txtEditPosition, txtEditNewVal)
-        )
-
-        # Кнопка поиска байта по адресу
-        btn = QtWidgets.QPushButton(self.tblChgTest)
-        btn.setText('')
-        btn.setIcon(QtGui.QIcon(icons.searchByteChange))
-        self.tblChgTest.setCellWidget(rowPosition, 4, btn)
-        btn.clicked.connect(
-            lambda *args, rowPosition=rowPosition: self.__getValByAddr(txtEditPosition, txtEditNewVal)
-        )
-
-        # Кнопка удаления строки
-        btn = QtWidgets.QPushButton(self.tblChgTest)
-        btn.setText('')
-        btn.setIcon(QtGui.QIcon(icons.delByteChange))
-        self.tblChgTest.setCellWidget(rowPosition, 5, btn)
-        btn.clicked.connect(
-            lambda *args, rowPosition=rowPosition: self.__delRowChgTbl(self.tblChgTest.currentRow())
-        )
-
-        self.tblChgTest.resizeColumnsToContents()
-
-    def __delRowChgTbl(self, row):
-        self.tblChgTest.removeRow(row)
-
-    def updChgTbl(self, data):
-        try:
-            count = 0
-            # True, тк как читаем до тех пор, пока в данных записи будут
-            while True:
-                self.addWithStartData(data[str(count)].split("->")[0], data[str(count)].split("->")[1])
-                count += 1
-        except:
-            pass
-
-    def chgAll(self):
-        for i in range(self.tblChgTest.rowCount()):
-            self.tblChgTest.cellWidget(i, 2).click()
-
-    def chgStartAll(self):
-        for i in range(self.tblChgTest.rowCount()):
-            self.tblChgTest.cellWidget(i, 3).click()
-
-    def chgFindAll(self):
-        for i in range(self.tblChgTest.rowCount()):
-            self.tblChgTest.cellWidget(i, 4).click()
-
-    def chgClearAll(self):
-        self.tblChgTest.setRowCount(0)
-
-
-    ''' Проверка полей при изменении/поиске/откате тестовых данных '''
-    def __checkChgField(self, txtEditPosition, txtEditNewVal):
-        # Проверка на пустоту полей
-        if txtEditPosition.toPlainText() == "" or txtEditNewVal.toPlainText() == "":
-            self.lblMsg.setText(msgChgNum.emptyField)
-            return False
-        # Проверка на валидность позиции
-        intNum = -1
-        try:
-            intNum = int(txtEditPosition.toPlainText(), 16)
-        except:
-            try:
-                if txtEditPosition.toPlainText()[-1] == 'h':
-                    intNum = int(txtEditPosition.toPlainText()[:-1], 16)
-            except:
-                self.lblMsg.setText(msgChgNum.badPosition)
-                return False
-        if intNum >= len(self.workApi.currTestData.getLstTestData()):
-            self.lblMsg.setText(msgChgNum.badPosition)
-            return False
-        txtEditPosition.setText(hex(intNum)[2:])
-
-        # Проверка на валидность нового значения
-        try:
-            intNum = int(txtEditNewVal.toPlainText(), 16)
-        except:
-            self.lblMsg.setText(msgChgNum.badHexNum)
-            return False
-        txtEditNewVal.setText(hex(intNum)[2:])
-        return True
-
-    ''' Изменение тестовых данных '''
-    def __chgValueTestData(self, txtEditPosition, txtEditNewVal):
-        try:
-            if self.__checkChgField(txtEditPosition, txtEditNewVal):
-                self.workApi.currTestData.chgValue(hexPos=txtEditPosition.toPlainText(), newVal=txtEditNewVal.toPlainText())
-                self.updTblInputTest()
-                self.lblMsg.setText(msgChgNum.confirmChg)
-        except:
-            self.lblMsg.setText(msgChgNum.badAction)
-
-    ''' откат изменений в тестовых данных '''
-    def __cnclValueTestData(self, txtEditPosition, txtEditNewVal):
-        try:
-            if self.__checkChgField(txtEditPosition, txtEditNewVal):
-                self.workApi.currTestData.backStartValue(hexPos=txtEditPosition.toPlainText())
-                self.updTblInputTest()
-                self.lblMsg.setText(msgChgNum.confirmCancelChg)
-        except:
-            self.lblMsg.setText(msgChgNum.badAction)
-
-    def makeCfg(self):
-        dataToCfg = {}
-        dataToCfg[jsonWord.db] = {}
-        dataToCfg[jsonWord.db][jsonWord.dbName] = Models.DB
-        dataToCfg[jsonWord.db][jsonWord.dbHost] = Models.HOST
-        dataToCfg[jsonWord.db][jsonWord.dbPosrt] = Models.PORT
-        dataToCfg[jsonWord.db][jsonWord.dbUser] = Models.USER
-        dataToCfg[jsonWord.db][jsonWord.dbPsw] = Models.PASSWORD
-
-        dataToCfg[jsonWord.mail] = {}
-        dataToCfg[jsonWord.mail][jsonWord.mailSmtp] = self.mailSmtp
-        dataToCfg[jsonWord.mail][jsonWord.mailLgn] = self.mailLgn
-        dataToCfg[jsonWord.mail][jsonWord.mailPsw] = self.mailPsw
-        dataToCfg[jsonWord.mail][jsonWord.userMail] = self.userMail
-        #database = MySQLDatabase(self.dbName, user=self.dbUser, password=self.dbPsw, host=self.dbHost, port=self.dbPort)
-
-        dataToCfg[jsonWord.readCfg] = self.currCfg
-        dataToCfg[self.currCfg] = {}
-        dataToCfg[self.currCfg][jsonWord.readCfgMethods] = self.currCfgMethods
-        dataToCfg[self.currCfg][jsonWord.readCfgFiles] = self.currCfgFiles
-        dataToCfg[self.currCfg][jsonWord.readCfgChgVal] = self.currCfgChgVal
-
-        dataToCfg[self.currCfgMethods] = self.workApi.exportAllMethods()
-
-        dataToCfg[self.currCfgFiles] = {}
-        dataToCfg[self.currCfgFiles][jsonWord.testFile] = self.workApi.testDataWay
-        dataToCfg[self.currCfgFiles][jsonWord.execFile] = self.workApi.execFileName
-        dataToCfg[self.currCfgFiles][jsonWord.endResFile] = self.workApi.resDataWay
-
-        rowChgTblCount = self.tblChgTest.rowCount()
-        dataToCfg[self.currCfgChgVal] = {}
-        for i in range(rowChgTblCount):
-            dataToCfg[self.currCfgChgVal][str(i)] = self.tblChgTest.cellWidget(i, 0).toPlainText() + \
-                                                    "->" + self.tblChgTest.cellWidget(i, 1).toPlainText()
-        return dataToCfg
-
-    def __compareDataInCfg(self, firstData, secondData):
-        firstDataStr = str(firstData)
-        secondDataStr = str(secondData)
-        if len(firstDataStr) != len(secondDataStr):
-            return False
-        for i in range(len(firstDataStr)):
-            if firstDataStr[i] != secondDataStr[i]:
-                return False
-        return True
-
-    def compareCfg(self, firstCfg, secondCfg):
-        if not self.__compareDataInCfg(firstCfg[self.currCfgMethods], secondCfg[self.currCfgMethods]):
-            return False
-        if not self.__compareDataInCfg(firstCfg[self.currCfgFiles], secondCfg[self.currCfgFiles]):
-            return False
-        if not self.__compareDataInCfg(firstCfg[self.currCfgChgVal], secondCfg[self.currCfgChgVal]):
-            return False
-        if not self.__compareDataInCfg(firstCfg[jsonWord.db], secondCfg[jsonWord.db]):
-            return False
-        if not self.__compareDataInCfg(firstCfg[jsonWord.mail], secondCfg[jsonWord.mail]):
-            return False
-        return True
 
     ''' Закрытие формы '''
     def __exitForm(self):
-        dataToCfg = self.makeCfg()
-        if not self.compareCfg(dataToCfg, self.jsonData):
+        dataToCfg = self.workWithCFG.makeCfg(self)
+        if not self.workWithCFG.compareCfg(self, dataToCfg, self.jsonData):
             qMessBox = QtWidgets.QMessageBox
             if qMessBox.question(self, 'Перезапись конфига', 'С последнего запуска вы внесли изменения в программу, '
                                                              'перезаписать конфиг с текущими значениями?',
@@ -385,23 +136,13 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
 
         QtCore.QCoreApplication.instance().quit()
 
-    ''' Получить значение по адресу в тестовых данных '''
-    def __getValByAddr(self, txtEditPosition, txtEditVal):
-        try:
-            if self.__checkChgField(txtEditPosition, txtEditVal):
-                findVal = self.workApi.currTestData.getValByPos(hexPos=txtEditPosition.toPlainText())
-                txtEditVal.setText(findVal)
-                self.lblMsg.setText(msgChgNum.confirmFind)
-        except:
-            self.lblMsg.setText(msgChgNum.badAction)
-
     ''' Разворачивание теста '''
     def openNewWndInputTest(self):
-        self.dialogTest = OpenTblWnd(self.tblInutTest)
+        self.dialogTest = OpenTblWnd(self.tblInutTest, True, self)
         self.dialogTest.show()
 
     def openNewWndResData(self):
-        self.dialogRes = OpenTblWnd(self.tblRes)
+        self.dialogRes = OpenTblWnd(self.tblRes, False, self)
         self.dialogRes.show()
 
     """ Работа с файлами """

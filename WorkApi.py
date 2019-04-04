@@ -451,7 +451,7 @@ class WorkApi():
             if (isinstance(self.currMethod.getResData(), Data)):
                 return self.currMethod.getResData().makeStrData()
             else:
-                print("Неверный формат результирующих данных")
+                print("Неверный формат результирующих данных метода")
         else:
             print("Неверный формат метода")
         return StrRetConts.retBat
