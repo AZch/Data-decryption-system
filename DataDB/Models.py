@@ -4,6 +4,12 @@ import json
 
 databaseMain = ""
 
+DB = ''
+USER = ''
+PASSWORD = ''
+HOST = ''
+PORT = ''
+
 file = open(jsonWord.configName, 'r', encoding='utf-8')
 with file:
     data = file.read()
@@ -50,7 +56,7 @@ def testConnect(DBcheck, USERcheck, PASSWORDcheck, HOSTcheck, PORTcheck):
         PASSWORD = PASSWORDcheck
         HOST = HOSTcheck
         PORT = PORTcheck
-        databaseMain = MySQLDatabase(DB, user=USERcheck, password=PASSWORDcheck, host=HOSTcheck, port=PORTcheck)
+        databaseMain.initialize(MySQLDatabase(DB, user=USER, password=PASSWORD, host=HOST, port=PORT))
         databaseMain.connect()
         return True
     except:
@@ -60,7 +66,9 @@ try:
     databaseMain = MySQLDatabase(DB, user=USER, password=PASSWORD, host=HOST, port=PORT)
     databaseMain.connect()
 except:
-    pass
+    print('cant Connect To DB')
+
+databaseMain = Proxy()
 
 class BaseModelDDS(Model):
     class Meta:

@@ -544,7 +544,7 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
     def getAllBtnArray(self):
         return [self.btnCalcThisMethod, self.btnCalcTo, self.btnNextMethod, self.btnPrevMethod,
                 self.btnDelThisMethod, self.btnAddMethod,
-                self.btnEditMethod, self.menu, self.menu_2, self.menuLoadInputTest]
+                self.btnEditMethod, self.menu, self.menu_2, self.menuLoadInputTest, self.menu_3]
 
     ''' Обновление данных формы во время работы метода '''
     def updateCalc(self, workApi, sgnUpdExec, arrayBtnLock, sgnUpdTbl, smtpMail, fromMail, toMail):
