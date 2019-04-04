@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1224</width>
-    <height>709</height>
+    <width>1031</width>
+    <height>688</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,8 +17,8 @@
    <widget class="QPushButton" name="btnLoadExecFile">
     <property name="geometry">
      <rect>
-      <x>770</x>
-      <y>430</y>
+      <x>1280</x>
+      <y>130</y>
       <width>271</width>
       <height>31</height>
      </rect>
@@ -30,8 +30,8 @@
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>370</x>
-      <y>0</y>
+      <x>730</x>
+      <y>10</y>
       <width>91</width>
       <height>16</height>
      </rect>
@@ -43,8 +43,8 @@
    <widget class="QLabel" name="lblType">
     <property name="geometry">
      <rect>
-      <x>370</x>
-      <y>20</y>
+      <x>730</x>
+      <y>30</y>
       <width>41</width>
       <height>16</height>
      </rect>
@@ -56,8 +56,8 @@
    <widget class="QLabel" name="lblName">
     <property name="geometry">
      <rect>
-      <x>370</x>
-      <y>40</y>
+      <x>730</x>
+      <y>50</y>
       <width>61</width>
       <height>16</height>
      </rect>
@@ -69,8 +69,8 @@
    <widget class="QLabel" name="lblExecFileHeader">
     <property name="geometry">
      <rect>
-      <x>770</x>
-      <y>410</y>
+      <x>1280</x>
+      <y>110</y>
       <width>101</width>
       <height>16</height>
      </rect>
@@ -82,8 +82,8 @@
    <widget class="QLabel" name="lblExecFile">
     <property name="geometry">
      <rect>
-      <x>870</x>
-      <y>410</y>
+      <x>1380</x>
+      <y>110</y>
       <width>171</width>
       <height>16</height>
      </rect>
@@ -95,8 +95,8 @@
    <widget class="QLabel" name="label_6">
     <property name="geometry">
      <rect>
-      <x>770</x>
-      <y>510</y>
+      <x>1280</x>
+      <y>210</y>
       <width>71</width>
       <height>16</height>
      </rect>
@@ -108,8 +108,8 @@
    <widget class="QLabel" name="lblInputTest">
     <property name="geometry">
      <rect>
-      <x>850</x>
-      <y>510</y>
+      <x>1360</x>
+      <y>210</y>
       <width>191</width>
       <height>16</height>
      </rect>
@@ -121,8 +121,8 @@
    <widget class="QTextEdit" name="nameMethod">
     <property name="geometry">
      <rect>
-      <x>430</x>
-      <y>40</y>
+      <x>790</x>
+      <y>50</y>
       <width>221</width>
       <height>21</height>
      </rect>
@@ -131,8 +131,8 @@
    <widget class="QPushButton" name="btnLoadInputTest">
     <property name="geometry">
      <rect>
-      <x>770</x>
-      <y>530</y>
+      <x>1280</x>
+      <y>230</y>
       <width>271</width>
       <height>31</height>
      </rect>
@@ -144,8 +144,8 @@
    <widget class="QPushButton" name="btnNextMethod">
     <property name="geometry">
      <rect>
-      <x>360</x>
-      <y>270</y>
+      <x>720</x>
+      <y>280</y>
       <width>31</width>
       <height>31</height>
      </rect>
@@ -157,8 +157,8 @@
    <widget class="QPushButton" name="btnPrevMethod">
     <property name="geometry">
      <rect>
-      <x>360</x>
-      <y>300</y>
+      <x>720</x>
+      <y>310</y>
       <width>31</width>
       <height>31</height>
      </rect>
@@ -170,8 +170,8 @@
    <widget class="QPushButton" name="btnDelThisMethod">
     <property name="geometry">
      <rect>
-      <x>480</x>
-      <y>200</y>
+      <x>840</x>
+      <y>210</y>
       <width>51</width>
       <height>41</height>
      </rect>
@@ -183,8 +183,8 @@
    <widget class="QPushButton" name="btnDelAllMethod">
     <property name="geometry">
      <rect>
-      <x>540</x>
-      <y>200</y>
+      <x>900</x>
+      <y>210</y>
       <width>51</width>
       <height>41</height>
      </rect>
@@ -196,8 +196,8 @@
    <widget class="QLabel" name="lblNextMethod">
     <property name="geometry">
      <rect>
-      <x>410</x>
-      <y>270</y>
+      <x>770</x>
+      <y>280</y>
       <width>161</width>
       <height>31</height>
      </rect>
@@ -209,8 +209,8 @@
    <widget class="QLabel" name="lblPrevMethod">
     <property name="geometry">
      <rect>
-      <x>410</x>
-      <y>300</y>
+      <x>770</x>
+      <y>310</y>
       <width>161</width>
       <height>31</height>
      </rect>
@@ -222,8 +222,8 @@
    <widget class="QLabel" name="label_12">
     <property name="geometry">
      <rect>
-      <x>360</x>
-      <y>250</y>
+      <x>720</x>
+      <y>260</y>
       <width>91</width>
       <height>16</height>
      </rect>
@@ -235,8 +235,8 @@
    <widget class="QLabel" name="lblThisMethod">
     <property name="geometry">
      <rect>
-      <x>450</x>
-      <y>250</y>
+      <x>810</x>
+      <y>260</y>
       <width>161</width>
       <height>16</height>
      </rect>
@@ -248,8 +248,8 @@
    <widget class="QPushButton" name="btnCalcThisMethod">
     <property name="geometry">
      <rect>
-      <x>600</x>
-      <y>200</y>
+      <x>960</x>
+      <y>210</y>
       <width>51</width>
       <height>41</height>
      </rect>
@@ -261,8 +261,8 @@
    <widget class="QPushButton" name="btnSaveTest">
     <property name="geometry">
      <rect>
-      <x>770</x>
-      <y>0</y>
+      <x>1290</x>
+      <y>30</y>
       <width>161</width>
       <height>31</height>
      </rect>
@@ -274,8 +274,8 @@
    <widget class="QPushButton" name="btnSaveResByte">
     <property name="geometry">
      <rect>
-      <x>190</x>
-      <y>0</y>
+      <x>1330</x>
+      <y>190</y>
       <width>101</width>
       <height>31</height>
      </rect>
@@ -313,7 +313,7 @@
    <widget class="QLabel" name="label_14">
     <property name="geometry">
      <rect>
-      <x>10</x>
+      <x>20</x>
       <y>10</y>
       <width>101</width>
       <height>16</height>
@@ -326,8 +326,8 @@
    <widget class="QLabel" name="label_15">
     <property name="geometry">
      <rect>
-      <x>660</x>
-      <y>10</y>
+      <x>20</x>
+      <y>370</y>
       <width>101</width>
       <height>16</height>
      </rect>
@@ -339,10 +339,10 @@
    <widget class="QPushButton" name="btnExit">
     <property name="geometry">
      <rect>
-      <x>1050</x>
-      <y>540</y>
-      <width>161</width>
-      <height>23</height>
+      <x>930</x>
+      <y>610</y>
+      <width>91</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
@@ -352,21 +352,21 @@
    <widget class="QLabel" name="label_16">
     <property name="geometry">
      <rect>
-      <x>1050</x>
-      <y>400</y>
-      <width>131</width>
+      <x>300</x>
+      <y>620</y>
+      <width>191</width>
       <height>21</height>
      </rect>
     </property>
     <property name="text">
-     <string>Время выполнения теста</string>
+     <string>Время выполнения теста (секунды):</string>
     </property>
    </widget>
    <widget class="QLCDNumber" name="lcdNumber">
     <property name="geometry">
      <rect>
-      <x>1110</x>
-      <y>420</y>
+      <x>490</x>
+      <y>620</y>
       <width>101</width>
       <height>21</height>
      </rect>
@@ -387,8 +387,8 @@
    <widget class="QLabel" name="label_5">
     <property name="geometry">
      <rect>
-      <x>1050</x>
-      <y>440</y>
+      <x>10</x>
+      <y>620</y>
       <width>61</width>
       <height>16</height>
      </rect>
@@ -400,9 +400,9 @@
    <widget class="QLabel" name="lblMsg">
     <property name="geometry">
      <rect>
-      <x>1050</x>
-      <y>460</y>
-      <width>161</width>
+      <x>80</x>
+      <y>620</y>
+      <width>211</width>
       <height>16</height>
      </rect>
     </property>
@@ -413,8 +413,8 @@
    <widget class="QPushButton" name="btnAddMethod">
     <property name="geometry">
      <rect>
-      <x>360</x>
-      <y>200</y>
+      <x>720</x>
+      <y>210</y>
       <width>51</width>
       <height>41</height>
      </rect>
@@ -426,8 +426,8 @@
    <widget class="QComboBox" name="cmbMethods">
     <property name="geometry">
      <rect>
-      <x>430</x>
-      <y>20</y>
+      <x>790</x>
+      <y>30</y>
       <width>221</width>
       <height>22</height>
      </rect>
@@ -438,7 +438,7 @@
      <rect>
       <x>10</x>
       <y>30</y>
-      <width>341</width>
+      <width>701</width>
       <height>331</height>
      </rect>
     </property>
@@ -446,18 +446,18 @@
    <widget class="QTableWidget" name="tblRes">
     <property name="geometry">
      <rect>
-      <x>660</x>
-      <y>30</y>
-      <width>551</width>
-      <height>331</height>
+      <x>10</x>
+      <y>390</y>
+      <width>1011</width>
+      <height>211</height>
      </rect>
     </property>
    </widget>
    <widget class="QPushButton" name="btnLoadResFile">
     <property name="geometry">
      <rect>
-      <x>770</x>
-      <y>480</y>
+      <x>1280</x>
+      <y>180</y>
       <width>271</width>
       <height>31</height>
      </rect>
@@ -469,8 +469,8 @@
    <widget class="QLabel" name="label_7">
     <property name="geometry">
      <rect>
-      <x>770</x>
-      <y>460</y>
+      <x>1280</x>
+      <y>160</y>
       <width>111</width>
       <height>16</height>
      </rect>
@@ -482,8 +482,8 @@
    <widget class="QLabel" name="lblResFile">
     <property name="geometry">
      <rect>
-      <x>880</x>
-      <y>460</y>
+      <x>1390</x>
+      <y>160</y>
       <width>161</width>
       <height>16</height>
      </rect>
@@ -495,8 +495,8 @@
    <widget class="QSpinBox" name="spnTimeWait">
     <property name="geometry">
      <rect>
-      <x>570</x>
-      <y>70</y>
+      <x>930</x>
+      <y>80</y>
       <width>81</width>
       <height>22</height>
      </rect>
@@ -508,8 +508,8 @@
    <widget class="QLabel" name="lblTimeWait">
     <property name="geometry">
      <rect>
-      <x>360</x>
-      <y>70</y>
+      <x>720</x>
+      <y>80</y>
       <width>211</width>
       <height>21</height>
      </rect>
@@ -521,8 +521,8 @@
    <widget class="QLabel" name="lblBytes">
     <property name="geometry">
      <rect>
-      <x>360</x>
-      <y>100</y>
+      <x>720</x>
+      <y>110</y>
       <width>291</width>
       <height>21</height>
      </rect>
@@ -534,8 +534,8 @@
    <widget class="QTableWidget" name="tblChgTest">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>370</y>
+      <x>1410</x>
+      <y>-10</y>
       <width>651</width>
       <height>191</height>
      </rect>
@@ -574,8 +574,8 @@
    <widget class="QPushButton" name="btnAddStrEditTest">
     <property name="geometry">
      <rect>
-      <x>670</x>
-      <y>370</y>
+      <x>1180</x>
+      <y>70</y>
       <width>41</width>
       <height>31</height>
      </rect>
@@ -587,10 +587,10 @@
    <widget class="QProgressBar" name="prgExec">
     <property name="geometry">
      <rect>
-      <x>1050</x>
-      <y>520</y>
-      <width>171</width>
-      <height>20</height>
+      <x>670</x>
+      <y>619</y>
+      <width>261</width>
+      <height>21</height>
      </rect>
     </property>
     <property name="value">
@@ -600,8 +600,8 @@
    <widget class="QPushButton" name="btnChgAll">
     <property name="geometry">
      <rect>
-      <x>670</x>
-      <y>410</y>
+      <x>1180</x>
+      <y>110</y>
       <width>71</width>
       <height>31</height>
      </rect>
@@ -613,8 +613,8 @@
    <widget class="QLabel" name="label_19">
     <property name="geometry">
      <rect>
-      <x>1050</x>
-      <y>480</y>
+      <x>600</x>
+      <y>620</y>
       <width>71</width>
       <height>16</height>
      </rect>
@@ -626,10 +626,10 @@
    <widget class="QLabel" name="lblExecuteProc">
     <property name="geometry">
      <rect>
-      <x>1050</x>
-      <y>500</y>
-      <width>171</width>
-      <height>16</height>
+      <x>670</x>
+      <y>620</y>
+      <width>231</width>
+      <height>21</height>
      </rect>
     </property>
     <property name="text">
@@ -639,8 +639,8 @@
    <widget class="QPushButton" name="btnOpenInputData">
     <property name="geometry">
      <rect>
-      <x>110</x>
-      <y>0</y>
+      <x>1350</x>
+      <y>140</y>
       <width>81</width>
       <height>31</height>
      </rect>
@@ -652,8 +652,8 @@
    <widget class="QPushButton" name="btnOpenResData">
     <property name="geometry">
      <rect>
-      <x>930</x>
-      <y>0</y>
+      <x>1220</x>
+      <y>30</y>
       <width>81</width>
       <height>31</height>
      </rect>
@@ -665,8 +665,8 @@
    <widget class="QLabel" name="label_20">
     <property name="geometry">
      <rect>
-      <x>770</x>
-      <y>390</y>
+      <x>1280</x>
+      <y>90</y>
       <width>91</width>
       <height>16</height>
      </rect>
@@ -678,8 +678,8 @@
    <widget class="QPushButton" name="btnClearChgAll">
     <property name="geometry">
      <rect>
-      <x>670</x>
-      <y>490</y>
+      <x>1180</x>
+      <y>190</y>
       <width>71</width>
       <height>31</height>
      </rect>
@@ -691,8 +691,8 @@
    <widget class="QPushButton" name="btnFindChgAll">
     <property name="geometry">
      <rect>
-      <x>670</x>
-      <y>530</y>
+      <x>1180</x>
+      <y>230</y>
       <width>71</width>
       <height>31</height>
      </rect>
@@ -704,8 +704,8 @@
    <widget class="QPushButton" name="btnStartAll">
     <property name="geometry">
      <rect>
-      <x>670</x>
-      <y>450</y>
+      <x>1180</x>
+      <y>150</y>
       <width>71</width>
       <height>31</height>
      </rect>
@@ -717,8 +717,8 @@
    <widget class="QLabel" name="lblStartAllPos">
     <property name="geometry">
      <rect>
-      <x>360</x>
-      <y>110</y>
+      <x>720</x>
+      <y>120</y>
       <width>291</width>
       <height>21</height>
      </rect>
@@ -730,8 +730,8 @@
    <widget class="QLabel" name="lblToCount">
     <property name="geometry">
      <rect>
-      <x>360</x>
-      <y>150</y>
+      <x>720</x>
+      <y>160</y>
       <width>291</width>
       <height>21</height>
      </rect>
@@ -743,8 +743,8 @@
    <widget class="QTextEdit" name="txtPosStart">
     <property name="geometry">
      <rect>
-      <x>360</x>
-      <y>130</y>
+      <x>720</x>
+      <y>140</y>
       <width>291</width>
       <height>21</height>
      </rect>
@@ -753,8 +753,8 @@
    <widget class="QTextEdit" name="txtPosEnd">
     <property name="geometry">
      <rect>
-      <x>360</x>
-      <y>170</y>
+      <x>720</x>
+      <y>180</y>
       <width>291</width>
       <height>21</height>
      </rect>
@@ -763,8 +763,8 @@
    <widget class="QPushButton" name="btnEditMethod">
     <property name="geometry">
      <rect>
-      <x>420</x>
-      <y>200</y>
+      <x>780</x>
+      <y>210</y>
       <width>51</width>
       <height>41</height>
      </rect>
@@ -773,31 +773,60 @@
      <string/>
     </property>
    </widget>
-   <widget class="QLabel" name="label_18">
-    <property name="geometry">
-     <rect>
-      <x>1050</x>
-      <y>420</y>
-      <width>61</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>(секунды):</string>
-    </property>
-   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1224</width>
+     <width>1031</width>
      <height>21</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>Развернуть</string>
+    </property>
+    <addaction name="action"/>
+    <addaction name="action_2"/>
+   </widget>
+   <widget class="QMenu" name="menu_2">
+    <property name="title">
+     <string>Сохранить</string>
+    </property>
+    <addaction name="action_3"/>
+    <addaction name="action_4"/>
+   </widget>
+   <widget class="QMenu" name="menu_3">
+    <property name="title">
+     <string>Загрузить тест</string>
+    </property>
+   </widget>
+   <addaction name="menu"/>
+   <addaction name="menu_2"/>
+   <addaction name="menu_3"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="action">
+   <property name="text">
+    <string>Тест</string>
+   </property>
+  </action>
+  <action name="action_2">
+   <property name="text">
+    <string>Результат</string>
+   </property>
+  </action>
+  <action name="action_3">
+   <property name="text">
+    <string>Тест</string>
+   </property>
+  </action>
+  <action name="action_4">
+   <property name="text">
+    <string>Результат</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>
