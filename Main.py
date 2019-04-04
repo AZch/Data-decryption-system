@@ -75,7 +75,7 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
         self.actOpenInputData.triggered.connect(self.openNewWndInputTest)
         self.actSaveResByte.triggered.connect(self.saveTestResByte)
         self.actSaveTest.triggered.connect(self.saveTestRes)
-        self.menuLoadInputTest.triggered.connect(self.loadInputTestFile)
+        self.actLoadTest.triggered.connect(self.loadInputTestFile)
         self.actDB.triggered.connect(self.openConnWndDB)
         self.actMail.triggered.connect(self.openConnWndMail)
 

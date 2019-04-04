@@ -499,8 +499,9 @@
    </widget>
    <widget class="QMenu" name="menuLoadInputTest">
     <property name="title">
-     <string>Загрузить тест</string>
+     <string>Загрузить</string>
     </property>
+    <addaction name="actLoadTest"/>
    </widget>
    <widget class="QMenu" name="menu_3">
     <property name="title">
@@ -544,6 +545,11 @@
   <action name="actMail">
    <property name="text">
     <string>Почта</string>
+   </property>
+  </action>
+  <action name="actLoadTest">
+   <property name="text">
+    <string>Тест</string>
    </property>
   </action>
  </widget>
