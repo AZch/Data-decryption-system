@@ -1,9 +1,9 @@
 {
     "db": {
-        "name": "dds",
-        "host": "localhost",
-        "port": 3306,
-        "user": "root",
+        "name": "",
+        "host": "",
+        "port": 330,
+        "user": "",
         "password": ""
     },
     "mail": {

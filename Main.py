@@ -14,6 +14,7 @@ from Constants import *
 
 import design
 from OpenTblWnd import OpenTblWnd
+from ConnWnd import ConnWnd
 from DataDB.Models import *
 from Methods.MBruteForce import MBruteForce
 from Methods.MethodCheck import MethodCheck
@@ -41,6 +42,7 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
         self.__initBtn()
         self.__initSgn()
         self.__initResTbl()
+        self.isDBConn = False
         self.workWithCFG.initDataFromCfg(self)
         self.workApi.setFactoryCheck()
 
@@ -74,6 +76,8 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
         self.actSaveResByte.triggered.connect(self.saveTestResByte)
         self.actSaveTest.triggered.connect(self.saveTestRes)
         self.menuLoadInputTest.triggered.connect(self.loadInputTestFile)
+        self.actDB.triggered.connect(self.openConnWndDB)
+        self.actMail.triggered.connect(self.openConnWndMail)
 
         self.cmbMethods.activated[str].connect(self.setFactory)
 #        self.btnLoadExecFile.clicked.connect(self.loadExecFile)
@@ -126,6 +130,14 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
         self.btnDelThisMethod.setIcon(QtGui.QIcon(icons.delMethod))
         self.btnDelThisMethod.setIconSize(self.__getQSize(identDiv, self.btnDelThisMethod))
 
+    def openConnWndDB(self):
+        self.dialogConn = ConnWnd(idConnWnd.idDB, self)
+        self.dialogConn.show()
+
+    def openConnWndMail(self):
+        self.dialogConn = ConnWnd(idConnWnd.idMail, self)
+        self.dialogConn.show()
+
 
     ''' Сигнал обновления данных при выполнении метода '''
     def __sgnUpdExec(self, newValuePrg, newMsg, newValueLcd):
@@ -139,6 +151,19 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
     ''' Сигнла обновления таблицы при выполении метода '''
     def __sgnUpdTbl(self):
         self.setResTable(res=self.workApi.dataForTable())
+
+    def testConnMail(self, mailSmtp, mailLgn, mailPsw, userMail):
+        try:
+            self.mailSmtp = mailSmtp
+            self.mailLgn = mailLgn
+            self.mailPsw = mailPsw
+            self.userMail = userMail
+            self.smtpObj = smtplib.SMTP(self.mailSmtp, 587)
+            self.smtpObj.starttls()
+            self.smtpObj.login(self.mailLgn, self.mailPsw)
+            return True
+        except:
+            return False
 
 
     ''' Закрытие формы '''

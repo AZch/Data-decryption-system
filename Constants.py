@@ -7,6 +7,7 @@ class StrConst():
     columnNameRes = "Результат функции"
     columnByte = "Байты"
     columnLocByte = "Положение байтов (с 0)"
+    noUse = "Не используется"
 
 class StrRetConts():
     retGood = "good"
@@ -25,6 +26,8 @@ class msgConfirm():
     delMethods = "Методы удалены"
     typeMethod = "Тип метода доступен"
 
+    conn = "Подключение удалось"
+
 class msgError():
     addMethod = "Ошибка при добавлении метода"
     loadFile = "Ошибка при загрузке файла"
@@ -36,6 +39,8 @@ class msgError():
     delMethod = "Ошибка при удалении метода"
     delMethods = "Ошибка удаления всех методов"
     typeMethod = "Ошибка при выборе типа"
+
+    conn = "Подключение не удалось"
 
 class msgWarning():
     formatMethod = "Неверный формат метода"
@@ -143,3 +148,20 @@ class jsonWord():
 class styles():
     lblStyleGood = "QLabel { color : green; }"
     lblStyleBad = "QLabel { color : red; }"
+
+class idConnWnd():
+    idDB = 0
+    idMail = 1
+
+class connDB():
+    lbl0 = 'Название базы'
+    lbl1 = 'Пользователь базы'
+    lbl2 = 'Пароль к базе'
+    lbl3 = 'Хост базы'
+    lbl4 = 'Порт базы'
+
+class connMail():
+    lbl0 = 'smtp сервер (пример: smtp.mail.ru)'
+    lbl1 = 'Логин почты отправки'
+    lbl2 = 'Пароль почты отправки'
+    lbl3 = 'Почта, на которую будет производиться отправка'

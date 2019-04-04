@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>311</width>
-    <height>380</height>
+    <height>402</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -26,7 +26,7 @@
     <string>Состояние подключения:</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_2">
+  <widget class="QLabel" name="lbl0">
    <property name="geometry">
     <rect>
      <x>50</x>
@@ -39,7 +39,7 @@
     <string>Название базы</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_3">
+  <widget class="QLabel" name="lbl1">
    <property name="geometry">
     <rect>
      <x>50</x>
@@ -52,7 +52,7 @@
     <string>Пользователь базы</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_4">
+  <widget class="QLabel" name="lbl2">
    <property name="geometry">
     <rect>
      <x>50</x>
@@ -65,7 +65,7 @@
     <string>Пароль к базе</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_5">
+  <widget class="QLabel" name="lbl3">
    <property name="geometry">
     <rect>
      <x>50</x>
@@ -78,7 +78,7 @@
     <string>Хост базы</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_6">
+  <widget class="QLabel" name="lbl4">
    <property name="geometry">
     <rect>
      <x>50</x>
@@ -108,7 +108,7 @@
    <property name="geometry">
     <rect>
      <x>170</x>
-     <y>340</y>
+     <y>360</y>
      <width>101</width>
      <height>31</height>
     </rect>
@@ -117,7 +117,7 @@
     <string>Выйти</string>
    </property>
   </widget>
-  <widget class="QSpinBox" name="spnPort">
+  <widget class="QSpinBox" name="spn4">
    <property name="geometry">
     <rect>
      <x>50</x>
@@ -125,6 +125,9 @@
      <width>221</width>
      <height>26</height>
     </rect>
+   </property>
+   <property name="maximum">
+    <number>999999999</number>
    </property>
   </widget>
   <widget class="QLabel" name="label_7">
@@ -143,17 +146,17 @@
   <widget class="QLabel" name="lblState">
    <property name="geometry">
     <rect>
-     <x>50</x>
+     <x>60</x>
      <y>330</y>
-     <width>221</width>
+     <width>211</width>
      <height>17</height>
     </rect>
    </property>
    <property name="text">
-    <string/>
+    <string>не проверено</string>
    </property>
   </widget>
-  <widget class="QPlainTextEdit" name="txtHost">
+  <widget class="QPlainTextEdit" name="txt3">
    <property name="geometry">
     <rect>
      <x>50</x>
@@ -163,7 +166,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QPlainTextEdit" name="txtPsw">
+  <widget class="QPlainTextEdit" name="txt2">
    <property name="geometry">
     <rect>
      <x>50</x>
@@ -173,7 +176,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QPlainTextEdit" name="txtUser">
+  <widget class="QPlainTextEdit" name="txt1">
    <property name="geometry">
     <rect>
      <x>50</x>
@@ -183,7 +186,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QPlainTextEdit" name="txtNameDB">
+  <widget class="QPlainTextEdit" name="txt0">
    <property name="geometry">
     <rect>
      <x>50</x>

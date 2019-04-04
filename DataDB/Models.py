@@ -14,32 +14,41 @@ with file:
     HOST = jsonData[jsonWord.db][jsonWord.dbHost]
     PORT = jsonData[jsonWord.db][jsonWord.dbPosrt]
 
-while True:
-    if DB == "":
-        print("Database name:")
-        DB = input()
-    if USER == "":
-        print("Database user name:")
-        USER = input()
-    if PASSWORD == "":
-        print("Database password:")
-        PASSWORD = input()
-    if HOST == "":
-        print("Database host name:")
-        HOST = input()
-    if PORT == 0:
-        print("Database port:")
-        PORT = int(input())
+# while True:
+#     if DB == "":
+#         print("Database name:")
+#         DB = input()
+#     if USER == "":
+#         print("Database user name:")
+#         USER = input()
+#     if PASSWORD == "":
+#         print("Database password:")
+#         PASSWORD = input()
+#     if HOST == "":
+#         print("Database host name:")
+#         HOST = input()
+#     if PORT == 0:
+#         print("Database port:")
+#         PORT = int(input())
+#     try:
+#         databaseMain = MySQLDatabase(DB, user=USER, password=PASSWORD, host=HOST, port=PORT)
+#         databaseMain.connect()
+#         break
+#     except:
+#         DB = ""
+#         USER = ""
+#         PASSWORD = ""
+#         HOST = ""
+#         PORT = 0
+#         break
+
+def testConnect(DB, USER, PASSWORD, HOST, PORT):
     try:
         databaseMain = MySQLDatabase(DB, user=USER, password=PASSWORD, host=HOST, port=PORT)
         databaseMain.connect()
-        break
+        return True
     except:
-        DB = ""
-        USER = ""
-        PASSWORD = ""
-        HOST = ""
-        PORT = 0
+        return False
 
 class BaseModelDDS(Model):
     class Meta:
