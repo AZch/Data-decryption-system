@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>823</width>
+    <width>842</width>
     <height>682</height>
    </rect>
   </property>
@@ -16,8 +16,8 @@
   <widget class="QTableWidget" name="tblData">
    <property name="geometry">
     <rect>
-     <x>0</x>
-     <y>10</y>
+     <x>10</x>
+     <y>4</y>
      <width>821</width>
      <height>431</height>
     </rect>
@@ -26,8 +26,8 @@
   <widget class="QPushButton" name="btnUpdTbl">
    <property name="geometry">
     <rect>
-     <x>580</x>
-     <y>450</y>
+     <x>590</x>
+     <y>444</y>
      <width>111</width>
      <height>23</height>
     </rect>
@@ -39,8 +39,8 @@
   <widget class="QPushButton" name="btnExit">
    <property name="geometry">
     <rect>
-     <x>700</x>
-     <y>650</y>
+     <x>710</x>
+     <y>644</y>
      <width>121</width>
      <height>31</height>
     </rect>
@@ -52,8 +52,8 @@
   <widget class="QPushButton" name="btnClearChgAll">
    <property name="geometry">
     <rect>
-     <x>750</x>
-     <y>570</y>
+     <x>760</x>
+     <y>564</y>
      <width>71</width>
      <height>31</height>
     </rect>
@@ -65,8 +65,8 @@
   <widget class="QPushButton" name="btnFindChgAll">
    <property name="geometry">
     <rect>
-     <x>750</x>
-     <y>610</y>
+     <x>760</x>
+     <y>604</y>
      <width>71</width>
      <height>31</height>
     </rect>
@@ -78,8 +78,8 @@
   <widget class="QPushButton" name="btnChgAll">
    <property name="geometry">
     <rect>
-     <x>750</x>
-     <y>490</y>
+     <x>760</x>
+     <y>484</y>
      <width>71</width>
      <height>31</height>
     </rect>
@@ -91,8 +91,8 @@
   <widget class="QPushButton" name="btnStartAll">
    <property name="geometry">
     <rect>
-     <x>750</x>
-     <y>530</y>
+     <x>760</x>
+     <y>524</y>
      <width>71</width>
      <height>31</height>
     </rect>
@@ -104,8 +104,8 @@
   <widget class="QPushButton" name="btnAddStrEditTest">
    <property name="geometry">
     <rect>
-     <x>750</x>
-     <y>450</y>
+     <x>760</x>
+     <y>444</y>
      <width>41</width>
      <height>31</height>
     </rect>
@@ -117,8 +117,8 @@
   <widget class="QTableWidget" name="tblChgTest">
    <property name="geometry">
     <rect>
-     <x>0</x>
-     <y>450</y>
+     <x>10</x>
+     <y>444</y>
      <width>741</width>
      <height>191</height>
     </rect>
@@ -157,8 +157,8 @@
   <widget class="QLabel" name="lblMsg">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>656</y>
+     <x>20</x>
+     <y>650</y>
      <width>681</width>
      <height>21</height>
     </rect>
