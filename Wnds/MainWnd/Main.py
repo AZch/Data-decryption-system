@@ -2,27 +2,22 @@ import sys  # sys нужен для передачи argv в QApplication
 import threading
 import time
 import traceback
-import smtplib
 #import pymysql
 
-from PyQt5 import QtWidgets, QtCore, QtGui
+from PyQt5 import QtWidgets
+from PyQt5 import QtCore
 
-from DataDB import Models
-from Methods import MCompBase
 from WorkApi import WorkApi
 from Constants import *
 
-import design
-from OpenTblWnd import OpenTblWnd
-from ConnWnd import ConnWnd
+from Wnds.MainWnd import design
+from Wnds.OpenTblWnd.OpenTblWnd import OpenTblWnd
+from peewee import *
 from DataDB.Models import *
 from Methods.MBruteForce import MBruteForce
 from Methods.MethodCheck import MethodCheck
 from Methods.MRandom import MRandom
-from Methods.MMoreOneRand import MMoreOneRand
-from Methods.MCompBase import MCompBase
-from WorkWithCFG import *
-from Methods.MReverse import MReverse
+databaseMain = MySQLDatabase('', user='', password='', host='', port=0)
 
 class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
     ''' Сигнналы (должны быть объявлены здесь) для обновления данных и таблицы при выполнении метода '''
@@ -31,20 +26,42 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
 
     def __init__(self):
         super().__init__()
-        self.setupUi(self)
+        self.setupUi(self)  # Это нужно для инициализации нашего дизайна
         self.countMethod = 0
 
         self.cmbMethods.addItems([typeMethod.typeCheck, typeMethod.typeBruteForce,
-                                  typeMethod.typeRandom, typeMethod.typeCompBase, typeMethod.typeMoreOneRand,
-                                  typeMethod.typeReverse])
+                                  typeMethod.typeRandom, typeMethod.typeCompBase])
         self.colorTypeDefault()
         self.__initAPI()
         self.__initBtn()
         self.__initSgn()
         self.__initResTbl()
-        self.isDBConn = False
-        self.workWithCFG.initDataFromCfg(self)
+        self.__initDataFromCfg()
         self.workApi.setFactoryCheck()
+
+    def __initDataFromCfg(self):
+        file = open(jsonWord.configName, 'r')
+        with file:
+            data = file.read()
+            self.jsonData = json.loads(data)
+
+            self.dbName = self.jsonData[jsonWord.db][jsonWord.dbName]
+            self.dbHost = self.jsonData[jsonWord.db][jsonWord.dbHost]
+            self.dbPort = self.jsonData[jsonWord.db][jsonWord.dbPosrt]
+            self.dbUser = self.jsonData[jsonWord.db][jsonWord.dbUser]
+            self.dbPsw = self.jsonData[jsonWord.db][jsonWord.dbPsw]
+
+            self.currCfg = self.jsonData[jsonWord.readCfg]
+            self.currCfgMethods = self.jsonData[self.currCfg][jsonWord.readCfgMethods]
+            self.currCfgFiles = self.jsonData[self.currCfg][jsonWord.readCfgFiles]
+            self.currCfgChgVal = self.jsonData[self.currCfg][jsonWord.readCfgChgVal]
+
+            self.workApi.loadJSONMethods(dataStr=self.jsonData[self.currCfgMethods])
+            self.updateAfterSelect()
+            self.workApi.loadJSONFiles(dataStr=self.jsonData[self.currCfgFiles])
+            self.updTblInputTest()
+            self.updNameFiles()
+            self.updChgTbl(self.jsonData[self.currCfgChgVal])
 
     ''' Инициализация таблицы с результатом '''
     def __initResTbl(self):
@@ -61,7 +78,6 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
     ''' Инициализация API '''
     def __initAPI(self):
         self.workApi = WorkApi()
-        self.workWithCFG = WorkWithCFG()
 
     ''' Инициализация сигналов '''
     def __initSgn(self):
@@ -70,74 +86,30 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
 
     ''' Инициализация кнопок '''
     def __initBtn(self):
-        self.__initImgBtn()
-        self.actOpenResData.triggered.connect(self.openNewWndResData)
-        self.actOpenInputData.triggered.connect(self.openNewWndInputTest)
-        self.actSaveResByte.triggered.connect(self.saveTestResByte)
-        self.actSaveTest.triggered.connect(self.saveTestRes)
-        self.actLoadTest.triggered.connect(self.loadInputTestFile)
-        self.actDB.triggered.connect(self.openConnWndDB)
-        self.actMail.triggered.connect(self.openConnWndMail)
-
         self.cmbMethods.activated[str].connect(self.setFactory)
-#        self.btnLoadExecFile.clicked.connect(self.loadExecFile)
+        self.btnLoadExecFile.clicked.connect(self.loadExecFile)
         self.btnExit.clicked.connect(self.__exitForm)
-        #self.btnLoadInputTest.clicked.connect(self.loadInputTestFile)
+        self.btnLoadInputTest.clicked.connect(self.loadInputTestFile)
         self.btnAddMethod.clicked.connect(self.addMethod)
         self.btnCalcThisMethod.clicked.connect(self.calcThisMethod)
         self.btnNextMethod.clicked.connect(self.nextMethod)
         self.btnPrevMethod.clicked.connect(self.prevMethod)
-        #self.btnSaveTest.clicked.connect(self.saveTestRes)
-        #self.btnSaveResByte.clicked.connect(self.saveTestResByte)
+        self.btnSaveTest.clicked.connect(self.saveTestRes)
+        self.btnSaveResByte.clicked.connect(self.saveTestResByte)
         self.btnDelThisMethod.clicked.connect(self.delMethod)
-#        self.btnDelAllMethod.clicked.connect(self.delMethods)
+        self.btnDelAllMethod.clicked.connect(self.delMethods)
         self.btnCalcTo.clicked.connect(self.calcTo)
-#        self.btnLoadResFile.clicked.connect(self.loadTestResFile)
-#        self.btnAddStrEditTest.clicked.connect(self.addStrToEditTest)
-        #self.btnOpenInputData.clicked.connect(self.openNewWndInputTest)
-        #self.btnOpenResData.clicked.connect(self.openNewWndResData)
-#        self.btnChgAll.clicked.connect(self.chgAll)
-#        self.btnStartAll.clicked.connect(self.chgStartAll)
-#        self.btnFindChgAll.clicked.connect(self.chgFindAll)
-#        self.btnClearChgAll.clicked.connect(self.chgClearAll)
+        self.btnLoadResFile.clicked.connect(self.loadTestResFile)
+        self.btnAddStrEditTest.clicked.connect(self.addStrToEditTest)
+        self.btnOpenInputData.clicked.connect(self.openNewWndInputTest)
+        self.btnOpenResData.clicked.connect(self.openNewWndResData)
+        self.btnChgAll.clicked.connect(self.chgAll)
+        self.btnStartAll.clicked.connect(self.chgStartAll)
+        self.btnFindChgAll.clicked.connect(self.chgFindAll)
+        self.btnClearChgAll.clicked.connect(self.chgClearAll)
         self.btnEditMethod.clicked.connect(self.updateMethodData)
         self.btnCalcTo.setVisible(False)
         self.spnToMethod.setVisible(False)
-#        self.btnDelAllMethod.setVisible(False)
-
-    def __getQSize(self, indentDiv, widget):
-        return QtCore.QSize(widget.size().width() - widget.size().width() / indentDiv,
-                         widget.size().height() - widget.size().height() / indentDiv
-                        )
-
-    def __initImgBtn(self):
-        identDiv = 10
-        self.btnCalcThisMethod.setIcon(QtGui.QIcon(icons.calcThisMethod))
-        self.btnCalcThisMethod.setIconSize(self.__getQSize(identDiv, self.btnCalcThisMethod))
-
-        self.btnNextMethod.setIcon(QtGui.QIcon(icons.nextMethod))
-        self.btnNextMethod.setIconSize(self.__getQSize(identDiv, self.btnNextMethod))
-
-        self.btnPrevMethod.setIcon(QtGui.QIcon(icons.prevMethod))
-        self.btnPrevMethod.setIconSize(self.__getQSize(identDiv, self.btnPrevMethod))
-
-        self.btnAddMethod.setIcon(QtGui.QIcon(icons.addMethod))
-        self.btnAddMethod.setIconSize(self.__getQSize(identDiv, self.btnAddMethod))
-
-        self.btnEditMethod.setIcon(QtGui.QIcon(icons.editMethod))
-        self.btnEditMethod.setIconSize(self.__getQSize(identDiv, self.btnEditMethod))
-
-        self.btnDelThisMethod.setIcon(QtGui.QIcon(icons.delMethod))
-        self.btnDelThisMethod.setIconSize(self.__getQSize(identDiv, self.btnDelThisMethod))
-
-    def openConnWndDB(self):
-        self.dialogConn = ConnWnd(idConnWnd.idDB, self)
-        self.dialogConn.show()
-
-    def openConnWndMail(self):
-        self.dialogConn = ConnWnd(idConnWnd.idMail, self)
-        self.dialogConn.show()
-
 
     ''' Сигнал обновления данных при выполнении метода '''
     def __sgnUpdExec(self, newValuePrg, newMsg, newValueLcd):
@@ -152,24 +124,191 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
     def __sgnUpdTbl(self):
         self.setResTable(res=self.workApi.dataForTable())
 
-    def testConnMail(self, mailSmtp, mailLgn, mailPsw, userMail):
-        try:
-            self.mailSmtp = mailSmtp
-            self.mailLgn = mailLgn
-            self.mailPsw = mailPsw
-            self.userMail = userMail
-            self.smtpObj = smtplib.SMTP(self.mailSmtp, 587)
-            self.smtpObj.starttls()
-            self.smtpObj.login(self.mailLgn, self.mailPsw)
-            return True
-        except:
-            return False
+    ''' Добавление новых кнопок и полей для изменения входных данных '''
+    def addStrToEditTest(self):
+        self.addWithStartData("0", "00")
 
+    def addWithStartData(self, posStr, byteStr):
+        rowPosition = self.tblChgTest.rowCount()
+        self.tblChgTest.insertRow(rowPosition)
+
+        # Поля для позиции
+        txtEditPosition = QtWidgets.QTextEdit(self.tblChgTest)
+        txtEditPosition.setText(posStr)
+        self.tblChgTest.setCellWidget(rowPosition, 0, txtEditPosition)
+
+        # Поле для нового значения
+        txtEditNewVal = QtWidgets.QTextEdit(self.tblChgTest)
+        txtEditNewVal.setText(byteStr)
+        self.tblChgTest.setCellWidget(rowPosition, 1, txtEditNewVal)
+
+        # Кнопка применения введенных изменений
+        btn = QtWidgets.QPushButton(self.tblChgTest)
+        btn.setText('Готово')
+        self.tblChgTest.setCellWidget(rowPosition, 2, btn)
+        btn.clicked.connect(
+            lambda *args, rowPosition=rowPosition: self.__chgValueTestData(txtEditPosition, txtEditNewVal)
+        )
+
+        # Кнопка отмены изменений
+        btn = QtWidgets.QPushButton(self.tblChgTest)
+        btn.setText('Начальное')
+        self.tblChgTest.setCellWidget(rowPosition, 3, btn)
+        btn.clicked.connect(
+            lambda *args, rowPosition=rowPosition: self.__cnclValueTestData(txtEditPosition, txtEditNewVal)
+        )
+
+        # Кнопка поиска байта по адресу
+        btn = QtWidgets.QPushButton(self.tblChgTest)
+        btn.setText('Получить')
+        self.tblChgTest.setCellWidget(rowPosition, 4, btn)
+        btn.clicked.connect(
+            lambda *args, rowPosition=rowPosition: self.__getValByAddr(txtEditPosition, txtEditNewVal)
+        )
+
+        # Кнопка удаления строки
+        btn = QtWidgets.QPushButton(self.tblChgTest)
+        btn.setText('Убрать')
+        self.tblChgTest.setCellWidget(rowPosition, 5, btn)
+        btn.clicked.connect(
+            lambda *args, rowPosition=rowPosition: self.__delRowChgTbl(self.tblChgTest.currentRow())
+        )
+
+        self.tblChgTest.resizeColumnsToContents()
+
+    def __delRowChgTbl(self, row):
+        self.tblChgTest.removeRow(row)
+
+    def updChgTbl(self, data):
+        try:
+            count = 0
+            # True, тк как читаем до тех пор, пока в данных записи будут
+            while True:
+                self.addWithStartData(data[str(count)].split("->")[0], data[str(count)].split("->")[1])
+                count += 1
+        except:
+            pass
+
+    def chgAll(self):
+        for i in range(self.tblChgTest.rowCount()):
+            self.tblChgTest.cellWidget(i, 2).click()
+
+    def chgStartAll(self):
+        for i in range(self.tblChgTest.rowCount()):
+            self.tblChgTest.cellWidget(i, 3).click()
+
+    def chgFindAll(self):
+        for i in range(self.tblChgTest.rowCount()):
+            self.tblChgTest.cellWidget(i, 4).click()
+
+    def chgClearAll(self):
+        self.tblChgTest.setRowCount(0)
+
+
+    ''' Проверка полей при изменении/поиске/откате тестовых данных '''
+    def __checkChgField(self, txtEditPosition, txtEditNewVal):
+        # Проверка на пустоту полей
+        if txtEditPosition.toPlainText() == "" or txtEditNewVal.toPlainText() == "":
+            self.lblMsg.setText(msgChgNum.emptyField)
+            return False
+        # Проверка на валидность позиции
+        intNum = -1
+        try:
+            intNum = int(txtEditPosition.toPlainText(), 16)
+        except:
+            try:
+                if txtEditPosition.toPlainText()[-1] == 'h':
+                    intNum = int(txtEditPosition.toPlainText()[:-1], 16)
+            except:
+                self.lblMsg.setText(msgChgNum.badPosition)
+                return False
+        if intNum >= len(self.workApi.currTestData.getLstTestData()):
+            self.lblMsg.setText(msgChgNum.badPosition)
+            return False
+        txtEditPosition.setText(hex(intNum)[2:])
+
+        # Проверка на валидность нового значения
+        try:
+            intNum = int(txtEditNewVal.toPlainText(), 16)
+        except:
+            self.lblMsg.setText(msgChgNum.badHexNum)
+            return False
+        txtEditNewVal.setText(hex(intNum)[2:])
+        return True
+
+    ''' Изменение тестовых данных '''
+    def __chgValueTestData(self, txtEditPosition, txtEditNewVal):
+        try:
+            if self.__checkChgField(txtEditPosition, txtEditNewVal):
+                self.workApi.currTestData.chgValue(hexPos=txtEditPosition.toPlainText(), newVal=txtEditNewVal.toPlainText())
+                self.updTblInputTest()
+                self.lblMsg.setText(msgChgNum.confirmChg)
+        except:
+            self.lblMsg.setText(msgChgNum.badAction)
+
+    ''' откат изменений в тестовых данных '''
+    def __cnclValueTestData(self, txtEditPosition, txtEditNewVal):
+        try:
+            if self.__checkChgField(txtEditPosition, txtEditNewVal):
+                self.workApi.currTestData.backStartValue(hexPos=txtEditPosition.toPlainText())
+                self.updTblInputTest()
+                self.lblMsg.setText(msgChgNum.confirmCancelChg)
+        except:
+            self.lblMsg.setText(msgChgNum.badAction)
+
+    def makeCfg(self):
+        dataToCfg = {}
+        dataToCfg[jsonWord.db] = {}
+        dataToCfg[jsonWord.db][jsonWord.dbName] = self.dbName
+        dataToCfg[jsonWord.db][jsonWord.dbHost] = self.dbHost
+        dataToCfg[jsonWord.db][jsonWord.dbPosrt] = self.dbPort
+        dataToCfg[jsonWord.db][jsonWord.dbUser] = self.dbUser
+        dataToCfg[jsonWord.db][jsonWord.dbPsw] = self.dbPsw
+        database = MySQLDatabase(self.dbName, user=self.dbUser, password=self.dbPsw, host=self.dbHost, port=self.dbPort)
+
+        dataToCfg[jsonWord.readCfg] = self.currCfg
+        dataToCfg[self.currCfg] = {}
+        dataToCfg[self.currCfg][jsonWord.readCfgMethods] = self.currCfgMethods
+        dataToCfg[self.currCfg][jsonWord.readCfgFiles] = self.currCfgFiles
+        dataToCfg[self.currCfg][jsonWord.readCfgChgVal] = self.currCfgChgVal
+
+        dataToCfg[self.currCfgMethods] = self.workApi.exportAllMethods()
+
+        dataToCfg[self.currCfgFiles] = {}
+        dataToCfg[self.currCfgFiles][jsonWord.testFile] = self.workApi.testDataWay
+        dataToCfg[self.currCfgFiles][jsonWord.execFile] = self.workApi.execFileName
+        dataToCfg[self.currCfgFiles][jsonWord.endResFile] = self.workApi.resDataWay
+
+        rowChgTblCount = self.tblChgTest.rowCount()
+        dataToCfg[self.currCfgChgVal] = {}
+        for i in range(rowChgTblCount):
+            dataToCfg[self.currCfgChgVal][str(i)] = self.tblChgTest.cellWidget(i, 0).toPlainText() + \
+                                                    "->" + self.tblChgTest.cellWidget(i, 1).toPlainText()
+        return dataToCfg
+
+    def __compareDataInCfg(self, firstData, secondData):
+        firstDataStr = str(firstData)
+        secondDataStr = str(secondData)
+        if len(firstDataStr) != len(secondDataStr):
+            return False
+        for i in range(len(firstDataStr)):
+            if firstDataStr[i] != secondDataStr[i]:
+                return False
+        return True
+
+    def compareCfg(self, firstCfg, secondCfg):
+        if not self.__compareDataInCfg(firstCfg[self.currCfgMethods], secondCfg[self.currCfgMethods]):
+            return False
+        if not self.__compareDataInCfg(firstCfg[self.currCfgFiles], secondCfg[self.currCfgFiles]):
+            return False
+        if not self.__compareDataInCfg(firstCfg[self.currCfgChgVal], secondCfg[self.currCfgChgVal]):
+            return False
+        return True
 
     ''' Закрытие формы '''
     def __exitForm(self):
-        dataToCfg = self.workWithCFG.makeCfg(self)
-        if not self.workWithCFG.compareCfg(self, dataToCfg, self.jsonData):
+        dataToCfg = self.makeCfg()
+        if not self.compareCfg(dataToCfg, self.jsonData):
             qMessBox = QtWidgets.QMessageBox
             if qMessBox.question(self, 'Перезапись конфига', 'С последнего запуска вы внесли изменения в программу, '
                                                              'перезаписать конфиг с текущими значениями?',
@@ -180,13 +319,23 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
 
         QtCore.QCoreApplication.instance().quit()
 
+    ''' Получить значение по адресу в тестовых данных '''
+    def __getValByAddr(self, txtEditPosition, txtEditVal):
+        try:
+            if self.__checkChgField(txtEditPosition, txtEditVal):
+                findVal = self.workApi.currTestData.getValByPos(hexPos=txtEditPosition.toPlainText())
+                txtEditVal.setText(findVal)
+                self.lblMsg.setText(msgChgNum.confirmFind)
+        except:
+            self.lblMsg.setText(msgChgNum.badAction)
+
     ''' Разворачивание теста '''
     def openNewWndInputTest(self):
-        self.dialogTest = OpenTblWnd(self.tblInutTest, True, self)
+        self.dialogTest = OpenTblWnd(self.tblInutTest)
         self.dialogTest.show()
 
     def openNewWndResData(self):
-        self.dialogRes = OpenTblWnd(self.tblRes, False, self)
+        self.dialogRes = OpenTblWnd(self.tblRes)
         self.dialogRes.show()
 
     """ Работа с файлами """
@@ -257,10 +406,8 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
             file = QtWidgets.QFileDialog.getOpenFileName(self, 'Выберите тестовый пример')[0]
             if file == '' :
                 return self.lblMsg.setText(msgWarning.noFileLoad)
-            #print('load0' + file)
             waySplit = file.split('/')
-            #self.lblInputTest.setText(waySplit[len(waySplit) - 1])
-            #print('load1')
+            self.lblInputTest.setText(waySplit[len(waySplit) - 1])
             try :
                 loadFile = open(file, 'r')
                 with loadFile:
@@ -403,8 +550,6 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
 
     ''' Задание фабрик методов '''
     def setFactory(self, text):
-        self.txtPosStart.setText("")
-        self.txtPosEnd.setText("")
         if (text == typeMethod.typeCheck):
             self.colorTypeDefault()
             self.workApi.setFactoryCheck()
@@ -425,16 +570,6 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
             self.workApi.setFactoryCompBase()
             self.lblStartAllPos.setText('')
             self.lblToCount.setText('')
-        elif (text == typeMethod.typeMoreOneRand):
-            self.colorTypeDefault()
-            self.workApi.setFactoryMMoreOneRand()
-            self.lblStartAllPos.setText('Позиции (16 ричная, без 0х и h) (начало и конец через пробел)')
-            self.lblToCount.setText('Количество раз на позицию')
-        elif (text == typeMethod.typeReverse):
-            self.colorTypeDefault()
-            self.workApi.setFactoryMReverse()
-            self.lblStartAllPos.setText('c')
-            self.lblToCount.setText('по')
         else:
             self.colorTypeBad()
             self.workApi.clearFactory()
@@ -461,13 +596,6 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
                     self.spnTimeWait.value(), self.getArrPos(), int(self.txtPosEnd.toPlainText())]
         elif str(self.cmbMethods.currentText()) == typeMethod.typeCompBase:
             return [self.nameMethod.toPlainText(), self.spnTimeWait.value()]
-        elif str(self.cmbMethods.currentText()) == typeMethod.typeMoreOneRand:
-            return [self.nameMethod.toPlainText(), int('0x' + self.txtPosStart.toPlainText().split(' ')[0], 16),
-                    int('0x' + self.txtPosStart.toPlainText().split(' ')[1], 16), 1,
-                    self.spnTimeWait.value(), int(self.txtPosEnd.toPlainText())]
-        elif str(self.cmbMethods.currentText()) == typeMethod.typeReverse:
-            return [self.nameMethod.toPlainText(), int('0x' + self.txtPosStart.toPlainText(), 16),
-                    int('0x' + self.txtPosEnd.toPlainText(), 16), 1, self.spnTimeWait.value()]
         else:
             return []
 
@@ -513,8 +641,7 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
                 countCalc -= 1
                 res = self.workApi.calcMethod()
                 newThread = threading.Thread(target=self.updateCalc, args=[self.workApi, self.sgnUpdExec,
-                                                                           self.getAllBtnArray(), self.sgnUpdTbl,
-                                                                       self.smtpObj, self.mailLgn, self.userMail])
+                                                                           self.getAllBtnArray(), self.sgnUpdTbl])
                 newThread.start()
                 newThread.join()
                 if self.workApi.goNextMethod() == StrRetConts.retBat:
@@ -531,8 +658,7 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
         try:
             res = self.workApi.calcMethod()
             newThread = threading.Thread(target=self.updateCalc, args=[self.workApi, self.sgnUpdExec,
-                                                                       self.getAllBtnArray(), self.sgnUpdTbl,
-                                                                       self.smtpObj, self.mailLgn, self.userMail])
+                                                                       self.getAllBtnArray(), self.sgnUpdTbl])
             newThread.start()
             if res == StrRetConts.retBat:
                 raise ValueError()
@@ -543,11 +669,14 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
     ''' Получить все кнопки которые надо заблокировать на время вычисления '''
     def getAllBtnArray(self):
         return [self.btnCalcThisMethod, self.btnCalcTo, self.btnNextMethod, self.btnPrevMethod,
-                self.btnDelThisMethod, self.btnAddMethod,
-                self.btnEditMethod, self.menu, self.menu_2, self.menuLoadInputTest, self.menu_3]
+                self.btnSaveResByte,
+                self.btnDelThisMethod, self.btnDelAllMethod, self.btnAddMethod,
+                self.btnLoadResFile, self.btnLoadExecFile, self.btnLoadInputTest,
+                self.tblChgTest, self.btnAddStrEditTest, self.btnChgAll, self.btnClearChgAll, self.btnFindChgAll,
+                self.btnStartAll, self.btnEditMethod]
 
     ''' Обновление данных формы во время работы метода '''
-    def updateCalc(self, workApi, sgnUpdExec, arrayBtnLock, sgnUpdTbl, smtpMail, fromMail, toMail):
+    def updateCalc(self, workApi, sgnUpdExec, arrayBtnLock, sgnUpdTbl):
         startTime = time.time()
         try:
             for btn in arrayBtnLock:
@@ -574,15 +703,7 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
                             int(time.time() - startTime)
                             )
             sgnUpdTbl.emit()
-            try:
-                smtpMail.sendmail(fromMail, toMail, "The calculation were successful")
-            except:
-                print('Ошибка:\n', traceback.format_exc())
         except:
-            try:
-                smtpMail.sendmail(fromMail, toMail, "An error in calculation")
-            except:
-                print('Ошибка:\n', traceback.format_exc())
             print('Ошибка:\n', traceback.format_exc())
             for btn in arrayBtnLock:
                 btn.setEnabled(True)
@@ -631,17 +752,6 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
                 self.workApi.setPosEndThisMethod(int('0x' + self.txtPosEnd.toPlainText(), 16))
                 self.lblStartAllPos.setText('c')
                 self.lblToCount.setText('по')
-            elif (isinstance(self.workApi.currMethod, MMoreOneRand)):
-                self.workApi.setPosStartThisMethod(int('0x' + self.txtPosStart.toPlainText().split(' ')[0], 16))
-                self.workApi.setPosEndThisMethod(int('0x' + self.txtPosStart.toPlainText().split(' ')[1], 16))
-                self.workApi.setCountRandThisMethod(int(self.txtPosEnd.toPlainText()))
-                self.lblStartAllPos.setText('Позиции (16 ричная, без 0х и h) (начало и конец через пробел)')
-                self.lblToCount.setText('Количество раз на позицию')
-            elif (isinstance(self.workApi.currMethod, MReverse)):
-                self.workApi.setPosStartThisMethod(int('0x' + self.txtPosStart.toPlainText(), 16))
-                self.workApi.setPosEndThisMethod(int('0x' + self.txtPosEnd.toPlainText(), 16))
-                self.lblStartAllPos.setText('c')
-                self.lblToCount.setText('по')
             else:
                 return self.lblMsg.setText("Не удалось изменить данные метода")
             self.lblMsg.setText("Данные метода изменены")
@@ -678,22 +788,6 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
                 self.lblStartAllPos.setText('c')
                 self.lblToCount.setText('по')
                 self.cmbMethods.setCurrentIndex(typeMethod.typeCheckId)
-            elif (isinstance(self.workApi.currMethod, MCompBase)):
-                self.cmbMethods.setCurrentIndex(typeMethod.typeCompBaseId)
-                pass
-            elif (isinstance(self.workApi.currMethod, MReverse)):
-                self.txtPosStart.setText(str(hex(self.workApi.getPosStartThisMethod())[2:]))
-                self.txtPosEnd.setText(str(hex(self.workApi.getPosEndThisMethod())[2:]))
-                self.lblStartAllPos.setText('c')
-                self.lblToCount.setText('по')
-                self.cmbMethods.setCurrentIndex(typeMethod.typeReverseId)
-            elif (isinstance(self.workApi.currMethod, MMoreOneRand)):
-                self.txtPosStart.setText(str(hex(self.workApi.getPosStartThisMethod())[2:]) + " " +
-                                         str(hex(self.workApi.getPosEndThisMethod())[2:]))
-                self.txtPosEnd.setText(str(self.workApi.getCountRandThisMethod()))
-                self.lblStartAllPos.setText('Позиции (16 ричная, без 0х и h) (начало и конец через пробел)')
-                self.lblToCount.setText('Количество раз на позицию')
-                self.cmbMethods.setCurrentIndex(typeMethod.typeMoreOneRandId)
             else:
                 return self.lblMsg.setText("Не удалось загрузить данные метода")
             self.lblMsg.setText("Данные метода загружены")

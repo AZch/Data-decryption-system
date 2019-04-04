@@ -2,15 +2,14 @@
     "db": {
         "name": "dds",
         "host": "localhost",
-        "port": 3306,
+        "port": 3307,
         "user": "root",
         "password": ""
     },
     "mail": {
-        "mailSmtp": "",
-        "lgn": "",
-        "pswd": "",
-        "userMail": ""
+        "mailSmtp": "smtp.mail.ru",
+        "lgn": "resultworkdds@mail.ru",
+        "pswd": "data1decryption2system4"
     },
     "readCfg": "default",
     "default": {
@@ -21,82 +20,64 @@
     "loadMehtods": {
         "method1": {
             "method": {
-                "name": "ss 40",
+                "name": "����� 40",
                 "type": "MCompBase",
                 "timeWait": 50
             }
         },
         "method2": {
             "method": {
-                "name": "MMOR",
-                "type": "MMoreOneRand",
-                "timeWait": 70,
+                "name": "12345",
+                "type": "MethodCheck",
+                "timeSleep": 0,
+                "timeWait": 40,
                 "countProc": 1,
-                "posStart": 348,
-                "posEnd": 351,
-                "countRandom": 12
+                "posStart": 2,
+                "posEnd": 5
             }
         },
         "method3": {
             "method": {
-                "name": "Rev",
-                "type": "MReverse",
-                "timeWait": 70,
+                "name": "edfg",
+                "type": "MethodCheck",
+                "timeSleep": 0,
+                "timeWait": 20,
                 "countProc": 1,
-                "posStart": 16,
-                "posEnd": 18
+                "posStart": 10,
+                "posEnd": 15
             }
         },
         "method4": {
             "method": {
-                "name": "mr",
-                "type": "MMoreOneRand",
-                "timeWait": 70,
+                "name": "123",
+                "type": "MBruteForce",
+                "timeWait": 40,
                 "countProc": 1,
-                "posStart": 2,
-                "posEnd": 5,
-                "countRandom": 3
+                "lstPosition": "12 13 14 15",
+                "countForce": 5
             }
         },
         "method5": {
             "method": {
-                "name": "rp",
-                "type": "MReverse",
-                "timeWait": 70,
-                "countProc": 1,
-                "posStart": 3,
-                "posEnd": 16
-            }
-        },
-        "method6": {
-            "method": {
-                "name": "mr",
+                "name": "2222",
                 "type": "MethodCheck",
                 "timeSleep": 0,
-                "timeWait": 70,
+                "timeWait": 60,
                 "countProc": 1,
-                "posStart": 16,
-                "posEnd": 21
-            }
-        },
-        "method7": {
-            "method": {
-                "name": "random",
-                "type": "MRand",
-                "timeWait": 70,
-                "countProc": 1,
-                "lstPosition": "1 2 52",
-                "countRandom": 15
+                "posStart": 348,
+                "posEnd": 351
             }
         }
     },
     "ReadFiles": {
-        "testFile": "/home/az/PycharmProjects/dum.reg",
+        "testFile": "C:/Users/anton/PycharmProjects/DataDecryptionSystemNew/dump000.reg",
         "execFile": "",
         "endResFile": ""
     },
     "chgValue": {
-        "0": "1->2",
-        "1": "0->00"
+        "0": "1->83",
+        "1": "14->CD",
+        "2": "0->04",
+        "3": "0->04"
     }
 }
