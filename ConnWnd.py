@@ -38,9 +38,9 @@ class ConnWnd(QtWidgets.QDialog, designConn.Ui_Dialog):
             self.btnTestConn.clicked.connect(self.__testConnMail)
 
     def __testConnDB(self):
-        if testConnect(DB=self.txt0.toPlainText(), USER=self.txt1.toPlainText(),
-                    PASSWORD=self.txt2.toPlainText(), HOST=self.txt3.toPlainText(),
-                    PORT=self.spn4.value()):
+        if testConnect(DBcheck=self.txt0.toPlainText(), USERcheck=self.txt1.toPlainText(),
+                    PASSWORDcheck=self.txt2.toPlainText(), HOSTcheck=self.txt3.toPlainText(),
+                    PORTcheck=self.spn4.value()):
             self.parentCall.DB = self.txt0.toPlainText()
             self.parentCall.HOST = self.txt3.toPlainText()
             self.parentCall.PORT = self.spn4.value()

@@ -42,17 +42,29 @@ with file:
 #         PORT = 0
 #         break
 
-def testConnect(DB, USER, PASSWORD, HOST, PORT):
+def testConnect(DBcheck, USERcheck, PASSWORDcheck, HOSTcheck, PORTcheck):
     try:
-        global databaseMain
-        databaseMain = MySQLDatabase(DB, user=USER, password=PASSWORD, host=HOST, port=PORT)
+        global DB, USER, PASSWORD, HOST, PORT
+        DB = DBcheck
+        USER = USERcheck
+        PASSWORD = PASSWORDcheck
+        HOST = HOSTcheck
+        PORT = PORTcheck
+        databaseMain = MySQLDatabase(DB, user=USERcheck, password=PASSWORDcheck, host=HOSTcheck, port=PORTcheck)
         databaseMain.connect()
         return True
     except:
         return False
 
+try:
+    databaseMain = MySQLDatabase(DB, user=USER, password=PASSWORD, host=HOST, port=PORT)
+    databaseMain.connect()
+except:
+    pass
+
 class BaseModelDDS(Model):
     class Meta:
+        global databaseMain
         database = databaseMain
 
 class Tasks(BaseModelDDS):
