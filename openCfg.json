@@ -7,9 +7,9 @@
         "password": "pswd"
     },
     "mail": {
-        "mailSmtp": "smtp.mail.ru",
-        "lgn": "resultworkdds@mail.ru",
-        "pswd": "data1decryption2system4",
+        "mailSmtp": "",
+        "lgn": "",
+        "pswd": "",
         "userMail": ""
     },
     "readCfg": "default",
@@ -113,7 +113,7 @@
         }
     },
     "ReadFiles": {
-        "testFile": "/home/az/PycharmProjects/dump.reg",
+        "testFile": "",
         "execFile": "",
         "endResFile": ""
     },

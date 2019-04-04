@@ -145,13 +145,13 @@
     <property name="geometry">
      <rect>
       <x>360</x>
-      <y>310</y>
-      <width>121</width>
-      <height>23</height>
+      <y>300</y>
+      <width>31</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
-     <string>Следующий метод:</string>
+     <string/>
     </property>
    </widget>
    <widget class="QPushButton" name="btnPrevMethod">
@@ -159,12 +159,12 @@
      <rect>
       <x>360</x>
       <y>330</y>
-      <width>121</width>
-      <height>23</height>
+      <width>31</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
-     <string>Предыдущий метод:</string>
+     <string/>
     </property>
    </widget>
    <widget class="QPushButton" name="btnDelThisMethod">
@@ -196,10 +196,10 @@
    <widget class="QLabel" name="lblNextMethod">
     <property name="geometry">
      <rect>
-      <x>490</x>
-      <y>310</y>
+      <x>410</x>
+      <y>300</y>
       <width>161</width>
-      <height>21</height>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
@@ -209,10 +209,10 @@
    <widget class="QLabel" name="lblPrevMethod">
     <property name="geometry">
      <rect>
-      <x>490</x>
+      <x>410</x>
       <y>330</y>
       <width>161</width>
-      <height>20</height>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
@@ -222,8 +222,8 @@
    <widget class="QLabel" name="label_12">
     <property name="geometry">
      <rect>
-      <x>400</x>
-      <y>290</y>
+      <x>360</x>
+      <y>280</y>
       <width>91</width>
       <height>16</height>
      </rect>
@@ -235,8 +235,8 @@
    <widget class="QLabel" name="lblThisMethod">
     <property name="geometry">
      <rect>
-      <x>490</x>
-      <y>290</y>
+      <x>450</x>
+      <y>280</y>
       <width>161</width>
       <height>16</height>
      </rect>
@@ -415,12 +415,12 @@
      <rect>
       <x>360</x>
       <y>200</y>
-      <width>141</width>
-      <height>31</height>
+      <width>51</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
-     <string>Добавить метод</string>
+     <string/>
     </property>
    </widget>
    <widget class="QComboBox" name="cmbMethods">
@@ -576,12 +576,12 @@
      <rect>
       <x>670</x>
       <y>370</y>
-      <width>91</width>
+      <width>41</width>
       <height>31</height>
      </rect>
     </property>
     <property name="text">
-     <string>Добавить</string>
+     <string/>
     </property>
    </widget>
    <widget class="QProgressBar" name="prgExec">
@@ -763,14 +763,14 @@
    <widget class="QPushButton" name="btnEditMethod">
     <property name="geometry">
      <rect>
-      <x>510</x>
+      <x>420</x>
       <y>200</y>
-      <width>141</width>
-      <height>31</height>
+      <width>51</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
-     <string>Изменить метод</string>
+     <string/>
     </property>
    </widget>
    <widget class="QLabel" name="label_18">
