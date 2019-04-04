@@ -145,7 +145,7 @@
     <property name="geometry">
      <rect>
       <x>360</x>
-      <y>300</y>
+      <y>270</y>
       <width>31</width>
       <height>31</height>
      </rect>
@@ -158,7 +158,7 @@
     <property name="geometry">
      <rect>
       <x>360</x>
-      <y>330</y>
+      <y>300</y>
       <width>31</width>
       <height>31</height>
      </rect>
@@ -170,34 +170,34 @@
    <widget class="QPushButton" name="btnDelThisMethod">
     <property name="geometry">
      <rect>
-      <x>360</x>
-      <y>240</y>
-      <width>141</width>
-      <height>31</height>
+      <x>480</x>
+      <y>200</y>
+      <width>51</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
-     <string>Удалить текущий метод</string>
+     <string/>
     </property>
    </widget>
    <widget class="QPushButton" name="btnDelAllMethod">
     <property name="geometry">
      <rect>
-      <x>510</x>
-      <y>240</y>
-      <width>141</width>
-      <height>31</height>
+      <x>540</x>
+      <y>200</y>
+      <width>51</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
-     <string>Удалить все методы</string>
+     <string/>
     </property>
    </widget>
    <widget class="QLabel" name="lblNextMethod">
     <property name="geometry">
      <rect>
       <x>410</x>
-      <y>300</y>
+      <y>270</y>
       <width>161</width>
       <height>31</height>
      </rect>
@@ -210,7 +210,7 @@
     <property name="geometry">
      <rect>
       <x>410</x>
-      <y>330</y>
+      <y>300</y>
       <width>161</width>
       <height>31</height>
      </rect>
@@ -223,7 +223,7 @@
     <property name="geometry">
      <rect>
       <x>360</x>
-      <y>280</y>
+      <y>250</y>
       <width>91</width>
       <height>16</height>
      </rect>
@@ -236,7 +236,7 @@
     <property name="geometry">
      <rect>
       <x>450</x>
-      <y>280</y>
+      <y>250</y>
       <width>161</width>
       <height>16</height>
      </rect>
@@ -248,14 +248,14 @@
    <widget class="QPushButton" name="btnCalcThisMethod">
     <property name="geometry">
      <rect>
-      <x>920</x>
-      <y>370</y>
-      <width>291</width>
-      <height>31</height>
+      <x>600</x>
+      <y>200</y>
+      <width>51</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
-     <string>Вычислить</string>
+     <string/>
     </property>
    </widget>
    <widget class="QPushButton" name="btnSaveTest">
@@ -602,12 +602,12 @@
      <rect>
       <x>670</x>
       <y>410</y>
-      <width>91</width>
+      <width>71</width>
       <height>31</height>
      </rect>
     </property>
     <property name="text">
-     <string>Применить все</string>
+     <string/>
     </property>
    </widget>
    <widget class="QLabel" name="label_19">
@@ -680,12 +680,12 @@
      <rect>
       <x>670</x>
       <y>490</y>
-      <width>91</width>
+      <width>71</width>
       <height>31</height>
      </rect>
     </property>
     <property name="text">
-     <string>Убрать все</string>
+     <string/>
     </property>
    </widget>
    <widget class="QPushButton" name="btnFindChgAll">
@@ -693,12 +693,12 @@
      <rect>
       <x>670</x>
       <y>530</y>
-      <width>91</width>
+      <width>71</width>
       <height>31</height>
      </rect>
     </property>
     <property name="text">
-     <string>Найти все</string>
+     <string/>
     </property>
    </widget>
    <widget class="QPushButton" name="btnStartAll">
@@ -706,12 +706,12 @@
      <rect>
       <x>670</x>
       <y>450</y>
-      <width>91</width>
+      <width>71</width>
       <height>31</height>
      </rect>
     </property>
     <property name="text">
-     <string>Начальное все</string>
+     <string/>
     </property>
    </widget>
    <widget class="QLabel" name="lblStartAllPos">
