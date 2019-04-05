@@ -8,7 +8,7 @@ class OpenTblWnd(QtWidgets.QDialog, designOpenTbl.Ui_openTbl):
     def __init__(self, tbl, isTest, parentClass):
         super(OpenTblWnd, self).__init__()
         self.setupUi(self)
-        self.btnEx0it.clicked.connect(self.closeWnd)
+        self.btnExit.clicked.connect(self.closeWnd)
 
         self.tblData.setColumnCount(tbl.columnCount())
         self.tblData.setRowCount(tbl.rowCount())
@@ -102,7 +102,7 @@ class OpenTblWnd(QtWidgets.QDialog, designOpenTbl.Ui_openTbl):
         btn = QtWidgets.QPushButton(tbl)
         btn.setText('')
         btn.setIcon(QtGui.QIcon(icons.confirmByteChange))
-        btn.setIconSize(self.__getQSize(identDiv, btn))
+        #btn.setIconSize(self.__getQSize(identDiv, btn))
         tbl.setCellWidget(rowPosition, 2, btn)
         btn.clicked.connect(
             lambda *args, rowPosition=rowPosition: self.__chgValueTestData(txtEditPosition, txtEditNewVal)
@@ -112,7 +112,7 @@ class OpenTblWnd(QtWidgets.QDialog, designOpenTbl.Ui_openTbl):
         btn = QtWidgets.QPushButton(tbl)
         btn.setText('')
         btn.setIcon(QtGui.QIcon(icons.startByteChange))
-        btn.setIconSize(self.__getQSize(identDiv, btn))
+        #btn.setIconSize(self.__getQSize(identDiv, btn))
         tbl.setCellWidget(rowPosition, 3, btn)
         btn.clicked.connect(
             lambda *args, rowPosition=rowPosition: self.__cnclValueTestData(txtEditPosition, txtEditNewVal)
@@ -122,7 +122,7 @@ class OpenTblWnd(QtWidgets.QDialog, designOpenTbl.Ui_openTbl):
         btn = QtWidgets.QPushButton(tbl)
         btn.setText('')
         btn.setIcon(QtGui.QIcon(icons.searchByteChange))
-        btn.setIconSize(self.__getQSize(identDiv, btn))
+        #btn.setIconSize(self.__getQSize(identDiv, btn))
         tbl.setCellWidget(rowPosition, 4, btn)
         btn.clicked.connect(
             lambda *args, rowPosition=rowPosition: self.__getValByAddr(txtEditPosition, txtEditNewVal)
@@ -132,7 +132,7 @@ class OpenTblWnd(QtWidgets.QDialog, designOpenTbl.Ui_openTbl):
         btn = QtWidgets.QPushButton(tbl)
         btn.setText('')
         btn.setIcon(QtGui.QIcon(icons.delByteChange))
-        btn.setIconSize(self.__getQSize(identDiv, btn))
+        #btn.setIconSize(self.__getQSize(identDiv, btn))
         tbl.setCellWidget(rowPosition, 5, btn)
         btn.clicked.connect(
             lambda *args, rowPosition=rowPosition: self.__delRowChgTbl(tbl.currentRow())

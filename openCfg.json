@@ -91,7 +91,7 @@
         }
     },
     "ReadFiles": {
-        "testFile": "/home/az/PycharmProjects/dum.reg",
+        "testFile": "C:/dum.reg",
         "execFile": "",
         "endResFile": ""
     },
