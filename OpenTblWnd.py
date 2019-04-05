@@ -8,7 +8,7 @@ class OpenTblWnd(QtWidgets.QDialog, designOpenTbl.Ui_openTbl):
     def __init__(self, tbl, isTest, parentClass):
         super(OpenTblWnd, self).__init__()
         self.setupUi(self)
-        self.btnExit.clicked.connect(self.closeWnd)
+        self.btnEx0it.clicked.connect(self.closeWnd)
 
         self.tblData.setColumnCount(tbl.columnCount())
         self.tblData.setRowCount(tbl.rowCount())
