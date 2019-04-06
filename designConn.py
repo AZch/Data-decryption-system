@@ -45,7 +45,7 @@ class Ui_Dialog(object):
         self.label_7.setGeometry(QtCore.QRect(70, 10, 181, 17))
         self.label_7.setObjectName("label_7")
         self.lblState = QtWidgets.QLabel(Dialog)
-        self.lblState.setGeometry(QtCore.QRect(60, 330, 211, 17))
+        self.lblState.setGeometry(QtCore.QRect(50, 330, 221, 17))
         self.lblState.setObjectName("lblState")
         self.txt3 = QtWidgets.QPlainTextEdit(Dialog)
         self.txt3.setGeometry(QtCore.QRect(50, 190, 221, 21))
@@ -73,7 +73,7 @@ class Ui_Dialog(object):
         self.lbl3.setText(_translate("Dialog", "Хост базы"))
         self.lbl4.setText(_translate("Dialog", "Порт базы"))
         self.btnTestConn.setText(_translate("Dialog", "Проверить"))
-        self.btnExit.setText(_translate("Dialog", "Выйти"))
+        self.btnExit.setText(_translate("Dialog", "Закрыть"))
         self.label_7.setText(_translate("Dialog", "Проверка подключения"))
         self.lblState.setText(_translate("Dialog", "не проверено"))
 

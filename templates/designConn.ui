@@ -114,7 +114,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Выйти</string>
+    <string>Закрыть</string>
    </property>
   </widget>
   <widget class="QSpinBox" name="spn4">
@@ -146,9 +146,9 @@
   <widget class="QLabel" name="lblState">
    <property name="geometry">
     <rect>
-     <x>60</x>
+     <x>50</x>
      <y>330</y>
-     <width>211</width>
+     <width>221</width>
      <height>17</height>
     </rect>
    </property>
