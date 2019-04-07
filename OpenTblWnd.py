@@ -210,11 +210,24 @@ class OpenTblWnd(QtWidgets.QDialog, designOpenTbl.Ui_openTbl):
         txtEditNewVal.setText(hex(intNum)[2:])
         return True
 
+    ''' Обновление таблицы с входным тестом '''
+
+    def updTblInputTest(self):
+        matrixTest = self.parentClass.workApi.currTestData.makeMatrixData()
+        self.tblData.setColumnCount(len(matrixTest[0]))
+        self.tblData.setRowCount(len(matrixTest))
+        for i in range(len(matrixTest)):
+            for j in range(len(matrixTest[i])):
+                self.tblData.setItem(i, j,
+                                         QtWidgets.QTableWidgetItem(matrixTest[i][j]))
+        self.tblData.resizeColumnsToContents()
+
     ''' Изменение тестовых данных '''
     def __chgValueTestData(self, txtEditPosition, txtEditNewVal):
         try:
             if self.__checkChgField(txtEditPosition, txtEditNewVal):
                 self.parentClass.workApi.currTestData.chgValue(hexPos=txtEditPosition.toPlainText(), newVal=txtEditNewVal.toPlainText())
+                self.parentClass.updTblInputTest()
                 self.updTblInputTest()
                 self.lblMsg.setText(msgChgNum.confirmChg)
         except:
@@ -225,6 +238,7 @@ class OpenTblWnd(QtWidgets.QDialog, designOpenTbl.Ui_openTbl):
         try:
             if self.__checkChgField(txtEditPosition, txtEditNewVal):
                 self.parentClass.workApi.currTestData.backStartValue(hexPos=txtEditPosition.toPlainText())
+                self.parentClass.updTblInputTest()
                 self.updTblInputTest()
                 self.lblMsg.setText(msgChgNum.confirmCancelChg)
         except:

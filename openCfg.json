@@ -1,9 +1,9 @@
 {
     "db": {
-        "name": "dds",
-        "host": "localhost",
-        "port": 3306,
-        "user": "root",
+        "name": "",
+        "host": "",
+        "port": "",
+        "user": "",
         "password": ""
     },
     "mail": {
@@ -18,78 +18,7 @@
         "readFiles": "ReadFiles",
         "chgVal": "chgValue"
     },
-    "loadMehtods": {
-        "method1": {
-            "method": {
-                "name": "ss 40",
-                "type": "MCompBase",
-                "timeWait": 50
-            }
-        },
-        "method2": {
-            "method": {
-                "name": "MMOR",
-                "type": "MMoreOneRand",
-                "timeWait": 70,
-                "countProc": 1,
-                "posStart": 348,
-                "posEnd": 351,
-                "countRandom": 12
-            }
-        },
-        "method3": {
-            "method": {
-                "name": "Rev",
-                "type": "MReverse",
-                "timeWait": 70,
-                "countProc": 1,
-                "posStart": 16,
-                "posEnd": 18
-            }
-        },
-        "method4": {
-            "method": {
-                "name": "mr",
-                "type": "MMoreOneRand",
-                "timeWait": 70,
-                "countProc": 1,
-                "posStart": 2,
-                "posEnd": 5,
-                "countRandom": 3
-            }
-        },
-        "method5": {
-            "method": {
-                "name": "rp",
-                "type": "MReverse",
-                "timeWait": 70,
-                "countProc": 1,
-                "posStart": 3,
-                "posEnd": 16
-            }
-        },
-        "method6": {
-            "method": {
-                "name": "mr",
-                "type": "MethodCheck",
-                "timeSleep": 0,
-                "timeWait": 70,
-                "countProc": 1,
-                "posStart": 16,
-                "posEnd": 21
-            }
-        },
-        "method7": {
-            "method": {
-                "name": "random",
-                "type": "MRand",
-                "timeWait": 70,
-                "countProc": 1,
-                "lstPosition": "1 2 52",
-                "countRandom": 15
-            }
-        }
-    },
+    "loadMehtods": {},
     "ReadFiles": {
         "testFile": "/home/az/PycharmProjects/dum.reg",
         "execFile": "",
@@ -97,6 +26,7 @@
     },
     "chgValue": {
         "0": "1->2",
-        "1": "0->00"
+        "1": "0->0",
+        "2": "0->0"
     }
 }

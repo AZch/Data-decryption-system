@@ -169,7 +169,7 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
     ''' Закрытие формы '''
     def __exitForm(self):
         dataToCfg = self.workWithCFG.makeCfg(self)
-        if not self.workWithCFG.compareCfg(self, dataToCfg, self.jsonData):
+        if not self.workWithCFG.compareCfg(self, dataToCfg):
             qMessBox = QtWidgets.QMessageBox
             if qMessBox.question(self, 'Перезапись конфига', 'С последнего запуска вы внесли изменения в программу, '
                                                              'перезаписать конфиг с текущими значениями?',

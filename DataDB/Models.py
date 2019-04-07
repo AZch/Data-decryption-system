@@ -4,21 +4,22 @@ import json
 
 databaseMain = ""
 
-DB = ''
-USER = ''
-PASSWORD = ''
-HOST = ''
-PORT = ''
-
-file = open(jsonWord.configName, 'r', encoding='utf-8')
-with file:
-    data = file.read()
-    jsonData = json.loads(data)
-    DB = jsonData[jsonWord.db][jsonWord.dbName]
-    USER = jsonData[jsonWord.db][jsonWord.dbUser]
-    PASSWORD = jsonData[jsonWord.db][jsonWord.dbPsw]
-    HOST = jsonData[jsonWord.db][jsonWord.dbHost]
-    PORT = jsonData[jsonWord.db][jsonWord.dbPosrt]
+try:
+    file = open(jsonWord.configName, 'r', encoding='utf-8')
+    with file:
+        data = file.read()
+        jsonData = json.loads(data)
+        DB = jsonData[jsonWord.db][jsonWord.dbName]
+        USER = jsonData[jsonWord.db][jsonWord.dbUser]
+        PASSWORD = jsonData[jsonWord.db][jsonWord.dbPsw]
+        HOST = jsonData[jsonWord.db][jsonWord.dbHost]
+        PORT = jsonData[jsonWord.db][jsonWord.dbPosrt]
+except:
+    DB = ''
+    USER = ''
+    PASSWORD = ''
+    HOST = ''
+    PORT = ''
 
 # while True:
 #     if DB == "":
@@ -62,13 +63,13 @@ def testConnect(DBcheck, USERcheck, PASSWORDcheck, HOSTcheck, PORTcheck):
     except:
         return False
 
+databaseMain = Proxy()
+
 try:
-    databaseMain = MySQLDatabase(DB, user=USER, password=PASSWORD, host=HOST, port=PORT)
+    databaseMain.initialize(MySQLDatabase(DB, user=USER, password=PASSWORD, host=HOST, port=PORT))
     databaseMain.connect()
 except:
     print('cant Connect To DB')
-
-databaseMain = Proxy()
 
 class BaseModelDDS(Model):
     class Meta:
