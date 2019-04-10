@@ -12,7 +12,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(311, 402)
+        Dialog.resize(311, 355)
         self.label = QtWidgets.QLabel(Dialog)
         self.label.setGeometry(QtCore.QRect(50, 310, 221, 20))
         self.label.setObjectName("label")
@@ -32,10 +32,10 @@ class Ui_Dialog(object):
         self.lbl4.setGeometry(QtCore.QRect(50, 220, 221, 17))
         self.lbl4.setObjectName("lbl4")
         self.btnTestConn = QtWidgets.QPushButton(Dialog)
-        self.btnTestConn.setGeometry(QtCore.QRect(160, 270, 111, 31))
+        self.btnTestConn.setGeometry(QtCore.QRect(50, 270, 101, 31))
         self.btnTestConn.setObjectName("btnTestConn")
         self.btnExit = QtWidgets.QPushButton(Dialog)
-        self.btnExit.setGeometry(QtCore.QRect(160, 360, 111, 31))
+        self.btnExit.setGeometry(QtCore.QRect(170, 270, 101, 31))
         self.btnExit.setObjectName("btnExit")
         self.spn4 = QtWidgets.QSpinBox(Dialog)
         self.spn4.setGeometry(QtCore.QRect(50, 240, 221, 26))

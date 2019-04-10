@@ -19,7 +19,7 @@ except:
     USER = ''
     PASSWORD = ''
     HOST = ''
-    PORT = ''
+    PORT = 0
 
 # while True:
 #     if DB == "":
@@ -57,6 +57,14 @@ def testConnect(DBcheck, USERcheck, PASSWORDcheck, HOSTcheck, PORTcheck):
         PASSWORD = PASSWORDcheck
         HOST = HOSTcheck
         PORT = PORTcheck
+        databaseMain.initialize(MySQLDatabase(DB, user=USER, password=PASSWORD, host=HOST, port=PORT))
+        databaseMain.connect()
+        return True
+    except:
+        return False
+
+def isValidConn():
+    try:
         databaseMain.initialize(MySQLDatabase(DB, user=USER, password=PASSWORD, host=HOST, port=PORT))
         databaseMain.connect()
         return True

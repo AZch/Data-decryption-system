@@ -54,7 +54,7 @@ class WorkWithCFG():
 
         workClass.DB = ""
         workClass.HOST = ""
-        workClass.PORT = ""
+        workClass.PORT = 0
         workClass.USER = ""
         workClass.PASSWORD = ""
 

@@ -529,11 +529,15 @@ class MainWnd(QtWidgets.QMainWindow, design.Ui_MainWindow):
     ''' Вычисление по выбранному методу '''
     def calcThisMethod(self):
         try:
-            res = self.workApi.calcMethod()
-            newThread = threading.Thread(target=self.updateCalc, args=[self.workApi, self.sgnUpdExec,
-                                                                       self.getAllBtnArray(), self.sgnUpdTbl,
-                                                                       self.smtpObj, self.mailLgn, self.userMail])
-            newThread.start()
+            if Models.isValidConn():
+                res = self.workApi.calcMethod()
+                newThread = threading.Thread(target=self.updateCalc, args=[self.workApi, self.sgnUpdExec,
+                                                                           self.getAllBtnArray(), self.sgnUpdTbl,
+                                                                           self.smtpObj, self.mailLgn, self.userMail])
+                newThread.start()
+            else:
+                self.lblMsg.setText(msgError.connDB)
+                return False
             if res == StrRetConts.retBat:
                 raise ValueError()
         except:

@@ -1,9 +1,9 @@
 {
     "db": {
-        "name": "",
-        "host": "",
-        "port": "",
-        "user": "",
+        "name": "dds",
+        "host": "localhost",
+        "port": 3306,
+        "user": "root",
         "password": ""
     },
     "mail": {
@@ -18,15 +18,19 @@
         "readFiles": "ReadFiles",
         "chgVal": "chgValue"
     },
-    "loadMehtods": {},
+    "loadMehtods": {
+        "method1": {
+            "method": {
+                "name": "12",
+                "type": "MCompBase",
+                "timeWait": 0
+            }
+        }
+    },
     "ReadFiles": {
         "testFile": "/home/az/PycharmProjects/dum.reg",
         "execFile": "",
         "endResFile": ""
     },
-    "chgValue": {
-        "0": "1->2",
-        "1": "0->0",
-        "2": "0->0"
-    }
+    "chgValue": {}
 }

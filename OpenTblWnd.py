@@ -231,7 +231,7 @@ class OpenTblWnd(QtWidgets.QDialog, designOpenTbl.Ui_openTbl):
                 self.updTblInputTest()
                 self.lblMsg.setText(msgChgNum.confirmChg)
         except:
-            self.lblMsg.setText(msgChgNum.badAction)
+            self.lblMsg.setText("Ошибка: " + msgChgNum.badActionByte)
 
     ''' откат изменений в тестовых данных '''
     def __cnclValueTestData(self, txtEditPosition, txtEditNewVal):

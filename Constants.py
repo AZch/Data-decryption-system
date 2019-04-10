@@ -41,6 +41,7 @@ class msgError():
     typeMethod = "Ошибка при выборе типа"
 
     conn = "Подключение не удалось"
+    connDB = "Нет подключения к базе данных"
 
 class msgWarning():
     formatMethod = "Неверный формат метода"
@@ -62,6 +63,7 @@ class msgChgNum():
     confirmChg = "Изменение прошло успешно"
     confirmCancelChg = "Откат прошел успешно"
     confirmFind = "Байт найден"
+    badActionByte = "Не валидная запись значения"
     badAction = "Произвести действие не удалось"
 
 class typeMethod():
